@@ -12,6 +12,7 @@ import AccountNotifications from "./screens/AccountNotifications";
 import AccountLanguage from "./screens/AccountLanguage";
 import AccountAbout from "./screens/AccountAbout";
 import AccountParkings from "./screens/AccountParkings";
+import MapsView from "./screens/MapsView";
 import AccountAddParking from "./screens/AccountAddParking";
 import Location from "./screens/Location";
 const Stack = createNativeStackNavigator();
@@ -32,7 +33,7 @@ export default function MyStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={globalScreenOptions}>
-        <Stack.Screen name="Main" component={Main} options={{ title: "" }} />
+        <Stack.Screen name="MapsView" component={MapsView} options={{ title: "" }} />
 
         <Stack.Screen name="Login" component={Login} options={{ title: "" }} />
         <Stack.Screen

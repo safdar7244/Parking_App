@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
           width:"100%",
           backgroundColor:"white",
           color:"black",
-          zIndex:100
+          zIndex:100,
       },
       tileButton:
       {
