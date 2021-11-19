@@ -33,7 +33,7 @@ export default function MyStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={globalScreenOptions}>
-        <Stack.Screen name="MapsView" component={MapsView} options={{ title: "" }} />
+        <Stack.Screen name="Main" component={Main} options={{ title: "" }} />
 
         <Stack.Screen name="Login" component={Login} options={{ title: "" }} />
         <Stack.Screen

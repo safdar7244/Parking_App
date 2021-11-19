@@ -13,29 +13,19 @@ import { data } from './FormsData/formData';
 import UploadImage from './common/UploadImage';
 import { Formik } from 'formik';
 import Options from "./common/Options"
+import MapsView from "./MapsView"
 export default function AccountAbout({navigation}){
  const [address,setaddress]=useState('')
  const [price,setprice]=useState('')
  const [message,setmessage]=useState('')
 
 
-    const renderFunction=(key)=>{
-    console.log("logged")
-    }
-// data.b = "new value";
-const list = [
-    
-    {
-      title: 'Slot 1',
-    },
-    {
-        title: 'Slot 2',
-      },
+   
      
     
             
       
-  ]
+  
   return (
 <ScrollView style={{  }} acontentContainerStyle={{ flexGrow: 1 ,      
 }}
@@ -55,7 +45,8 @@ stickyFooterIndices={[1]}
           
                <Text style={styles.UserName}>User</Text>
 
-            
+<MapsView />
+  
                 <View style={styles.innercontainer2}>
 
               <View style={styles.row}>

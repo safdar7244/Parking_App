@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground,StyleSheet, View,Picker, SafeAreaView, Text, Alert,ScrollView,TextInput } from 'react-native';
+import { ImageBackground,StyleSheet, Dimensions,View,Picker, SafeAreaView, Text, Alert,ScrollView,TextInput } from 'react-native';
 
 import { useState,useEffect } from 'react';
 
@@ -9,11 +9,14 @@ import * as Location from "expo-location";
 import MapView, { Marker, Callout } from "react-native-maps";
 
 // import TabBottom from "./TabBottom";
-export default function AccountAbout({navigation}){
+export default function MapsView({navigation}){
+    
     const [Flatno,setFlatNo]=useState('')
     const [Building,setBuilding]=useState('')
     const [Street,setStreet]=useState('')
     const [Area,setArea]=useState('')
+    const [Price,setPrice]=useState('')
+
     const [userLocation, setUserLocation] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
 
@@ -63,16 +66,6 @@ getLocation();
 
 
   return (
-<ScrollView style={{  }} contentContainerStyle={{ flexGrow: 1 ,      
-}}
-stickyFooterIndices={[1]}
->
-    {/* <ScrollView 
-    style={styles.Scrollcontainer}
-> */}
-
-       {/* <ImageBackground source={require('../pictures/bkg-user.jpeg')} resizeMode="cover" style={styles.image} /> */}
-       <TabBottom navigate={navigation}/> 
 
 <View style={styles.innerContainer}>
 
@@ -81,6 +74,7 @@ stickyFooterIndices={[1]}
         initialRegion={userLocation}
         onPress={markerHandler}
       >
+          
         {userLocation && (
           <Marker
             coordinate={{
@@ -146,6 +140,15 @@ stickyFooterIndices={[1]}
 
       />
                 </View>
+                <View style={styles.row}>
+                <TextInput
+       style={styles.formFieldTextFull}
+       onChangeText={Price => setPrice(Price)}
+      defaultValue={Price}
+      placeholder="Ft/Hr"
+      />
+
+                    </View>
 
                 {/* <Button onPress={handleSubmit} title="Submit"/> */}
 
@@ -160,17 +163,14 @@ stickyFooterIndices={[1]}
 
 </View>
 
-{/*  */}
-  {/* </ScrollView> */}
-  </ScrollView>
 
   );
 };
 
 const styles = StyleSheet.create({
     map:{
-        width:"100%",
-        height:400,
+        width:Dimensions.get('window') | 400 ,
+        height:300,
         marginBottom:40,
 
     },
@@ -192,6 +192,16 @@ const styles = StyleSheet.create({
         backgroundColor:"#f2f2f2",
         // marginLeft:20
     },
+    formFieldTextFull:{
+        width:"110%",
+        fontSize: 12,
+        borderRadius: 7,
+        borderWidth: 1,
+        padding: 5,
+        marginBottom:20,
+        backgroundColor:"#f2f2f2",
+        // marginLeft:20
+    },
     formFieldTextRight: {
         width:"50%",
         fontSize: 12,
@@ -204,7 +214,7 @@ const styles = StyleSheet.create({
     },
       innercontainer2:{
         backgroundColor:"white",
-        width:"90%",
+        width:"75%",
         padding:40,
         marginBottom:100,
       },
@@ -282,6 +292,7 @@ innerContainer:
     // justifyContent:"center",
     alignItems:"center",
 //    backgroundColor:"blue",
-     marginTop:"-15%"
-},
+    //  marginTop:"5%", 
+    marginBottom:"-20%",
+    },
   });
