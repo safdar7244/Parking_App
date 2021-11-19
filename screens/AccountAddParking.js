@@ -47,9 +47,9 @@ stickyFooterIndices={[1]}
 
 <MapsView />
   
-                <View style={styles.innercontainer2}>
+                {/* <View style={styles.innercontainer2}> */}
 
-              <View style={styles.row}>
+              {/* <View style={styles.row}>
 
                 <Text style={styles.labelText}>Address</Text>
                 <TextInput
@@ -64,8 +64,8 @@ stickyFooterIndices={[1]}
 
 
 
-                </View>
-               <View style={styles.row}> 
+                </View> */}
+               {/* <View style={styles.row}> 
                
                 <Text style={styles.labelText}>Ft/hr        </Text>
                 <TextInput
@@ -73,14 +73,14 @@ stickyFooterIndices={[1]}
        onChangeText={price => setprice(price)}
       defaultValue={price}
       />
-                </View>
+                </View> */}
 
                 {/* <Button onPress={handleSubmit} title="Submit"/> */}
 
             
           
 
-</View>
+{/* </View> */}
 <View style={{
         // marginBottom:"20%",
         borderRadius:15,
