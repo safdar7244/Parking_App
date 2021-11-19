@@ -5,11 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
 import { useState } from 'react';
 
-export default function AccountNotifications({navigation}){
-    const [guard, setGuard] = useState(false);
-    const [covered, setCovered] = useState(false);
-    const [camera, setCamera] = useState(false);
-    // const [visible, setVisible] = useState(false);
+export default function Options(props,{navigation}){
+
 
 
 
@@ -20,22 +17,22 @@ export default function AccountNotifications({navigation}){
  
 
     <View style={{flexDirection:"row",padding:10}}> 
-    <Text style={{padding:5 }}>   Option 1 </Text>
-    <Switch value={guard} style={{marginLeft:"auto",paddingRight:10}} color="#00DB8C" onChange={()=>{setGuard(!guard)}} />
+    <Text style={{padding:5 }}>  {props.option1} </Text>
+    <Switch value={props.param1} style={{marginLeft:"auto",paddingRight:10}} color="#00DB8C" onChange={()=>{props.function1(!props.param1)}} />
     </View>
 
     <Divider orientation="horizontal" />
 
     <View style={{flexDirection:"row",padding:10}}> 
-    <Text style={{padding:5 }}>   Option 2 </Text>
-    <Switch value={covered} style={{marginLeft:"auto",paddingRight:10}} color="#00DB8C" onChange={()=>{setCovered(!covered)}} />
+    <Text style={{padding:5 }}>  {props.option2} </Text>
+    <Switch value={props.param2} style={{marginLeft:"auto",paddingRight:10}} color="#00DB8C" onChange={()=>{props.function2(!props.param2)}} />
     </View>
 
     <Divider orientation="horizontal" />
 
     <View style={{flexDirection:"row",padding:10}}> 
-    <Text style={{padding:5 }}>   Option 3 </Text>
-    <Switch value={camera} style={{marginLeft:"auto",paddingRight:10}} color="#00DB8C" onChange={()=>{setCamera(!camera)}} />
+    <Text style={{padding:5 }}>  {props.option3} </Text>
+    <Switch value={props.param3} style={{marginLeft:"auto",paddingRight:10}} color="#00DB8C" onChange={()=>{props.function3(!props.param3)}} />
     </View>
 
 

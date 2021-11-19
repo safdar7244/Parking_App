@@ -14,73 +14,50 @@ import UploadImage from './common/UploadImage';
 import { Formik } from 'formik';
 import Options from "./common/Options"
 import MapsView from "./MapsView"
-export default function AccountAbout({navigation}){
- const [address,setaddress]=useState('')
- const [price,setprice]=useState('')
- const [message,setmessage]=useState('')
+export default function AccountAddParking({navigation}){
+  const [Flatno,setFlatNo]=useState('')
+  const [Building,setBuilding]=useState('')
+  const [Street,setStreet]=useState('')
+  const [Area,setArea]=useState('')
+  const [Price,setPrice]=useState('')
+  const [userLocation, setUserLocation] = useState(null);
+  const [message,setmessage]=useState('')
+  const [guard, setGuard] = useState(false);
+  const [covered, setCovered] = useState(false);
+  const [camera, setCamera] = useState(false);
 
-
-   
-     
-    
-            
-      
   
   return (
 <ScrollView style={{  }} acontentContainerStyle={{ flexGrow: 1 ,      
 }}
 stickyFooterIndices={[1]}
 >
-    {/* <ScrollView 
-    style={styles.Scrollcontainer}
-> */}
-
-       {/* <ImageBackground source={require('../pictures/bkg-user.jpeg')} resizeMode="cover" style={styles.image} /> */}
-       <TabBottom navigate={navigation}/> 
+ <TabBottom navigate={navigation}/> 
 
 <View style={styles.innerContainer}>
 
 <UploadImage />
 
           
-               <Text style={styles.UserName}>User</Text>
+<Text style={styles.UserName}>User</Text>
 
-<MapsView />
-  
-                {/* <View style={styles.innercontainer2}> */}
+<MapsView 
+ Flatno={Flatno}
+ Building={Building}
+ Street={Street}
+ Area={Area}
+ Price={Price}
+ userLocation={userLocation}
+ 
+ setFlatNo={setFlatNo}
+ setBuilding={setBuilding}
+ setStreet={setStreet}
+ setArea={setArea}
+ setPrice={setPrice}
+ setUserLocation={setUserLocation}
 
-              {/* <View style={styles.row}>
+/>
 
-                <Text style={styles.labelText}>Address</Text>
-                <TextInput
-                  style={styles.formFieldText}
-                  onChangeText={address => setaddress(address)}
-                 defaultValue={address}
-                />
-
-
-
-
-
-
-
-                </View> */}
-               {/* <View style={styles.row}> 
-               
-                <Text style={styles.labelText}>Ft/hr        </Text>
-                <TextInput
-       style={styles.formFieldText}
-       onChangeText={price => setprice(price)}
-      defaultValue={price}
-      />
-                </View> */}
-
-                {/* <Button onPress={handleSubmit} title="Submit"/> */}
-
-            
-          
-
-{/* </View> */}
 <View style={{
         // marginBottom:"20%",
         borderRadius:15,
@@ -91,7 +68,20 @@ stickyFooterIndices={[1]}
           alignItems:"center",
       padding:20,   
 }}>
-<Options />
+<Options
+  option1="Guard"
+  option2="Covered"
+  option3="Camera"
+  
+  param1={guard}
+  param2={covered}
+  param3={camera}
+
+  function1={setGuard}
+  function2={setCovered}
+  function3={setCamera}
+
+/>
 
 </View>    
 
@@ -112,7 +102,6 @@ stickyFooterIndices={[1]}
         backgroundColor:"#eeeeee",
         marginLeft:20}
     }
-    // placeholder="Comment here"
     onChangeText={message => setmessage(message)}
    defaultValue={message}
   />
@@ -127,8 +116,6 @@ stickyFooterIndices={[1]}
 
 </View>
 
-{/*  */}
-  {/* </ScrollView> */}
   </ScrollView>
 
   );

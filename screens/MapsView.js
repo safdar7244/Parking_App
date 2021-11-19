@@ -9,23 +9,15 @@ import * as Location from "expo-location";
 import MapView, { Marker, Callout } from "react-native-maps";
 
 // import TabBottom from "./TabBottom";
-export default function MapsView({navigation}){
+export default function MapsView(props,{navigation}){
     
-    const [Flatno,setFlatNo]=useState('')
-    const [Building,setBuilding]=useState('')
-    const [Street,setStreet]=useState('')
-    const [Area,setArea]=useState('')
-    const [Price,setPrice]=useState('')
-
-    const [userLocation, setUserLocation] = useState(null);
-    const [isFetching, setIsFetching] = useState(false);
-
+    console.log("mapsview props",props)
 
 
 
 const markerHandler = (event) => {
 console.log(event);
-setUserLocation({
+props.setUserLocation({
   latitude: event.nativeEvent.coordinate.latitude,
   longitude: event.nativeEvent.coordinate.longitude,
   latitudeDelta: 0.0922,
@@ -52,7 +44,7 @@ const getLocation = async () => {
     const location = await Location.getCurrentPositionAsync({
       timeout: 4000,
     });
-    setUserLocation({
+    props.setUserLocation({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.0922,
@@ -71,15 +63,15 @@ getLocation();
 
 <MapView
         style={styles.map}
-        initialRegion={userLocation}
+        initialRegion={props.userLocation}
         onPress={markerHandler}
       >
           
-        {userLocation && (
+        {props.userLocation && (
           <Marker
             coordinate={{
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
+              latitude: props.userLocation.latitude,
+              longitude: props.userLocation.longitude,
             }}
             draggable={true}
             onDragEnd={(e) => {
@@ -104,14 +96,14 @@ getLocation();
                 {/* <Text style={styles.labelText}>Address</Text> */}
                 <TextInput
                   style={styles.formFieldText}
-                  onChangeText={Flat => setFlatNo(Flat)}
-                 defaultValue={Flatno}
+                  onChangeText={Flat => props.setFlatNo(Flat)}
+                 defaultValue={props.Flatno}
                  placeholder="Flat/Villa No"
                 />
                 <TextInput
                   style={styles.formFieldTextRight}
-                  onChangeText={Building => setBuilding(Building)}
-                 defaultValue={Building}
+                  onChangeText={Building => props.setBuilding(Building)}
+                 defaultValue={props.Building}
                  placeholder="Building/Villa"
 
                 />
@@ -128,14 +120,14 @@ getLocation();
                 {/* <Text style={styles.labelText}>Ft/hr        </Text> */}
                 <TextInput
        style={styles.formFieldText}
-       onChangeText={Street => setStreet(Street)}
-      defaultValue={Street}
+       onChangeText={Street => props.setStreet(Street)}
+      defaultValue={props.Street}
       placeholder="Street"
       />
        <TextInput
        style={styles.formFieldTextRight}
-       onChangeText={Area => setArea(Area)}
-      defaultValue={Area}
+       onChangeText={Area => props.setArea(Area)}
+      defaultValue={props.Area}
       placeholder="Area"
 
       />
@@ -143,8 +135,8 @@ getLocation();
                 <View style={styles.row}>
                 <TextInput
        style={styles.formFieldTextFull}
-       onChangeText={Price => setPrice(Price)}
-      defaultValue={Price}
+       onChangeText={Price => props.setPrice(Price)}
+      defaultValue={props.Price}
       placeholder="Ft/Hr"
       />
 

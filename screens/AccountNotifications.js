@@ -12,10 +12,10 @@ import TabBottom from './TabBottom';
 import Options from "./common/Options"
 import AvatarCustom from './common/AvatarCustom';
 export default function AccountNotifications({navigation}){
-    const [guard, setGuard] = useState(false);
-    const [covered, setCovered] = useState(false);
-    const [camera, setCamera] = useState(false);
-    // const [visible, setVisible] = useState(false);
+ 
+    const [Notification,setNotification]=useState('')
+  const [Payment,setPayment]=useState('')
+  const [newParking,setNewParking]=useState('')
 
 
 
@@ -32,7 +32,23 @@ export default function AccountNotifications({navigation}){
                <Text style={styles.UserName}>User</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
 
-               <Options />
+               <Options
+              
+              option1="Push Notification"
+              option2="Late Payment"
+              option3="Add Slot"
+              
+              param1={Notification}
+              param2={Payment}
+              param3={newParking}
+            
+              function1={setNotification}
+              function2={setPayment}
+              function3={setNewParking}
+            
+            
+               
+               />
     {/* </Overlay> */}
 
 </View>
