@@ -10,13 +10,15 @@ import {
   Dimensions,
   SectionList,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView , { Callout} from "react-native-maps";
 import {
   TabView,
   Tab,
   Button,
   Overlay,
   Switch,
+
+
   Divider,
 } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -28,6 +30,9 @@ import TabBottom from "./TabBottom";
 import * as Location from "expo-location";
 import geohash from "ngeohash";
 import { auth, db } from "../firebase";
+import Account from "./Account";
+import { Avatar } from "react-native-elements/dist/avatar/Avatar";
+import AvatarCustom from "./common/AvatarCustom";
 export default function Maps({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
@@ -201,7 +206,40 @@ export default function Maps({ navigation }) {
                     latitude: space.coordinates.latitude,
                     longitude: space.coordinates.longitude,
                   }}
-                ></Marker>
+                  onPress={()=>console.log("im here")}
+                >
+<Callout onPress={()=>{
+  console.log("callout")}
+
+}
+
+  tooltip={false} style={{width:200,height:200}}>
+ {/* <Account /> */}
+ 
+ <View style={{alignItems:"center"}}>
+ <Avatar
+            size={90}
+            
+            source={{
+                uri:
+                  'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                 }}
+            containerStyle={{ backgroundColor: 'grey' ,width:"100%"}}
+          >
+            
+          </Avatar>
+
+<Text >Price </Text>
+<Text >Some Details </Text>
+<Text >Some More Details </Text>
+
+
+
+  {/* <Alert>Nooo</Alert> */}
+  </View>
+</Callout>
+
+                </Marker>
               );
             })}
         </MapView>
