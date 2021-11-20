@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -25,7 +25,9 @@ import OverlaySet from "./Overlay";
 import City from "./City";
 import { Marker } from "react-native-maps";
 import TabBottom from "./TabBottom";
-
+import * as Location from "expo-location";
+import geohash from "ngeohash";
+import { auth, db } from "../firebase";
 export default function Maps({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
@@ -33,6 +35,8 @@ export default function Maps({ navigation }) {
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
   const [camera, setCamera] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [spaces, setSpaces] = useState(null);
 
   const [reigon, setRegion] = useState({
     latitude: 31.476,
@@ -40,11 +44,92 @@ export default function Maps({ navigation }) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-
   const [x, setx] = useState({ latitude: 31.466, longitude: 74.3045 });
   function hello(params) {
     setVisiblesearch(true);
   }
+
+  const getGeohashRange = (
+    latitude,
+    longitude,
+    distance // miles
+  ) => {
+    return new Promise((resolve) => {
+      console.log("here");
+      const lat = 0.0144927536231884; // degrees latitude per mile
+      const lon = 0.0181818181818182; // degrees longitude per mile
+
+      const lowerLat = latitude - lat * distance;
+      const lowerLon = longitude - lon * distance;
+
+      const upperLat = latitude + lat * distance;
+      const upperLon = longitude + lon * distance;
+
+      const lower = geohash.encode(lowerLat, lowerLon);
+      const upper = geohash.encode(upperLat, upperLon);
+      console.log("done");
+      return resolve({ lower, upper });
+    });
+
+    // console.log("bogaobga");
+
+    // return {
+    //   lower,
+    //   upper,
+    // };
+  };
+
+  useEffect(() => {
+    console.log("shdaudasdk");
+    const verifyPersmission = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return false;
+      }
+      return true;
+    };
+    const getLocation = async () => {
+      const done = await verifyPersmission();
+      if (!done) {
+        return;
+      }
+      try {
+        const location = await Location.getCurrentPositionAsync({
+          timeout: 4000,
+        });
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+        console.log("hererererer");
+        const range = await getGeohashRange(
+          location.coords.latitude,
+          location.coords.longitude,
+          12
+        );
+        console.log("rang", range);
+        const a = [];
+        db.collection("spaces")
+          .where("ghash", ">=", range.lower)
+          .where("ghash", "<=", range.upper)
+          .onSnapshot((snapshot) => {
+            // Your own custom logic here
+            snapshot.forEach((doc) => {
+              console.log(doc.id, doc.data());
+              let b = doc.data();
+              b.id = doc.id;
+              a.push(b);
+            });
+            setSpaces(a);
+          });
+      } catch (err) {}
+    };
+    getLocation();
+  }, []);
+  ////
 
   return (
     <View style={{ flex: 1 }}>
@@ -107,21 +192,18 @@ export default function Maps({ navigation }) {
       </View>
 
       <View style={{ flex: 1, zIndex: 2 }}>
-        <MapView region={reigon} style={styles.map}>
-          <Marker
-            draggable
-            style={{ zIndex: 10 }}
-            coordinate={x}
-            onDragEnd={(e) => {
-              console.log(e.nativeEvent.coordinate);
-              setx(e.nativeEvent.coordinate);
-            }}
-            onSelect={console.log("onSelect", arguments)}
-            onDrag={console.log("onDrag", arguments)}
-            onDragStart={console.log("onDragStart", arguments)}
-            onPress={console.log("onPress", arguments)}
-            title={"Hi"}
-          />
+        <MapView initialRegion={userLocation} style={styles.map}>
+          {spaces &&
+            spaces.map((space) => {
+              return (
+                <Marker
+                  coordinate={{
+                    latitude: space.coordinates.latitude,
+                    longitude: space.coordinates.longitude,
+                  }}
+                ></Marker>
+              );
+            })}
         </MapView>
       </View>
       <TabBottom navigate={navigation} />
