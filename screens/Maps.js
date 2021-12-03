@@ -33,6 +33,9 @@ import { auth, db } from "../firebase";
 import Account from "./Account";
 import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 import AvatarCustom from "./common/AvatarCustom";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
+
 export default function Maps({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
@@ -42,6 +45,7 @@ export default function Maps({ navigation }) {
   const [camera, setCamera] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [spaces, setSpaces] = useState(null);
+  const [currentLocation,setCurrentlocation] =useState("Search")
 
   const [reigon, setRegion] = useState({
     latitude: 31.476,
@@ -103,13 +107,14 @@ export default function Maps({ navigation }) {
         const location = await Location.getCurrentPositionAsync({
           timeout: 4000,
         });
+
         setUserLocation({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         });
-        console.log("hererererer");
+        console.log("hererererer",location);
         const range = await getGeohashRange(
           location.coords.latitude,
           location.coords.longitude,
@@ -156,13 +161,13 @@ export default function Maps({ navigation }) {
       </Overlay>
 
       <Overlay
-        overlayStyle={{ padding: 20, width: "80%" }}
+        overlayStyle={{width: "90%" }}
         isVisible={visibleSearch}
         onBackdropPress={() => {
           setVisiblesearch(!visibleSearch);
         }}
       >
-        <City />
+        <City setUserLocation={setUserLocation} setCurrentlocation={setCurrentlocation} />
       </Overlay>
 
       <View
@@ -172,6 +177,8 @@ export default function Maps({ navigation }) {
           zIndex: 10,
           top: 50,
           flexDirection: "row",
+          justifyContent:"center",
+          alignItems:"center"
         }}
       >
         <Button
@@ -187,7 +194,7 @@ export default function Maps({ navigation }) {
           titleStyle={{ color: "black" }}
           buttonStyle={{ backgroundColor: "white", paddingTop: 12 }}
           containerStyle={styles.searchBar}
-          title="Lahore"
+          title={currentLocation}
         ></Button>
 
         <Button
@@ -197,7 +204,20 @@ export default function Maps({ navigation }) {
       </View>
 
       <View style={{ flex: 1, zIndex: 2 }}>
-        <MapView initialRegion={userLocation} style={styles.map}>
+      <GooglePlacesAutocomplete
+      placeholder='Search'
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(data, details);
+      }}
+      query={{
+        key: 'AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA',
+        language: 'en',
+      }}
+
+   
+    />
+        <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
           {spaces &&
             spaces.map((space) => {
               return (
