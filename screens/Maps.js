@@ -32,13 +32,13 @@ import Account from "./Account";
 import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 import AvatarCustom from "./common/AvatarCustom";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
+import MapViewDirections from "react-native-maps-directions";
 import ParkingRequest from "./ParkingRequest";
 
 export default function Maps({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
-
+  const [Showmarkerdetails, setShowmarkerdetails] = useState(false);
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
   const [camera, setCamera] = useState(false);
@@ -46,6 +46,7 @@ export default function Maps({ navigation }) {
   const [spaces, setSpaces] = useState(null);
   const [currentLocation,setCurrentlocation] =useState("Search")
 
+  var [DirectionsTimer,setDirectionsTimer] = useState(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);
   const [customer, setCustomer] = useState(null);
@@ -87,6 +88,30 @@ export default function Maps({ navigation }) {
   function hello(params) {
     setVisiblesearch(true);
   }
+
+
+  //////////////////////////////// to start interval
+  function startDirections()
+  {
+    
+      if (!DirectionsTimer) {
+        DirectionsTimer = setInterval(() => 
+        {
+          getLocation();
+          }, 2000);
+      }
+    
+  };
+
+  //////////////////////////////// to stop interval
+  function stopDirections()
+  {
+     if (DirectionsTimer) {
+          clearInterval(DirectionsTimer);
+          DirectionsTimer = null;
+     }
+  };
+
 
   function Book(space) {
     setBookedSpace(space);
@@ -236,6 +261,65 @@ export default function Maps({ navigation }) {
         />
       </Overlay>
 
+
+      {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
+      <Overlay overlayStyle={{ padding: 20, width: "80%" }}
+        isVisible={Showmarkerdetails}
+        onBackdropPress={() => {
+          setShowmarkerdetails(!Showmarkerdetails);
+        }}>
+
+        <View
+                      onPress={() => {
+                        console.log(space);
+                        Book(space);
+                      }}
+                      
+                      style={{ width: "100%"}}
+
+                     
+                    >
+                      
+
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Avatar
+                          size={90}
+                          source={{
+                            uri: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+                          }}
+                          containerStyle={{
+                            backgroundColor: "grey",
+                            width: "100%",
+                          }}
+                        ></Avatar>
+
+                        <Text>Price </Text>
+                        <Text>Some Details </Text>
+                        <Text>Some More Details </Text>
+
+                        <Button
+                          onPress={() => {
+                            // Book(e, space);
+
+                            console.log(a);
+                          }}
+                          titleStyle={{ color: "white" }}
+                          buttonStyle={{
+                            backgroundColor: "#5EA0EE",
+                          }}
+                          containerStyle={{}}
+                          title="Book"
+                        ></Button>
+                      </View>
+                    </View>
+      </Overlay>
+      {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
+
       <Overlay
         overlayStyle={{width: "90%" }}
         isVisible={visibleSearch}
@@ -294,6 +378,11 @@ export default function Maps({ navigation }) {
    
     />
         <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
+        <MapViewDirections
+          origin={userLocation}
+          destination={currentLocation}
+          apikey={"AIzaSyDE3pJPmbS7IIT6WgAZnxJ9m77Nqa4UGLU"}
+        />
           {spaces &&
             spaces.map((space) => {
               const a = space;
@@ -305,56 +394,10 @@ export default function Maps({ navigation }) {
                       latitude: space.coordinates.latitude,
                       longitude: space.coordinates.longitude,
                     }}
-                    onPress={() => console.log("bpogasda", space)}
+                    onPress={() => {console.log("bpogasda", space)
+                    setShowmarkerdetails(true)}}
                   >
-                    <Callout
-                      onPress={() => {
-                        console.log(space);
-                        Book(space);
-                      }}
-                      tooltip={false}
-                      style={{ width: 200, height: 200 }}
-                    >
-                      {/* <Account /> */}
 
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Avatar
-                          size={90}
-                          source={{
-                            uri: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-                          }}
-                          containerStyle={{
-                            backgroundColor: "grey",
-                            width: "100%",
-                          }}
-                        ></Avatar>
-
-                        <Text>Price </Text>
-                        <Text>Some Details </Text>
-                        <Text>Some More Details </Text>
-
-                        <Button
-                          onPress={() => {
-                            // Book(e, space);
-
-                            console.log(a);
-                          }}
-                          titleStyle={{ color: "white" }}
-                          buttonStyle={{
-                            backgroundColor: "#5EA0EE",
-                          }}
-                          containerStyle={{}}
-                          title="Book"
-                        ></Button>
-
-                        {/* <Alert>Nooo</Alert> */}
-                      </View>
-                    </Callout>
                   </Marker>
                 );
               else {
