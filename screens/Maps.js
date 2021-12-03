@@ -10,15 +10,13 @@ import {
   Dimensions,
   SectionList,
 } from "react-native";
-import MapView , { Callout} from "react-native-maps";
+import MapView, { Callout } from "react-native-maps";
 import {
   TabView,
   Tab,
   Button,
   Overlay,
   Switch,
-
-
   Divider,
 } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -35,6 +33,7 @@ import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 import AvatarCustom from "./common/AvatarCustom";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
+import ParkingRequest from "./ParkingRequest";
 
 export default function Maps({ navigation }) {
   const [visible, setVisible] = useState(false);
@@ -47,6 +46,37 @@ export default function Maps({ navigation }) {
   const [spaces, setSpaces] = useState(null);
   const [currentLocation,setCurrentlocation] =useState("Search")
 
+  const [visibleRequest, setVisibleRequest] = useState(false);
+  const [user, setUser] = useState(null);
+  const [customer, setCustomer] = useState(null);
+  const [bookedSpace, setBookedSpace] = useState(null);
+  const toggleOverlayRequest = () => {
+    setVisibleRequest(!visibleRequest);
+  };
+  if (user) {
+    db.collection("users")
+      .where("id", "==", user.uid)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          console.log("hehrehrhehrehrhehrer");
+
+          if (change.type === "added") {
+            console.log("New city: ", change.doc.data());
+          }
+          if (change.type === "modified") {
+            console.log("Modified city: ", change.doc.data());
+            if (change.doc.data().activeRequest) {
+              setVisibleRequest(true);
+              setCustomer(change.doc.data().activeRequest.id);
+            }
+          }
+          if (change.type === "removed") {
+            console.log("Removed city: ", change.doc.data());
+          }
+        });
+      });
+  }
+
   const [reigon, setRegion] = useState({
     latitude: 31.476,
     longitude: 74.3045,
@@ -56,6 +86,44 @@ export default function Maps({ navigation }) {
   const [x, setx] = useState({ latitude: 31.466, longitude: 74.3045 });
   function hello(params) {
     setVisiblesearch(true);
+  }
+
+  function Book(space) {
+    setBookedSpace(space);
+    console.log("BOOK NOW", space);
+    const b = null;
+    db.collection("users")
+      .doc(space.owner)
+      .update({
+        activeRequest: {
+          status: 1,
+          id: user.uid,
+          slot_id: space.id,
+        },
+      })
+      .then(function () {
+        console.log("Frank food updated");
+      });
+    // const a = db.collection("users").doc(''));
+    // console.log(a);
+  }
+
+  function AcceptRequest(customer, bookedSpace) {
+    db.collection("users")
+      .doc(customer)
+      .update({
+        space: {
+          id: bookedSpace.id,
+        },
+      })
+      .then(function () {
+        console.log("Frank food updated");
+      });
+    console.log("accepted");
+  }
+
+  function RejectRequest() {
+    console.log("rejected");
   }
 
   const getGeohashRange = (
@@ -79,13 +147,6 @@ export default function Maps({ navigation }) {
       console.log("done");
       return resolve({ lower, upper });
     });
-
-    // console.log("bogaobga");
-
-    // return {
-    //   lower,
-    //   upper,
-    // };
   };
 
   useEffect(() => {
@@ -121,6 +182,13 @@ export default function Maps({ navigation }) {
           12
         );
         console.log("rang", range);
+
+        auth.onAuthStateChanged((authUser) => {
+          if (authUser) {
+            setUser(authUser);
+            console.log("sdsadsadsadsadsadsad", user);
+          }
+        });
         const a = [];
         db.collection("spaces")
           .where("ghash", ">=", range.lower)
@@ -143,6 +211,14 @@ export default function Maps({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
+      <ParkingRequest
+        visible={visibleRequest}
+        toggleOverlay={toggleOverlayRequest}
+        accept={AcceptRequest}
+        reject={RejectRequest}
+        customer={customer}
+        bookedSpace={bookedSpace}
+      />
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
         isVisible={visible}
@@ -220,47 +296,70 @@ export default function Maps({ navigation }) {
         <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
           {spaces &&
             spaces.map((space) => {
-              return (
-                <Marker
-                  coordinate={{
-                    latitude: space.coordinates.latitude,
-                    longitude: space.coordinates.longitude,
-                  }}
-                  onPress={()=>console.log("im here")}
-                >
-<Callout onPress={()=>{
-  console.log("callout")}
+              const a = space;
+              console.log("user", user);
+              if (user && user.uid !== space.owner)
+                return (
+                  <Marker
+                    coordinate={{
+                      latitude: space.coordinates.latitude,
+                      longitude: space.coordinates.longitude,
+                    }}
+                    onPress={() => console.log("bpogasda", space)}
+                  >
+                    <Callout
+                      onPress={() => {
+                        console.log(space);
+                        Book(space);
+                      }}
+                      tooltip={false}
+                      style={{ width: 200, height: 200 }}
+                    >
+                      {/* <Account /> */}
 
-}
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Avatar
+                          size={90}
+                          source={{
+                            uri: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+                          }}
+                          containerStyle={{
+                            backgroundColor: "grey",
+                            width: "100%",
+                          }}
+                        ></Avatar>
 
-  tooltip={false} style={{width:200,height:200}}>
- {/* <Account /> */}
- 
- <View style={{alignItems:"center"}}>
- <Avatar
-            size={90}
-            
-            source={{
-                uri:
-                  'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                 }}
-            containerStyle={{ backgroundColor: 'grey' ,width:"100%"}}
-          >
-            
-          </Avatar>
+                        <Text>Price </Text>
+                        <Text>Some Details </Text>
+                        <Text>Some More Details </Text>
 
-<Text >Price </Text>
-<Text >Some Details </Text>
-<Text >Some More Details </Text>
+                        <Button
+                          onPress={() => {
+                            // Book(e, space);
 
+                            console.log(a);
+                          }}
+                          titleStyle={{ color: "white" }}
+                          buttonStyle={{
+                            backgroundColor: "#5EA0EE",
+                          }}
+                          containerStyle={{}}
+                          title="Book"
+                        ></Button>
 
-
-  {/* <Alert>Nooo</Alert> */}
-  </View>
-</Callout>
-
-                </Marker>
-              );
+                        {/* <Alert>Nooo</Alert> */}
+                      </View>
+                    </Callout>
+                  </Marker>
+                );
+              else {
+                return null;
+              }
             })}
         </MapView>
       </View>

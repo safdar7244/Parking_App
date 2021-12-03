@@ -11,7 +11,7 @@ import { Button, Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 // import { StackActions, NavigationActions } from "react-navigation";
 
 export default function Register({ navigation, route }) {
@@ -21,6 +21,7 @@ export default function Register({ navigation, route }) {
   const [password, setPassword] = useState("");
   const signUp = async () => {
     try {
+      console.log(email, password);
       const authUser = await auth.createUserWithEmailAndPassword(
         email,
         password
@@ -28,6 +29,39 @@ export default function Register({ navigation, route }) {
       const a = await authUser.user.updateProfile({
         displayName: name,
       });
+
+      console.log("a", authUser.uid);
+
+      const obj = {
+        email,
+        name,
+      };
+
+      auth.onAuthStateChanged((authUser) => {
+        if (authUser) {
+          console.log(authUser);
+          obj.id = authUser.uid;
+
+          db.collection("users")
+            .doc(obj.id)
+            .set(obj)
+            .then(() => {
+              console.log("Document successfully written!");
+            })
+            .catch((error) => {
+              console.error("Error writing document: ", error);
+            });
+        }
+      });
+
+      // db.collection("users")
+      //   .add(user)
+      //   .then(() => {
+      //     console.log("Document successfully written!");
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error writing document: ", error);
+      //   });
 
       navigation.reset({
         index: 0,
