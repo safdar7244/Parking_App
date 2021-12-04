@@ -51,6 +51,7 @@ export default function Maps({ navigation }) {
   const [user, setUser] = useState(null);
   const [customer, setCustomer] = useState(null);
   const [bookedSpace, setBookedSpace] = useState(null);
+  const [requestSpace,setrequestSpace] = useState(null);
   const toggleOverlayRequest = () => {
     setVisibleRequest(!visibleRequest);
   };
@@ -62,17 +63,17 @@ export default function Maps({ navigation }) {
           console.log("hehrehrhehrehrhehrer");
 
           if (change.type === "added") {
-            console.log("New city: ", change.doc.data());
+            // console.log("New city: ", change.doc.data());
           }
           if (change.type === "modified") {
-            console.log("Modified city: ", change.doc.data());
+            // console.log("Modified city: ", change.doc.data());
             if (change.doc.data().activeRequest) {
               setVisibleRequest(true);
               setCustomer(change.doc.data().activeRequest.id);
             }
           }
           if (change.type === "removed") {
-            console.log("Removed city: ", change.doc.data());
+            // console.log("Removed city: ", change.doc.data());
           }
         });
       });
@@ -114,6 +115,8 @@ export default function Maps({ navigation }) {
 
 
   function Book(space) {
+
+    
     setBookedSpace(space);
     console.log("BOOK NOW", space);
     const b = null;
@@ -130,7 +133,7 @@ export default function Maps({ navigation }) {
         console.log("Frank food updated");
       });
     // const a = db.collection("users").doc(''));
-    // console.log(a);
+    //  console.log(a);
   }
 
   function AcceptRequest(customer, bookedSpace) {
@@ -200,18 +203,18 @@ export default function Maps({ navigation }) {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         });
-        console.log("hererererer",location);
+        // console.log("hererererer",location);
         const range = await getGeohashRange(
           location.coords.latitude,
           location.coords.longitude,
           12
         );
-        console.log("rang", range);
+        // console.log("rang", range);
 
         auth.onAuthStateChanged((authUser) => {
           if (authUser) {
             setUser(authUser);
-            console.log("sdsadsadsadsadsadsad", user);
+            // console.log("sdsadsadsadsadsadsad", user);
           }
         });
         const a = [];
@@ -221,7 +224,7 @@ export default function Maps({ navigation }) {
           .onSnapshot((snapshot) => {
             // Your own custom logic here
             snapshot.forEach((doc) => {
-              console.log(doc.id, doc.data());
+              // console.log(doc.id, doc.data());
               let b = doc.data();
               b.id = doc.id;
               a.push(b);
@@ -271,7 +274,7 @@ export default function Maps({ navigation }) {
 
         <View
                       onPress={() => {
-                        console.log(space);
+                        // console.log(space);
                         Book(space);
                       }}
                       
@@ -304,9 +307,12 @@ export default function Maps({ navigation }) {
 
                         <Button
                           onPress={() => {
-                            // Book(e, space);
+                            // onPress={() => {
+                        // console.log(space);
+                        Book(requestSpace);
+  
 
-                            console.log(a);
+                            // console.log(a);
                           }}
                           titleStyle={{ color: "white" }}
                           buttonStyle={{
@@ -368,7 +374,7 @@ export default function Maps({ navigation }) {
       placeholder='Search'
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
-        console.log(data, details);
+        // console.log(data, details);
       }}
       query={{
         key: 'AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA',
@@ -379,14 +385,17 @@ export default function Maps({ navigation }) {
     />
         <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
         <MapViewDirections
+          lineDashPattern={[0]}
           origin={userLocation}
           destination={currentLocation}
-          apikey={"AIzaSyDE3pJPmbS7IIT6WgAZnxJ9m77Nqa4UGLU"}
+          apikey={"AIzaSyBF4pISVkNESXEyzdHxDXZjupKC9n-xyTQ"}
+          strokeWidth={3}
+          strokeColor="blue"
         />
           {spaces &&
             spaces.map((space) => {
               const a = space;
-              console.log("user", user);
+              // console.log("user", user);
               if (user && user.uid !== space.owner)
                 return (
                   <Marker
@@ -394,7 +403,8 @@ export default function Maps({ navigation }) {
                       latitude: space.coordinates.latitude,
                       longitude: space.coordinates.longitude,
                     }}
-                    onPress={() => {console.log("bpogasda", space)
+                    onPress={() => {
+                    setrequestSpace(space)
                     setShowmarkerdetails(true)}}
                   >
 
