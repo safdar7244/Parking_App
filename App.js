@@ -15,6 +15,8 @@ import AccountParkings from "./screens/AccountParkings";
 import MapsView from "./screens/MapsView";
 import AccountAddParking from "./screens/AccountAddParking";
 import Location from "./screens/Location";
+import TempScreen from "./screens/temp";
+
 const Stack = createNativeStackNavigator();
 
 const globalScreenOptions = {
@@ -45,6 +47,11 @@ export default function MyStack() {
           name="Account"
           component={Account}
           options={{ title: "", headerShown: true }}
+        />
+        <Stack.Screen
+          name="Temp"
+          component={TempScreen}
+          options={{ title: "", headerShown: false }}
         />
         <Stack.Screen
           name="Maps"

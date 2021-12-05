@@ -296,7 +296,7 @@ db.collection("users")
   };
 
 
-  function getLocationCurrent(){
+  async function getLocationCurrent(){
     //////console.log("shdaudasdk");
     const verifyPersmission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -357,66 +357,66 @@ db.collection("users")
   }
   
 
-  useEffect(() => {
-    ////console.log("shdaudasdk");
-    const verifyPersmission = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return false;
-      }
-      return true;
-    };
-    const getLocation = async () => {
-      const done = await verifyPersmission();
-      if (!done) {
-        return;
-      }
-      try {
-        const location = await Location.getCurrentPositionAsync({
-          timeout: 4000,
-        });
+  // useEffect(() => {
+  //   ////console.log("shdaudasdk");
+  //   const verifyPersmission = async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       setErrorMsg("Permission to access location was denied");
+  //       return false;
+  //     }
+  //     return true;
+  //   };
+  //   const getLocation = async () => {
+  //     const done = await verifyPersmission();
+  //     if (!done) {
+  //       return;
+  //     }
+  //     try {
+  //       const location = await Location.getCurrentPositionAsync({
+  //         timeout: 4000,
+  //       });
 
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.0009,
-          longitudeDelta: 0.0020,
-        });
-        // ////console.log("hererererer",location);
-        const range = await getGeohashRange(
-          location.coords.latitude,
-          location.coords.longitude,
-          12
-        );
-        // ////console.log("rang", range);
+  //       setUserLocation({
+  //         latitude: location.coords.latitude,
+  //         longitude: location.coords.longitude,
+  //         latitudeDelta: 0.0009,
+  //         longitudeDelta: 0.0020,
+  //       });
+  //       // ////console.log("hererererer",location);
+  //       const range = await getGeohashRange(
+  //         location.coords.latitude,
+  //         location.coords.longitude,
+  //         12
+  //       );
+  //       // ////console.log("rang", range);
 
-        auth.onAuthStateChanged((authUser) => {
-          if (authUser) {
-            ////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
-            setUser(authUser);
-            // ////console.log("sdsadsadsadsadsadsad", user);
-          }
-        });
-        const a = [];
-        db.collection("spaces")
-          .where("ghash", ">=", range.lower)
-          .where("ghash", "<=", range.upper)
-          .onSnapshot((snapshot) => {
-            // Your own custom logic here
-            snapshot.forEach((doc) => {
-              // ////console.log(doc.id, doc.data());
-              let b = doc.data();
-              b.id = doc.id;
-              a.push(b);
-            });
-            setSpaces(a);
-          });
-      } catch (err) {}
-    };
-    getLocation();
-  }, []);
-  ////
+  //       auth.onAuthStateChanged((authUser) => {
+  //         if (authUser) {
+  //           ////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
+  //           setUser(authUser);
+  //           // ////console.log("sdsadsadsadsadsadsad", user);
+  //         }
+  //       });
+  //       const a = [];
+  //       db.collection("spaces")
+  //         .where("ghash", ">=", range.lower)
+  //         .where("ghash", "<=", range.upper)
+  //         .onSnapshot((snapshot) => {
+  //           // Your own custom logic here
+  //           snapshot.forEach((doc) => {
+  //             // ////console.log(doc.id, doc.data());
+  //             let b = doc.data();
+  //             b.id = doc.id;
+  //             a.push(b);
+  //           });
+  //           setSpaces(a);
+  //         });
+  //     } catch (err) {}
+  //   };
+  //   getLocation();
+  // }, []);
+  // ////
 
   return (
     
@@ -582,6 +582,7 @@ db.collection("users")
         <Button
           icon={<Icon name="adjust" size={30} color="green" />}
           buttonStyle={styles.filterButton}
+          onPress={getLocationCurrent}
         ></Button>
       </View>
 

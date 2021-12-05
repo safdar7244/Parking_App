@@ -23,15 +23,16 @@ export default function Login({ navigation, route }) {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         //console.log("dasdsdasd");
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: "Maps",
-              params: { someParam: "Param1" },
-            },
-          ],
-        });
+        // navigation.reset({
+        //   index: 0,
+        //   routes: [
+        //     {
+        //       name: "Maps",
+        //       params: { someParam: "Param1" },
+        //     },
+        //   ],
+        // });
+        navigation.replace('Maps');
       })
       .catch((err) => {
         alert(err);
