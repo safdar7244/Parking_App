@@ -19,7 +19,7 @@ export default function City(props){
       fetchDetails={true}
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
-        console.log(details.address_components[0].long_name)
+        ////console.log(details.address_components[0].long_name)
         props.setUserLocation(
           {latitude: details.geometry.location.lat,
           longitude: details.geometry.location.lng,

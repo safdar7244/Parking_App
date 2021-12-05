@@ -21,7 +21,7 @@ export default function Register({ navigation, route }) {
   const [password, setPassword] = useState("");
   const signUp = async () => {
     try {
-      console.log(email, password);
+      //console.log(email, password);
       const authUser = await auth.createUserWithEmailAndPassword(
         email,
         password
@@ -30,7 +30,7 @@ export default function Register({ navigation, route }) {
         displayName: name,
       });
 
-      console.log("a", authUser.uid);
+      //console.log("a", authUser.uid);
 
       const obj = {
         email,
@@ -39,14 +39,14 @@ export default function Register({ navigation, route }) {
 
       auth.onAuthStateChanged((authUser) => {
         if (authUser) {
-          console.log(authUser);
+          //console.log(authUser);
           obj.id = authUser.uid;
 
           db.collection("users")
             .doc(obj.id)
             .set(obj)
             .then(() => {
-              console.log("Document successfully written!");
+              //console.log("Document successfully written!");
             })
             .catch((error) => {
               console.error("Error writing document: ", error);
@@ -57,7 +57,7 @@ export default function Register({ navigation, route }) {
       // db.collection("users")
       //   .add(user)
       //   .then(() => {
-      //     console.log("Document successfully written!");
+      //     //console.log("Document successfully written!");
       //   })
       //   .catch((error) => {
       //     console.error("Error writing document: ", error);

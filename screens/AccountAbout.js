@@ -34,7 +34,7 @@ export default function AccountAbout({navigation}){
             containerStyle={{ backgroundColor: 'grey', }}
           >
             <Avatar.Accessory size={0} 
-            onPress={() => console.log("Works!")}
+            onPress={() => {}}
 
             />
           </Avatar>

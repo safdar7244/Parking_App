@@ -21,10 +21,10 @@ import MapView, { Marker, Callout } from "react-native-maps";
 
 // import TabBottom from "./TabBottom";
 export default function MapsView(props, { navigation }) {
-  // console.log("mapsview props", props);
+  // //console.log("mapsview props", props);
 
   const markerHandler = (event) => {
-    console.log(event.nativeEvent.coordinate.latitude);
+    //console.log(event.nativeEvent.coordinate.latitude);
     props.setUserLocation({
       latitude: event.nativeEvent.coordinate.latitude,
       longitude: event.nativeEvent.coordinate.longitude,
@@ -34,7 +34,7 @@ export default function MapsView(props, { navigation }) {
   };
 
   useEffect(() => {
-    console.log("shdaudasdk");
+    //console.log("shdaudasdk");
     const verifyPersmission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -79,7 +79,7 @@ export default function MapsView(props, { navigation }) {
             }}
             draggable={true}
             onDragEnd={(e) => {
-              console.log("sadsad", e.nativeEvent.coordinate);
+              //console.log("sadsad", e.nativeEvent.coordinate);
             }}
           >
             <Callout>

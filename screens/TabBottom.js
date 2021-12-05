@@ -16,11 +16,11 @@ import AccountEdit from './AccountEdit';
 export default function TabBottom(props){
   // const {navigate} = useNavigation();
 
-  // console.log("ppp",props.navigate)
+  // //console.log("ppp",props.navigate)
     const [index, setIndex] = useState(0)
     
 //   useEffect(()=>{
-// console.log("index Changed")
+// //console.log("index Changed")
 // if(index==0){
 //   // props.navigate.navigate('Maps')
 
@@ -39,15 +39,15 @@ export default function TabBottom(props){
       <Tab indicatorStyle={{backgroundColor:"white"}}  value={index} onChange={setIndex} >
         <Tab.Item
         onPressIn={()=>{
-          console.log("pressed1")
+          //console.log("pressed1")
           props.navigate.navigate('Maps')
           
           }} 
         icon={ <Icon name="place" size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} containerStyle={{color:"black"}} titleStyle={styles.tileButton} title="Térkép" />
-        <Tab.Item icon={ <Icon name="confirmation-number"  onPress={()=>console.log("pressed2")} size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title="Jegyek" />
+        <Tab.Item icon={ <Icon name="confirmation-number"  onPress={()=> {}} size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title="Jegyek" />
         <Tab.Item 
         onPressIn={()=>{
-          console.log("pressed3")
+          //console.log("pressed3")
           props.navigate.navigate('Account')
           
           }} 

@@ -22,7 +22,7 @@ export default function Login({ navigation, route }) {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        console.log("dasdsdasd");
+        //console.log("dasdsdasd");
         navigation.reset({
           index: 0,
           routes: [

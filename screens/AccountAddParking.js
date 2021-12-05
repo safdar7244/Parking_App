@@ -124,6 +124,8 @@ export default function AccountAddParking({ navigation }) {
           .add(obj)
           .then(() => {
             console.log("Document successfully written!");
+                    navigation.replace("Maps")
+
           })
           .catch((error) => {
             console.error("Error writing document: ", error);
@@ -132,6 +134,7 @@ export default function AccountAddParking({ navigation }) {
     });
 
     console.log(obj);
+
   };
   return (
     <ScrollView

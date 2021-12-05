@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Button, Overlay } from "react-native-elements";
 
 function ParkingRequest(props) {
-  console.log("props", props);
+  //console.log("props", props);
   return (
     <View style={styles.container}>
       <Overlay
@@ -24,7 +24,11 @@ function ParkingRequest(props) {
         >
           <Button
             buttonStyle={styles.button1}
-            onPress={() => props.accept(props.customer, props.bookedSpace)}
+            onPress={() => {
+              //console.log("customer: ",props.customer,"bookedspace: ",props.bookedspace)
+              props.accept(props.customer, props.bookedSpace)}
+            
+            }
             title="Accept"
           />
           <Button

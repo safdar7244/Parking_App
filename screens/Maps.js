@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useRef } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   Alert,
   Dimensions,
   SectionList,
+  ActivityIndicator,
 } from "react-native";
 import MapView, { Callout } from "react-native-maps";
 import {
@@ -34,24 +35,36 @@ import AvatarCustom from "./common/AvatarCustom";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from "react-native-maps-directions";
 import ParkingRequest from "./ParkingRequest";
-
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 export default function Maps({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
   const [Showmarkerdetails, setShowmarkerdetails] = useState(false);
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
+
   const [camera, setCamera] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [spaces, setSpaces] = useState(null);
   const [currentLocation,setCurrentlocation] =useState("Search")
-
-  var [DirectionsTimer,setDirectionsTimer] = useState(null);
+  const DirectionsTimer = useRef(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);
+    const [requestAccepted, setRequestAccepted] = useState(0);
+
   const [customer, setCustomer] = useState(null);
   const [bookedSpace, setBookedSpace] = useState(null);
   const [requestSpace,setrequestSpace] = useState(null);
+  const [startGps,setStartGps] = useState(false);
+
+  
+    const [requestRejected, setRequestRejected] = useState(false);
+
+  const [loadingScreen, setLoadingScreen] = useState(false);
+
   const toggleOverlayRequest = () => {
     setVisibleRequest(!visibleRequest);
   };
@@ -60,20 +73,39 @@ export default function Maps({ navigation }) {
       .where("id", "==", user.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          console.log("hehrehrhehrehrhehrer");
+          ////console.log("hehrehrhehrehrhehrer");
 
           if (change.type === "added") {
-            // console.log("New city: ", change.doc.data());
+            // //console.log("New city: ", change.doc.data());
           }
           if (change.type === "modified") {
-            // console.log("Modified city: ", change.doc.data());
-            if (change.doc.data().activeRequest) {
+            // //console.log("Modified city: ", change.doc.data());
+                        if (change.doc.data().activeRequest) {
+
+            if (change.doc.data().activeRequest.status==1) {
               setVisibleRequest(true);
+              ////console.log("SET CUSTOMER  : ",change.doc.data().activeRequest.id)
+                            ////console.log("SET BOOKED SPACES  : ",change.doc.data().activeRequest.slot_id)
+
               setCustomer(change.doc.data().activeRequest.id);
+                //khizer bit
+              // setBookedSpace(change.doc.data().activeRequest.slot_id)
             }
           }
+             if (change.doc.data().acceptedSession) {
+              if(change.doc.data().acceptedSession.status===1){
+              setVisibleRequest(false);
+            
+
+              // setCustomer(change.doc.data().activeRequest.id);
+
+
+              // setBookedSpace(change.doc.data().activeRequest.slot_id)
+            }
+          }
+          }
           if (change.type === "removed") {
-            // console.log("Removed city: ", change.doc.data());
+            // //console.log("Removed city: ", change.doc.data());
           }
         });
       });
@@ -95,22 +127,25 @@ export default function Maps({ navigation }) {
   function startDirections()
   {
     
-      if (!DirectionsTimer) {
-        DirectionsTimer = setInterval(() => 
+      // if (!DirectionsTimer) {
+        DirectionsTimer.current = setInterval(() => 
         {
-          getLocation();
-          }, 2000);
-      }
+          getLocationCurrent();
+          }, 4000);
+      // }
     
   };
 
   //////////////////////////////// to stop interval
   function stopDirections()
   {
-     if (DirectionsTimer) {
-          clearInterval(DirectionsTimer);
-          DirectionsTimer = null;
-     }
+    ////console.log("\n\n\n\n\n\n it is",DirectionsTimer)
+     
+          ////console.log("\n\n\n\n\n\n\n\nhello stop")
+          ////console.log("hello stop")
+          clearInterval(DirectionsTimer.current);
+          
+     
   };
 
 
@@ -118,7 +153,8 @@ export default function Maps({ navigation }) {
 
     
     setBookedSpace(space);
-    console.log("BOOK NOW", space);
+
+    ////console.log("BOOK NOW",space)
     const b = null;
     db.collection("users")
       .doc(space.owner)
@@ -130,28 +166,110 @@ export default function Maps({ navigation }) {
         },
       })
       .then(function () {
-        console.log("Frank food updated");
+        ////console.log("Frank food updated");
       });
     // const a = db.collection("users").doc(''));
-    //  console.log(a);
+    //  ////console.log(a);
   }
 
+  useEffect(()=>{
+ db.collection("users")
+      .where("id", "==", auth.currentUser.uid)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          ////console.log("hehrehrhehrehrhehrer");
+
+          if (change.type === "added") {
+            // ////console.log("New city: ", change.doc.data());
+          }
+          if (change.type === "modified") {
+            // ////console.log("Modified city: ", change.doc.data());
+              
+             if (change.doc.data().acceptedSession) {
+              if(change.doc.data().acceptedSession.status===1){
+              ////console.log("\n\n\n\nHELLO N2N","No : ",visibleRequest,bookedSpace)
+              setStartGps(true)
+              setLoadingScreen(false)
+              setShowmarkerdetails(false);
+              startDirections();
+              // setCustomer(change.doc.data().activeRequest.id);
+
+
+              // setBookedSpace(change.doc.data().activeRequest.slot_id)
+            }
+            else
+            if(change.doc.data().acceptedSession.status===-1){
+              ////console.log("\n\n\n\nRejected",visibleRequest,bookedSpace)
+              setLoadingScreen(false)
+              setRequestRejected(true)
+              // startDirections();
+              // setCustomer(change.doc.data().activeRequest.id);
+
+
+              // setBookedSpace(change.doc.data().activeRequest.slot_id)
+            }
+          }
+          }
+          if (change.type === "removed") {
+            // ////console.log("Removed city: ", change.doc.data());
+          }
+        });
+      });
+  },[])
+
+
   function AcceptRequest(customer, bookedSpace) {
-    db.collection("users")
+
+      db.collection("users")
       .doc(customer)
       .update({
-        space: {
-          id: bookedSpace.id,
+        acceptedSession: {
+          status: 1,
         },
       })
       .then(function () {
-        console.log("Frank food updated");
+    ////console.log("accepte and updatedd");
+    setVisibleRequest(false);
       });
-    console.log("accepted");
   }
+function resetBackend(){
+  ////console.log("\n\n\n\n\n\n\n\n\n\n\ncustomer : ",customer)
+  ////console.log("Owner : ",bookedSpace)
+ db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        acceptedSession: {
+          status: 0,
+        },
+      })
+      .then(function () {
+        //////console.log("updating backend1 done")
+})
+db.collection("users")
+      .doc(bookedSpace.owner)
+      .update({
+        activeRequest: {
+          status: 0,
+        },
+      })
+      .then(function () {
+        //////console.log("updating backend2 done")
+})
+}
 
   function RejectRequest() {
-    console.log("rejected");
+      db.collection("users")
+      .doc(customer)
+      .update({
+        acceptedSession: {
+          status: -1,
+        },
+      })
+      .then(function () {
+    //////console.log("rejected and updatedd");
+    setVisibleRequest(false);
+      });
+
   }
 
   const getGeohashRange = (
@@ -160,7 +278,7 @@ export default function Maps({ navigation }) {
     distance // miles
   ) => {
     return new Promise((resolve) => {
-      console.log("here");
+      //////console.log("here");
       const lat = 0.0144927536231884; // degrees latitude per mile
       const lon = 0.0181818181818182; // degrees longitude per mile
 
@@ -172,13 +290,14 @@ export default function Maps({ navigation }) {
 
       const lower = geohash.encode(lowerLat, lowerLon);
       const upper = geohash.encode(upperLat, upperLon);
-      console.log("done");
+      //////console.log("done");
       return resolve({ lower, upper });
     });
   };
 
-  useEffect(() => {
-    console.log("shdaudasdk");
+
+  function getLocationCurrent(){
+    //////console.log("shdaudasdk");
     const verifyPersmission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -200,21 +319,22 @@ export default function Maps({ navigation }) {
         setUserLocation({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0009,
+          longitudeDelta: 0.0020,
         });
-        // console.log("hererererer",location);
+        // ////console.log("hererererer",location);
         const range = await getGeohashRange(
           location.coords.latitude,
           location.coords.longitude,
           12
         );
-        // console.log("rang", range);
+        // ////console.log("rang", range);
 
         auth.onAuthStateChanged((authUser) => {
           if (authUser) {
+            ////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
             setUser(authUser);
-            // console.log("sdsadsadsadsadsadsad", user);
+            // ////console.log("sdsadsadsadsadsadsad", user);
           }
         });
         const a = [];
@@ -224,7 +344,68 @@ export default function Maps({ navigation }) {
           .onSnapshot((snapshot) => {
             // Your own custom logic here
             snapshot.forEach((doc) => {
-              // console.log(doc.id, doc.data());
+              // ////console.log(doc.id, doc.data());
+              let b = doc.data();
+              b.id = doc.id;
+              a.push(b);
+            });
+            setSpaces(a);
+          });
+      } catch (err) {}
+    };
+    getLocation();
+  }
+  
+
+  useEffect(() => {
+    ////console.log("shdaudasdk");
+    const verifyPersmission = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return false;
+      }
+      return true;
+    };
+    const getLocation = async () => {
+      const done = await verifyPersmission();
+      if (!done) {
+        return;
+      }
+      try {
+        const location = await Location.getCurrentPositionAsync({
+          timeout: 4000,
+        });
+
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.0009,
+          longitudeDelta: 0.0020,
+        });
+        // ////console.log("hererererer",location);
+        const range = await getGeohashRange(
+          location.coords.latitude,
+          location.coords.longitude,
+          12
+        );
+        // ////console.log("rang", range);
+
+        auth.onAuthStateChanged((authUser) => {
+          if (authUser) {
+            ////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
+            setUser(authUser);
+            // ////console.log("sdsadsadsadsadsadsad", user);
+          }
+        });
+        const a = [];
+        db.collection("spaces")
+          .where("ghash", ">=", range.lower)
+          .where("ghash", "<=", range.upper)
+          .onSnapshot((snapshot) => {
+            // Your own custom logic here
+            snapshot.forEach((doc) => {
+              // ////console.log(doc.id, doc.data());
               let b = doc.data();
               b.id = doc.id;
               a.push(b);
@@ -238,14 +419,21 @@ export default function Maps({ navigation }) {
   ////
 
   return (
+    
     <View style={{ flex: 1 }}>
-      <ParkingRequest
+      {////console.log("GPS  ????? : ",startGps)
+}
+
+  
+        <ParkingRequest
         visible={visibleRequest}
         toggleOverlay={toggleOverlayRequest}
         accept={AcceptRequest}
         reject={RejectRequest}
         customer={customer}
         bookedSpace={bookedSpace}
+        
+
       />
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
@@ -272,18 +460,7 @@ export default function Maps({ navigation }) {
           setShowmarkerdetails(!Showmarkerdetails);
         }}>
 
-        <View
-                      onPress={() => {
-                        // console.log(space);
-                        Book(space);
-                      }}
-                      
-                      style={{ width: "100%"}}
-
-                     
-                    >
-                      
-
+        <View style={{ width: "100%"}}                    >
                       <View
                         style={{
                           backgroundColor: "white",
@@ -305,15 +482,22 @@ export default function Maps({ navigation }) {
                         <Text>Some Details </Text>
                         <Text>Some More Details </Text>
 
-                        <Button
+                       {loadingScreen ? 
+                        <View style={{flex:1,padding:20}}>
+                        <ActivityIndicator size="large" color="#0000ff"/>
+                          </View>
+                          :
+                          <Button
                           onPress={() => {
+                            setLoadingScreen(true)
                             // onPress={() => {
-                        // console.log(space);
+                        // ////console.log(space);
                         Book(requestSpace);
   
 
-                            // console.log(a);
+                            // ////console.log(a);
                           }}
+
                           titleStyle={{ color: "white" }}
                           buttonStyle={{
                             backgroundColor: "#5EA0EE",
@@ -321,6 +505,11 @@ export default function Maps({ navigation }) {
                           containerStyle={{}}
                           title="Book"
                         ></Button>
+                          }
+                          {
+                            requestRejected && <Text>Your Request was Rejected</Text>
+
+                          }
                       </View>
                     </View>
       </Overlay>
@@ -335,6 +524,33 @@ export default function Maps({ navigation }) {
       >
         <City setUserLocation={setUserLocation} setCurrentlocation={setCurrentlocation} />
       </Overlay>
+
+     {startGps && <View
+        style={{
+          position: "absolute",
+          width: "100%",
+          zIndex: 10,
+          bottom: '20%',
+          flexDirection: "row",
+          justifyContent:"center",
+          alignItems:"center"
+        }}
+      >
+        <Button
+                          onPress={() => {
+                            setStartGps(false)
+                            stopDirections();
+                            resetBackend();
+                          }}
+
+                          titleStyle={{ color: "white" }}
+                          buttonStyle={{
+                            backgroundColor: "red",
+                          }}
+                          containerStyle={{}}
+                          title="stop navigation"
+        ></Button> 
+      </View>}
 
       <View
         style={{
@@ -374,7 +590,7 @@ export default function Maps({ navigation }) {
       placeholder='Search'
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
-        // console.log(data, details);
+        // ////console.log(data, details);
       }}
       query={{
         key: 'AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA',
@@ -384,18 +600,18 @@ export default function Maps({ navigation }) {
    
     />
         <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
-        <MapViewDirections
-          lineDashPattern={[0]}
+       {startGps && <MapViewDirections
+          lineDashPattern={[1]}
           origin={userLocation}
-          destination={currentLocation}
+          destination={bookedSpace.coordinates}
           apikey={"AIzaSyBF4pISVkNESXEyzdHxDXZjupKC9n-xyTQ"}
           strokeWidth={3}
           strokeColor="blue"
-        />
+        />}
           {spaces &&
             spaces.map((space) => {
               const a = space;
-              // console.log("user", user);
+              // ////console.log("user", user);
               if (user && user.uid !== space.owner)
                 return (
                   <Marker
