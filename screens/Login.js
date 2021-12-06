@@ -11,7 +11,7 @@ import { Button, Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { data } from "./FormsData/formData";
+// import { data } from "./FormsData/formData";
 import { auth } from "../firebase";
 
 export default function Login({ navigation, route }) {
@@ -19,20 +19,21 @@ export default function Login({ navigation, route }) {
   const [password, setPassword] = useState("");
 
   const logIn = () => {
+    // navigation.replace('Temp');
+
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        //console.log("dasdsdasd");
-        // navigation.reset({
-        //   index: 0,
-        //   routes: [
-        //     {
-        //       name: "Maps",
-        //       params: { someParam: "Param1" },
-        //     },
-        //   ],
-        // });
-        navigation.replace('Maps');
+        console.log("dasdsdasd");
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: "Maps",
+              params: { someParam: "Param1" },
+            },
+          ],
+        });
       })
       .catch((err) => {
         alert(err);
@@ -89,7 +90,7 @@ export default function Login({ navigation, route }) {
             Nincs még fiókod? Regisztrálj!
           </Text>
 
-          <Button
+          {/* <Button
             icon={
               <Icon
                 name="facebook-square"
@@ -107,11 +108,11 @@ export default function Login({ navigation, route }) {
             }}
           >
             {" "}
-          </Button>
+          </Button> */}
 
           <View style={{ height: 10 }}></View>
 
-          <Button
+          {/* <Button
             icon={
               <Icon
                 name="google"
@@ -130,7 +131,7 @@ export default function Login({ navigation, route }) {
             }}
           >
             {" "}
-          </Button>
+          </Button> */}
 
           <View style={{ height: 50 }}></View>
         </View>

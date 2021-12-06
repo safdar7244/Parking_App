@@ -46,6 +46,7 @@ export default function Main({ navigation }) {
             title="Bejelentkezés"
             onPress={() => {
               navigation.navigate("Login");
+
             }}
           >
             {" "}
