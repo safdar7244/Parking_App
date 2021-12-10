@@ -23,6 +23,9 @@ import expo.modules.updates.UpdatesController;
 import com.facebook.react.bridge.JSIModulePackage;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;  // <--- Import Package
+
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +44,9 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
+      
       List<ReactPackage> packages = new PackageList(this).getPackages();
+      new ReactNativePushNotificationPackage();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
       return packages;
     }

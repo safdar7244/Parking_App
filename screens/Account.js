@@ -18,6 +18,9 @@ import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
 // import AccountAbout from "./AccountAbout"
 import AvatarCustom from "./common/AvatarCustom";
+
+
+
 export default function Account({ navigation }) {
   const list = [
     {

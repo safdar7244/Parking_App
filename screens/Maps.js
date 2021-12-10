@@ -35,6 +35,10 @@ import AvatarCustom from "./common/AvatarCustom";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from "react-native-maps-directions";
 import ParkingRequest from "./ParkingRequest";
+import PushNotification from "./PushNotification";
+import { schedulePushNotification } from "./PushNotification";
+
+///////////////////////////////////////////////////////////////////////
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -83,7 +87,15 @@ export default function Maps({ navigation }) {
                         if (change.doc.data().activeRequest) {
 
             if (change.doc.data().activeRequest.status==1) {
-              setVisibleRequest(true);
+              
+              if (!visibleRequest)
+              {
+                schedulePushNotification();
+                setVisibleRequest(true);
+              }
+
+             
+              
               ////console.log("SET CUSTOMER  : ",change.doc.data().activeRequest.id)
                             ////console.log("SET BOOKED SPACES  : ",change.doc.data().activeRequest.slot_id)
 
@@ -199,9 +211,11 @@ export default function Maps({ navigation }) {
             }
             else
             if(change.doc.data().acceptedSession.status===-1){
-              ////console.log("\n\n\n\nRejected",visibleRequest,bookedSpace)
+              console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
+              resetBackend();
               setLoadingScreen(false)
               setRequestRejected(true)
+              
               // startDirections();
               // setCustomer(change.doc.data().activeRequest.id);
 
@@ -245,6 +259,8 @@ function resetBackend(){
       .then(function () {
         //////console.log("updating backend1 done")
 })
+if (bookedSpace)
+{
 db.collection("users")
       .doc(bookedSpace.owner)
       .update({
@@ -255,6 +271,7 @@ db.collection("users")
       .then(function () {
         //////console.log("updating backend2 done")
 })
+}
 }
 
   function RejectRequest() {

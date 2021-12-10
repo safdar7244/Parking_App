@@ -25,10 +25,32 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.parkingApp.app"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.parkingApp.app",
+      "config":
+      {
+        "googleMaps":
+        {
+          "apiKey":"AIzaSyBmrrLcxsX5OTm2qqtP5w2m4u4R3jFv-Ss"
+        }
+      }
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./local/assets/notification-sound.wav",
+            "./local/assets/notification-sound-other.wav"
+          ]
+        }
+      ]
+    ]
   }
 }
