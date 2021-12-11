@@ -18,6 +18,8 @@ export default function Login({ navigation, route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  
+
   const logIn = () => {
     // navigation.replace('Temp');
 
