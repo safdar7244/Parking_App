@@ -126,6 +126,7 @@ export default function Register({ navigation, route }) {
               color: "grey",
               padding: 5,
             }}
+            secureTextEntry={true}
             placeholder="Jelszó"
             onChangeText={(text) => setPassword(text)}
           />
