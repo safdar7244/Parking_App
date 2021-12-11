@@ -72,6 +72,8 @@ export default function Maps({ navigation }) {
   const toggleOverlayRequest = () => {
     setVisibleRequest(!visibleRequest);
   };
+
+  
   if (user) {
     db.collection("users")
       .where("id", "==", user.uid)
@@ -204,23 +206,13 @@ export default function Maps({ navigation }) {
               setLoadingScreen(false)
               setShowmarkerdetails(false);
               startDirections();
-              // setCustomer(change.doc.data().activeRequest.id);
-
-
-              // setBookedSpace(change.doc.data().activeRequest.slot_id)
             }
             else
             if(change.doc.data().acceptedSession.status===-1){
-              console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
-              resetBackend();
+              //console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
+              resetBackend(change.doc.data().acceptedSession.id);
               setLoadingScreen(false)
               setRequestRejected(true)
-              
-              // startDirections();
-              // setCustomer(change.doc.data().activeRequest.id);
-
-
-              // setBookedSpace(change.doc.data().activeRequest.slot_id)
             }
           }
           }
@@ -231,9 +223,11 @@ export default function Maps({ navigation }) {
       });
   },[])
 
+  function AcceptRequest(customer, bookedSpace) 
+  {
 
-  function AcceptRequest(customer, bookedSpace) {
-
+    if (customer)
+    {
       db.collection("users")
       .doc(customer)
       .update({
@@ -242,23 +236,20 @@ export default function Maps({ navigation }) {
         },
       })
       .then(function () {
-    ////console.log("accepte and updatedd");
+    console.log("accepte and updatedd");
     setVisibleRequest(false);
-      });
-  }
-function resetBackend(){
-  ////console.log("\n\n\n\n\n\n\n\n\n\n\ncustomer : ",customer)
-  ////console.log("Owner : ",bookedSpace)
- db.collection("users")
-      .doc(auth.currentUser.uid)
-      .update({
-        acceptedSession: {
-          status: 0,
-        },
       })
-      .then(function () {
-        //////console.log("updating backend1 done")
-})
+      .catch()
+      {
+        console.log("error");
+      }
+    }
+  }
+
+//////////////////////////////////////////////////////////////////// 
+function resetBackend(slotId)
+{
+
 if (bookedSpace)
 {
 db.collection("users")
@@ -272,14 +263,47 @@ db.collection("users")
         //////console.log("updating backend2 done")
 })
 }
+
+if (slotId)
+{
+  db.collection("users")
+      .doc(slotId)
+      .update({
+        activeRequest: {
+          status: 0,
+        },
+      })
+      .then(function () {
+        //////console.log("updating backend2 done")
+})
 }
 
-  function RejectRequest() {
+db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        acceptedSession: {
+          status: 0,
+        },
+      })
+      .then(function () {
+        //////console.log("updating backend1 done")
+})
+
+
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+  function RejectRequest(bookedSpace) 
+  {
+
+    console.log("HOLO",bookedSpace)
       db.collection("users")
       .doc(customer)
       .update({
         acceptedSession: {
           status: -1,
+          id:auth.currentUser.uid
         },
       })
       .then(function () {
@@ -522,7 +546,27 @@ db.collection("users")
                           containerStyle={{}}
                           title="Book"
                         ></Button>
+                        
+
                           }
+
+                          {
+                            loadingScreen &&
+                            <Button
+                          onPress={() => {
+                            setLoadingScreen(false)
+                            resetBackend();
+                          }}
+
+                          titleStyle={{ color: "white" }}
+                          buttonStyle={{
+                            backgroundColor: "red",
+                          }}
+                          containerStyle={{}}
+                          title="Cancel"
+                        ></Button>
+                          }
+
                           {
                             requestRejected && <Text>Your Request was Rejected</Text>
 
@@ -539,7 +583,7 @@ db.collection("users")
           setVisiblesearch(!visibleSearch);
         }}
       >
-        <City setUserLocation={setUserLocation} setCurrentlocation={setCurrentlocation} />
+        <City setVisiblesearch={setVisiblesearch} setUserLocation={setUserLocation} setCurrentlocation={setCurrentlocation} />
       </Overlay>
 
      {startGps && <View
@@ -618,6 +662,9 @@ db.collection("users")
    
     />
         <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
+          { userLocation &&
+        <Marker coordinate={userLocation}/>
+          }
        {startGps && <MapViewDirections
           lineDashPattern={[1]}
           origin={userLocation}
@@ -626,6 +673,8 @@ db.collection("users")
           strokeWidth={3}
           strokeColor="blue"
         />}
+          
+
           {spaces &&
             spaces.map((space) => {
               const a = space;

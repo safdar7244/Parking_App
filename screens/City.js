@@ -27,6 +27,7 @@ export default function City(props){
           longitudeDelta: 0.0421,}
         )
         props.setCurrentlocation(details.address_components[0].long_name)
+        props.setVisiblesearch(false)
       }}
       query={{
         key: 'AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA',

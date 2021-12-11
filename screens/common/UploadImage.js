@@ -21,7 +21,6 @@ export default function UploadImage(props) {
   };
   return (
             <View style={{
-                marginTop:"30%",
                 width:250,
                 height:250,
                 elevation:2,

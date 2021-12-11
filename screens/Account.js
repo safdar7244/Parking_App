@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Text,
   Alert,
+  ScrollView
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -56,6 +57,8 @@ export default function Account({ navigation }) {
   };
   return (
     <View style={styles.container}>
+
+    <ScrollView>
       <ImageBackground
         source={require("../pictures/bkg-user.jpeg")}
         resizeMode="cover"
@@ -108,6 +111,7 @@ export default function Account({ navigation }) {
           <ListItem.Chevron />
         </ListItem>
       </View>
+      </ScrollView>
 
       <TabBottom navigate={navigation} />
     </View>

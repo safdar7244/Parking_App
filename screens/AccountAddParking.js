@@ -144,10 +144,16 @@ export default function AccountAddParking({ navigation }) {
     >
       <TabBottom navigate={navigation} />
 
-      <View style={styles.innerContainer}>
-        <UploadImage />
 
-        <Text style={styles.UserName}>User</Text>
+      
+      <View style={styles.innerContainer}>
+      <Text style={styles.UserName2}>Location Image</Text>
+
+        <UploadImage />
+     
+
+
+        <Text style={styles.UserName}>Location and Details</Text>
 
         <MapsView
           Flatno={Flatno}
@@ -166,13 +172,14 @@ export default function AccountAddParking({ navigation }) {
           setCity={setCity}
         />
 
+        <Text style={styles.UserName}>Features</Text>
+
         <View
           style={{
             // marginBottom:"20%",
             borderRadius: 15,
             backgroundColor: "white",
             width: "80%",
-            marginTop: "10%",
             justifyContent: "center",
             alignItems: "center",
             padding: 20,
@@ -191,17 +198,21 @@ export default function AccountAddParking({ navigation }) {
           />
         </View>
 
+        <Text style={styles.UserName}>Queries</Text>
+
         <View style={styles.innerContainer3}>
           <Text style={{ marginBottom: 20 }}>
             If theres any Querry please comment below:
           </Text>
           <TextInput
+          editable = {true}
+          multiline = {true}
+          numberOfLines={5}
             style={{
-              width: 200,
-              height: 150,
+              width: "100%",
               fontSize: 12,
               borderRadius: 7,
-              borderWidth: 1,
+              borderWidth: .5,
               padding: 5,
               marginBottom: 20,
               backgroundColor: "#eeeeee",
@@ -270,7 +281,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 40,
-    marginTop: 40,
+    marginTop:40
+  },
+  UserName2: {
+    fontFamily: "sans-serif",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 40,
+    marginTop: "30%",
   },
   labelText: {
     // fontSize: 14,
@@ -294,7 +312,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: "white",
     width: "80%",
-    marginTop: "10%",
+    marginTop: 10,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,

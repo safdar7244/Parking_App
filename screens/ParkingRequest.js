@@ -9,7 +9,6 @@ function ParkingRequest(props) {
       <Overlay
         overlayStyle={{ padding: 40 }}
         isVisible={props.visible}
-        onBackdropPress={props.toggleOverlay}
       >
         <Text style={{ textAlign: "center", padding: 10 }}>
           You Have A New Parking Request {"\n"}
@@ -33,7 +32,9 @@ function ParkingRequest(props) {
           />
           <Button
             buttonStyle={styles.button2}
-            onPress={props.reject}
+            onPress={()=>{
+              props.reject(props.bookedSpace)
+            }}
             title="Reject"
           />
         </View>

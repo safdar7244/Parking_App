@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground,StyleSheet, View,Picker, SafeAreaView, Text, Alert } from 'react-native';
+import { ImageBackground,StyleSheet, View,Linking, SafeAreaView, Text, Alert,TextInput } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
@@ -13,6 +13,16 @@ import { data } from './FormsData/formData';
 export default function AccountAbout({navigation}){
  
    
+  function handleClick(){
+    Linking.canOpenURL("https://homeparking.hu").then(supported => {
+      if (supported) {
+        Linking.openURL("https://homeparking.hu");
+      } else {
+        console.log("Don't know how to open URI: " + this.props.url);
+      }
+    });
+  };
+
 // data.b = "new value";
 
   return (
@@ -42,13 +52,31 @@ export default function AccountAbout({navigation}){
                <Text style={styles.UserName}>User</Text>
             
 <View style={styles.innerContainer2}>
-<Text style={styles.innerText}>Privacy Policy</Text>
+<Text onPress={handleClick} style={styles.innerText}>Privacy Policy</Text>
 <Text style={styles.innerText}>F.A.Q</Text>
 <Text style={styles.innerText}>How the App Works</Text>
 
 </View> 
 <View style={styles.innerContainer2}>
 <Text style={styles.innerText}>I have a Question/Suggestion</Text>
+<TextInput
+          editable = {true}
+          multiline = {true}
+          numberOfLines={5}
+            style={{
+              width: "100%",
+              fontSize: 12,
+              borderRadius: 7,
+              borderWidth: .5,
+              padding: 5,
+              marginBottom: 20,
+              backgroundColor: "#eeeeee",
+              marginLeft: 20,
+            }}
+            // onChangeText={(message) => setmessage(message)}
+          
+  />
+  <Button title="Send" ></Button>
 
 </View>     
 </View>
@@ -99,7 +127,6 @@ innerContainer2:
     justifyContent:"center",
     alignItems:"center",
 padding:20,   
-height:"20%", 
     
     
 },
@@ -110,4 +137,8 @@ innerContainer:
            //    backgroundColor:"blue",
                 marginTop:"-15%"
 },
+innerText:
+{
+  margin:5
+}
   });

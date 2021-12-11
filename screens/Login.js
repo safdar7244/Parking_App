@@ -71,6 +71,7 @@ export default function Login({ navigation, route }) {
             containerStyle={styles.buttonContainer}
             leftIcon={{ type: "font-awesome-5", name: "key", color: "grey" }}
             placeholder="Jelszó"
+            secureTextEntry={true} 
             onChangeText={(text) => setPassword(text)}
           />
 
