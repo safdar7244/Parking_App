@@ -92,9 +92,9 @@ export default function MapsView(props, { navigation }) {
       {/* <Text style={styles.UserName}>User</Text> */}
 
       <View style={styles.innercontainer2}>
-        <View style={styles.row}>
+        {/* <View style={styles.row}> */}
           {/* <Text style={styles.labelText}>Address</Text> */}
-          <TextInput
+          {/* <TextInput
             style={styles.formFieldText}
             onChangeText={(Flat) => props.setFlatNo(Flat)}
             defaultValue={props.Flatno}
@@ -105,11 +105,11 @@ export default function MapsView(props, { navigation }) {
             onChangeText={(Building) => props.setBuilding(Building)}
             defaultValue={props.Building}
             placeholder="Building/Villa"
-          />
-        </View>
-        <View style={styles.row}>
+          /> */}
+        {/* </View> */}
+        {/* <View style={styles.row}> */}
           {/* <Text style={styles.labelText}>Ft/hr        </Text> */}
-          <TextInput
+          {/* <TextInput
             style={styles.formFieldText}
             onChangeText={(Street) => props.setStreet(Street)}
             defaultValue={props.Street}
@@ -120,8 +120,8 @@ export default function MapsView(props, { navigation }) {
             onChangeText={(Area) => props.setArea(Area)}
             defaultValue={props.Area}
             placeholder="Area"
-          />
-        </View>
+          /> */}
+        {/* </View> */}
         <View style={styles.row}>
           <TextInput
             style={styles.formFieldText}
@@ -129,12 +129,12 @@ export default function MapsView(props, { navigation }) {
             defaultValue={props.Price}
             placeholder="Ft/Hr"
           />
-          <TextInput
+          {/* <TextInput
             style={styles.formFieldTextRight}
             onChangeText={(City) => props.setCity(City)}
             defaultValue={props.City}
             placeholder="City"
-          />
+          /> */}
         </View>
       </View>
     </View>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   formFieldText: {
-    width: "50%",
+    width: "100%",
     fontSize: 12,
     borderRadius: 7,
     borderWidth: .5,

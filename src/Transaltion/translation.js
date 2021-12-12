@@ -19,7 +19,15 @@ export const data = {
     User:["User","Fiók"],
     Ticket:["Ticket","Jegyek"],
     Map:["Map","Térkép"],
-    Search:["Search","Search"]
+    Search:["Search","Search"],
+    Location_Image:["Location Image","Helykép"],
+    Location_And_Details:["Location and Details","Helyszín és részletek" ],
+    Querries:["Querries","Lekérdezések"],
+    Features:["Features","Jellemzők"],
+    If_Any_Querry:["If theres any Querry Please comment Below","Ha van kérdés, kérjük, kommentálja alább"],
+    Guard:["Guard","Őr"],
+    Covered:["Covered","Fedett"],
+    Camera:["Camera","Kamera"]
 
 
 

@@ -15,9 +15,14 @@ import { auth, db } from "../firebase";
 import SettingsContext from '../src/context/Setting';
 import { data } from '../src/Transaltion/translation';
 export default function AccountParkings({navigation}){
+
+  const list_spaces=[
+
+  ]
   const [username,setUsername]=useState("User")
   const {settings,saveSettings}= useContext(SettingsContext);
 
+  const [spaces,setSpaces]=useState([])
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
@@ -30,9 +35,18 @@ console.log("Entered")
       // Your own custom logic here
       snapshot.forEach((doc) => {
         // ////console.log(doc.id, doc.data());
-console.log("PARKING SLOT YAAAY",doc.data())
+// console.log("PARKING SLOT YAAAY",doc.data())
+let dd=doc.data()
+dd["title"]="Slot "+(list_spaces.length+1)
+// const dta={
+//   title:2
+// }
+// dd.append(dta)
+list_spaces.push(dd)
       });
-      // setSpaces(a);
+      // console.log(list_spaces)
+      // console.log(list_spaces.length)
+      setSpaces(list_spaces);
     });
 
 
@@ -42,24 +56,31 @@ console.log("PARKING SLOT YAAAY",doc.data())
 
   },[])
 
-    const renderFunction=(key)=>{
-    // console.log("logged")
+    const renderFunction=(item,key)=>{
+    console.log("key : ",key)
+     navigation.replace(
+      'AccountAddParking',
+      { item },
+    );
+
+    
+
     }
 // data.b = "new value";
-const list = [
+// const list = [
     
-    {
-      title: 'Slot 1',
-    },
-    {
-        title: 'Slot 2',
-      },
+//     {
+//       title: 'Slot 1',
+//     },
+//     {
+//         title: 'Slot 2',
+//       },
  
                        
     
             
       
-  ]
+//   ]
   return (
 <ScrollView style={{ minHeight:"100%" }} acontentContainerStyle={{ flexGrow: 1 ,      
 }}
@@ -83,8 +104,8 @@ stickyFooterIndices={[0]}
 <Text style={styles.innerText}>{data["My_Parking_Spaces"][settings]}</Text>
 {
       
-        list.map((item, i) => (
-          <ListItem button onPress={() => {{renderFunction(i+1)}}} key={i+1} bottomDivider containerStyle={{width:"100%",fontSize:12}}>
+        spaces.map((item, i) => (
+          <ListItem button onPress={() => {{renderFunction(item,i+1)}}} key={i+1} bottomDivider containerStyle={{width:"100%",fontSize:12}}>
             <ListItem.Content>
               <ListItem.Title>{item.title}</ListItem.Title>
               
@@ -188,11 +209,11 @@ padding:40,
 },
 innerContainer3:
 {
-    marginBottom:"25%",
+    marginBottom:"55%",
   borderRadius:15,
     backgroundColor:"white",
     width:"80%",
-    marginTop:"10%",
+    marginTop:"20%",
     justifyContent:"center",
     alignItems:"center",
 padding:30,   

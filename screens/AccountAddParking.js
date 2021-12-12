@@ -14,31 +14,59 @@ import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Switch, Divider, Overlay } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { TabView, ListItem, Tab, Button } from "react-native-elements";
 import Maps from "./Maps";
 import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
-import { data } from "./FormsData/formData";
+// import { data } from "./FormsData/formData";
 import UploadImage from "./common/UploadImage";
 import { Formik } from "formik";
 import Options from "./common/Options";
 import MapsView from "./MapsView";
 import { auth, db } from "../firebase";
 import geohash from "ngeohash";
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from '../src/context/Setting';
 
-export default function AccountAddParking({ navigation }) {
-  const [Flatno, setFlatNo] = useState("");
-  const [Building, setBuilding] = useState("");
-  const [Street, setStreet] = useState("");
-  const [Area, setArea] = useState("");
+export default function AccountAddParking({route,navigation}  ) {
+  // const [Flatno, setFlatNo] = useState("");
+  // const [Building, setBuilding] = useState("");
+  // const [Street, setStreet] = useState("");
+  // const [Area, setArea] = useState("");
+  const {settings,saveSettings}= useContext(SettingsContext);
+
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
   const [message, setmessage] = useState("");
-  const [City, setCity] = useState("");
+  // const [City, setCity] = useState("");
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
   const [camera, setCamera] = useState(false);
+
+React.useEffect(()=>{
+  // const _item={}
+  // if(props){
+  //   const {item}=props.route.params.item
+  //   _item=item
+  // }
+  
+// console.log("props,",route,"NAV->",navigation)
+// console.log("--->>>",item)
+if(route.params){
+  // console.log("props ener",route.params)
+  setPrice(route.params.item.Price)
+  setCamera(route.params.item.camera)
+  setCovered(route.params.item.covered)
+  setUserLocation({
+    latitude: route.params.item.coordinates.latitude,
+    longitude: route.params.item.coordinates.longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  })
+  setGuard(route.params.item.guard)
+}
+},[])
 
   const getGeohashRange = (
     latitude,
@@ -65,32 +93,32 @@ export default function AccountAddParking({ navigation }) {
 
   const handleSubmit = async () => {
     console.log(
-      Flatno,
-      Building,
-      Street,
+      // Flatno,
+      // Building,
+      // Street,
       userLocation,
-      Area,
+      // Area,
       guard,
       covered,
       camera,
       Price,
-      City
+      // City
     );
     const coordinates = {
       latitude: userLocation.latitude,
       longitude: userLocation.longitude,
     };
     const obj = {
-      Flatno,
-      Building,
-      Street,
+      // Flatno,
+      // Building,
+      // Street,
       coordinates,
-      Area,
+      // Area,
       guard,
       covered,
       camera,
       Price,
-      City,
+      // City,
     };
 
     const ghash = geohash.encode(
@@ -147,32 +175,32 @@ export default function AccountAddParking({ navigation }) {
 
       
       <View style={styles.innerContainer}>
-      <Text style={styles.UserName2}>Location Image</Text>
+      <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
 
         <UploadImage />
      
 
 
-        <Text style={styles.UserName}>Location and Details</Text>
+        <Text style={styles.UserName}>{data["Location_And_Details"][settings]}</Text>
 
         <MapsView
-          Flatno={Flatno}
-          Building={Building}
-          Street={Street}
-          Area={Area}
+          // Flatno={Flatno}
+          // Building={Building}
+          // Street={Street}
+          // Area={Area}
           Price={Price}
           userLocation={userLocation}
-          setFlatNo={setFlatNo}
-          setBuilding={setBuilding}
-          setStreet={setStreet}
-          setArea={setArea}
+          // setFlatNo={setFlatNo}
+          // setBuilding={setBuilding}
+          // setStreet={setStreet}
+          // setArea={setArea}
           setPrice={setPrice}
           setUserLocation={setUserLocation}
-          City={City}
-          setCity={setCity}
+          // City={City}
+          // setCity={setCity}
         />
 
-        <Text style={styles.UserName}>Features</Text>
+        <Text style={styles.UserName}>{data["Features"][settings]}</Text>
 
         <View
           style={{
@@ -186,9 +214,9 @@ export default function AccountAddParking({ navigation }) {
           }}
         >
           <Options
-            option1="Guard"
-            option2="Covered"
-            option3="Camera"
+            option1={data["Guard"][settings]}
+            option2={data["Covered"][settings]}
+            option3={data["Camera"][settings]}
             param1={guard}
             param2={covered}
             param3={camera}
@@ -198,11 +226,11 @@ export default function AccountAddParking({ navigation }) {
           />
         </View>
 
-        <Text style={styles.UserName}>Queries</Text>
+        <Text style={styles.UserName}>{data["Querries"][settings]}</Text>
 
         <View style={styles.innerContainer3}>
           <Text style={{ marginBottom: 20 }}>
-            If theres any Querry please comment below:
+            {data["If_Any_Querry"][settings]}
           </Text>
           <TextInput
           editable = {true}
@@ -222,7 +250,7 @@ export default function AccountAddParking({ navigation }) {
             defaultValue={message}
           />
 
-          <Button onPress={handleSubmit} title="Submit" />
+          <Button onPress={handleSubmit} title={data["Submit"][settings]} />
         </View>
       </View>
     </ScrollView>
