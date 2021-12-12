@@ -10,13 +10,20 @@ import Maps from "./Maps"
 import AccountEdit from "./AccountEdit"
 import TabBottom from './TabBottom';
 import Options from "./common/Options"
+import { auth, db } from "../firebase";
+
 import AvatarCustom from './common/AvatarCustom';
 export default function AccountNotifications({navigation}){
  
     const [Notification,setNotification]=useState('')
   const [Payment,setPayment]=useState('')
   const [newParking,setNewParking]=useState('')
-
+  const [username,setUsername]=useState("User")
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[])
 
 
   return (
@@ -29,7 +36,7 @@ export default function AccountNotifications({navigation}){
      
           <AvatarCustom />
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
 
                <Options

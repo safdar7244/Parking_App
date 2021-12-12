@@ -4,18 +4,82 @@ import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
 import ButtonMain from './common/button';
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import { TabView,ListItem, Tab,Button } from 'react-native-elements';
 import Maps from "./Maps"
 import AccountEdit from "./AccountEdit"
 import TabBottom from './TabBottom';
 import { data } from './FormsData/formData';
+import { auth, db } from "../firebase";
+import SettingsContext from '../src/context/Setting';
+
 import AvatarCustom from './common/AvatarCustom';
 export default function AccountLanguage({navigation}){
-    console.log("hhh",data)
-    data["b"]="ddddd"
+    // console.log("hhh",data)
 
-    const [selectedValue, setSelectedValue] = useState("java");
+    // data["b"]="ddddd"
+    const [username,setUsername]=useState("User")
+    const {settings,saveSettings}= useContext(SettingsContext);
+   
+   
+    React.useEffect(()=>{
+      if(settings==0){
+        console.log("setting is 0")
+        setSelectedValue("eng")
+      }
+      else if (settings==1){
+        console.log("setting is 1")
+
+        setSelectedValue("hang")
+      }
+      const user=auth.currentUser.providerData[0]["displayName"]
+      setUsername(user)
+      console.log("CURRENT : ",user)
+    },[])
+
+
+    React.useEffect(()=>{
+      
+     
+
+
+
+      if(selectedValue=="eng"){
+
+
+        db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          language: {
+            status: 0,
+          },
+        })
+        .then(function () {
+         console.log("English set")
+         setTimeout(() => {
+          saveSettings(0)
+        }, 0);
+        });      }
+      
+      if(selectedValue=="hang")
+      {
+
+        db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          language: {
+            status: 1,
+          },
+        })
+        .then(function () {
+         console.log("Hungary set")
+         setTimeout(() => {
+          saveSettings(1)
+        }, 0);
+        });      }
+
+    },selectedValue)
+    const [selectedValue, setSelectedValue] = useState("");
    
 // data.b = "new value";
 
@@ -29,7 +93,7 @@ export default function AccountLanguage({navigation}){
      
           <AvatarCustom />
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
                <View style={styles.innerContainer2}>
 
@@ -39,7 +103,9 @@ export default function AccountLanguage({navigation}){
                <Picker
         selectedValue={selectedValue}
         style={{ height: 50, width: 130 ,marginLeft:"20%",fontSize:12}}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+        onValueChange={(itemValue, itemIndex) => {
+          // console.log("balue to cehck  L ", itemValue)
+          setSelectedValue(itemValue)}}
       >
         <Picker.Item label="English" value="eng" />
         <Picker.Item label="Hungary" value="hang" />

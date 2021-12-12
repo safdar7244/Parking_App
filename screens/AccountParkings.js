@@ -11,8 +11,16 @@ import AccountEdit from "./AccountEdit"
 import TabBottom from './TabBottom';
 import { data } from './FormsData/formData';
 import AvatarCustom from './common/AvatarCustom';
-export default function AccountAbout({navigation}){
- 
+import { auth, db } from "../firebase";
+
+export default function AccountParkings({navigation}){
+  const [username,setUsername]=useState("User")
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[])
+
     const renderFunction=(key)=>{
     console.log("logged")
     }
@@ -48,7 +56,7 @@ stickyFooterIndices={[0]}
      
           <AvatarCustom />
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
 
                <View style={styles.innerContainer2}>
 <Text style={styles.innerText}>My Parking Slots</Text>
