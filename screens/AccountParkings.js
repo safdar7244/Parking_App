@@ -21,11 +21,29 @@ export default function AccountParkings({navigation}){
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
-    console.log("CURRENT : ",user)
+    // console.log("CURRENT : ",user)
+
+console.log("Entered")
+    db.collection("spaces")
+    .where("owner", "==", auth.currentUser.uid)
+    .onSnapshot((snapshot) => {
+      // Your own custom logic here
+      snapshot.forEach((doc) => {
+        // ////console.log(doc.id, doc.data());
+console.log("PARKING SLOT YAAAY",doc.data())
+      });
+      // setSpaces(a);
+    });
+
+
+
+
+
+
   },[])
 
     const renderFunction=(key)=>{
-    console.log("logged")
+    // console.log("logged")
     }
 // data.b = "new value";
 const list = [
