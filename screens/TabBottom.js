@@ -3,7 +3,7 @@ import { ImageBackground,StyleSheet,View, SafeAreaView, TextInput,Text, Alert,Di
 import MapView from 'react-native-maps';
 import { TabView, Tab,Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useContext } from 'react';
 import Maps from './Maps';
 import Account from "./Account"
 import AccountEdit from './AccountEdit';
@@ -11,9 +11,12 @@ import AccountEdit from './AccountEdit';
 // import {useNavigation} from 'react-navigation-hooks';
 
 // const Tab = createBottomTabNavigator();
-
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from '../src/context/Setting';
 
 export default function TabBottom(props){
+  const {settings,saveSettings}= useContext(SettingsContext);
+
   // const {navigate} = useNavigation();
 
   // //console.log("ppp",props.navigate)
@@ -43,15 +46,15 @@ export default function TabBottom(props){
           props.navigate.navigate('Maps')
           
           }} 
-        icon={ <Icon name="place" size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} containerStyle={{color:"black"}} titleStyle={styles.tileButton} title="Térkép" />
-        <Tab.Item icon={ <Icon name="confirmation-number"  onPress={()=> {}} size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title="Jegyek" />
+        icon={ <Icon name="place" size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} containerStyle={{color:"black"}} titleStyle={styles.tileButton} title={data["Map"][settings]} />
+        <Tab.Item icon={ <Icon name="confirmation-number"  onPress={()=> {}} size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title={data["Ticket"][settings]} />
         <Tab.Item 
         onPressIn={()=>{
           //console.log("pressed3")
           props.navigate.navigate('Account')
           
           }} 
-        icon={ <Icon name="portrait"  size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title="Fiók" />
+        icon={ <Icon name="portrait"  size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title={data["User"][settings]} />
       </Tab>  
       </View>
 

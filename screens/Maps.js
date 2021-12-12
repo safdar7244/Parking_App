@@ -21,7 +21,7 @@ import {
   Divider,
 } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import OverlaySet from "./Overlay";
 import City from "./City";
 import { Marker } from "react-native-maps";
@@ -37,13 +37,16 @@ import MapViewDirections from "react-native-maps-directions";
 import ParkingRequest from "./ParkingRequest";
 import PushNotification from "./PushNotification";
 import { schedulePushNotification } from "./PushNotification";
-
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from '../src/context/Setting';
 ///////////////////////////////////////////////////////////////////////
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 export default function Maps({ navigation }) {
+  const {settings,saveSettings}= useContext(SettingsContext);
+
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
   const [Showmarkerdetails, setShowmarkerdetails] = useState(false);
@@ -53,7 +56,7 @@ export default function Maps({ navigation }) {
   const [camera, setCamera] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [spaces, setSpaces] = useState(null);
-  const [currentLocation,setCurrentlocation] =useState("Search")
+  const [currentLocation,setCurrentlocation] =useState(data["Search"][settings])
   const DirectionsTimer = useRef(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);

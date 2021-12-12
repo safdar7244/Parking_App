@@ -6,45 +6,119 @@ import {
   SafeAreaView,
   Text,
   Alert,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { useState } from "react";
+import { useState ,useContext} from "react";
 import { TabView, ListItem, Tab, Button } from "react-native-elements";
 import Maps from "./Maps";
 import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
 // import AccountAbout from "./AccountAbout"
 import AvatarCustom from "./common/AvatarCustom";
-
-
+import ReLogin from "./ReLogin"
+import { auth, db } from "../firebase";
+// import ReLogin from "./ReLogin";
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from '../src/context/Setting';
 
 export default function Account({ navigation }) {
+  const {settings,saveSettings}= useContext(SettingsContext);
+
+console.log("setthings :  ",settings)
+
+  const [username,setUsername]=useState("User")
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[])
+  
   const list = [
     {
-      title: "Profile",
+      title: data["Profile"][settings],
       icon: "user",
     },
+
     {
-      title: "Notifications",
+      title: data["Notifications"][settings],
       icon: "bell",
     },
     {
-      title: "Language",
+      title: data["Language"][settings],
       icon: "globe",
     },
     {
-      title: "About",
+      title: data["About"][settings],
       icon: "question-circle",
     },
     {
-      title: "My Parking Spaces",
+      title: data["My_Parking_Spaces"][settings],
       icon: "car",
-    },
+      }
+      // ,
+      // {
+      //   title: data["Late_Payment"][settings],
+      //   icon: "dollar",
+      //   }
   ];
+
+
+  const deleteAccount=(ley)=>{
+
+const user = auth.currentUser;
+// console.log("usr :",user)
+user.delete().then(function() {
+  // User deleted.
+  // navigation.navigate()
+  // console.log("DELETEDDD")
+  Alert.alert(
+    "Account Deleted ! ",
+    "Press OK to continue",
+    [
+    
+      { text: "OK", onPress: () => {
+
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Register' }]
+     })
+      //  navigation.navigate("Register")
+
+        
+      } }
+    ]
+  );
+}).catch(function(error) {
+  // An error happened.
+  Alert.alert(
+    "Alert !",
+    "Please, Enter your Credentials again before Deleting your Account",
+    [
+    
+      { text: "OK", onPress: () => {
+
+
+
+        auth.signOut().then(function() {
+          console.log('Signed Out')
+          navigation.replace("ReLogin")
+        
+        }, function(error) {
+          console.error('Sign Out Error', error);
+        });
+
+        
+      } }
+    ]
+  );
+});
+
+  }
 
   const renderFunction = (key) => {
     console.log("yaya");
@@ -56,8 +130,12 @@ export default function Account({ navigation }) {
     key == 5 && navigation.navigate("AccountParkings");
   };
   return (
-    <View style={styles.container}>
 
+<ScrollView
+      style={{}}
+      contentContainerStyle={{ flexGrow: 1 }}
+      stickyFooterIndices={[1]}
+    >
       
       <ImageBackground
         source={require("../pictures/bkg-user.jpeg")}
@@ -68,7 +146,7 @@ export default function Account({ navigation }) {
       <View style={styles.innerContainer}>
         <AvatarCustom url="'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'" />
 
-        <Text style={styles.UserName}>User</Text>
+        <Text style={styles.UserName}>{username}</Text>
       </View>
       <View style={styles.ListStyle}>
         {list.map((item, i) => (
@@ -96,7 +174,7 @@ export default function Account({ navigation }) {
           button
           onPress={() => {
             {
-              renderFunction(6);
+              deleteAccount(6);
             }
           }}
           key={6}
@@ -105,7 +183,7 @@ export default function Account({ navigation }) {
           <Icon name="smile-o" size={20} />
           <ListItem.Content>
             <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
-              Delete Account
+              {data["Delete_Account"][settings]}
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
@@ -114,7 +192,8 @@ export default function Account({ navigation }) {
 
 
       <TabBottom navigate={navigation} />
-    </View>
+    </ScrollView>
+    
   );
 }
 
@@ -147,6 +226,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    marginBottom:"30%",
   },
   innerContainer: {
     // justifyContent:"center",

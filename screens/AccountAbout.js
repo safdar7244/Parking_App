@@ -4,15 +4,33 @@ import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
 import ButtonMain from './common/button';
-import { useState } from 'react';
+import { useState ,useContext} from 'react';
 import { TabView,ListItem, Tab,Button } from 'react-native-elements';
 import Maps from "./Maps"
 import AccountEdit from "./AccountEdit"
 import TabBottom from './TabBottom';
-import { data } from './FormsData/formData';
+// import { data } from './FormsData/formData';
+import { auth, db } from "../firebase";
+import { data } from '../src/Transaltion/translation';
+import SettingsContext from '../src/context/Setting';
+
+
 export default function AccountAbout({navigation}){
  
-   
+  const {settings,saveSettings}= useContext(SettingsContext);
+  // setTimeout(() => {
+  //   saveSettings(1)
+  // }, 0);
+ 
+  // console.log("ssss",settings)
+
+  const [username,setUsername]=useState("User")
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[])
+
   function handleClick(){
     Linking.canOpenURL("https://homeparking.hu").then(supported => {
       if (supported) {
@@ -49,16 +67,16 @@ export default function AccountAbout({navigation}){
             />
           </Avatar>
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
             
 <View style={styles.innerContainer2}>
-<Text onPress={handleClick} style={styles.innerText}>Privacy Policy</Text>
-<Text style={styles.innerText}>F.A.Q</Text>
-<Text style={styles.innerText}>How the App Works</Text>
+<Text onPress={handleClick} style={styles.innerText}>{data["Privacy_Policy"][settings]}</Text>
+<Text style={styles.innerText}>{data["FAQ"][settings]}</Text>
+<Text style={styles.innerText}>{data["How_The_App_Works"][settings]}</Text>
 
 </View> 
 <View style={styles.innerContainer2}>
-<Text style={styles.innerText}>I have a Question/Suggestion</Text>
+<Text style={styles.innerText}>{data["Question_Suggestion"][settings]}</Text>
 <TextInput
           editable = {true}
           multiline = {true}
@@ -76,7 +94,7 @@ export default function AccountAbout({navigation}){
             // onChangeText={(message) => setmessage(message)}
           
   />
-  <Button title="Send" ></Button>
+  <Button title={data["Send"][settings]} ></Button>
 
 </View>     
 </View>

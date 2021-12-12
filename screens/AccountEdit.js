@@ -4,15 +4,38 @@ import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import ButtonMain from './common/button';
-import { useState } from 'react';
+import { useState ,useContext} from 'react';
 import { TabView,ListItem, Tab,Button } from 'react-native-elements';
 import { formData } from './FormsData/formData';
 import TabBottom from './TabBottom';
 import AvatarCustom from './common/AvatarCustom';
 import { Formik } from 'formik'
+import { auth, db } from "../firebase";
+import SettingsContext from '../src/context/Setting';
+import { data } from '../src/Transaltion/translation';
 export default function AccountEdit({navigation}){
+  const {settings,saveSettings}= useContext(SettingsContext);
 
+  console.log("setthings :  ",settings)
   
+  const [username,setUsername]=useState("User")
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[]);
+
+function updateDbname(val)
+{
+  db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          name: val
+        })
+        .then(function () {
+         console.log("English set")
+        }); 
+}
     return (
         // <View style={styles.container}>
           
@@ -83,14 +106,36 @@ export default function AccountEdit({navigation}){
           <View style={styles.innerContainer}>
           <AvatarCustom />
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
                </View>
 
           <Formik
-            initialValues={{username:'', email:''}}
+            initialValues={{_username:''}}
             onSubmit={(values) =>{
-               console.log('submitted', values)
-              navigation.replace('Account')
+               console.log('submitted', values._username)
+              //  auth.currentUser.providerData[0]["displayName"]=values._username
+              auth.currentUser.updateProfile({
+                displayName: values._username,
+              });
+              updateDbname(values._username)
+               setUsername(values._username)
+
+              Alert.alert(
+                "Success !",
+                "Username successfully changed ",
+                [
+                
+                  { text: "OK", onPress: () => {
+                    navigation.navigate('Maps')
+
+                    setTimeout(()=>{
+                      navigation.navigate('Account')
+
+                    },500)
+
+                  }}
+                ]
+              );
               }}
           >
              {({handleChange, handleSubmit, values})=>(
@@ -99,14 +144,14 @@ export default function AccountEdit({navigation}){
 
               <View style={styles.row}>
 
-                <Text style={styles.labelText}>Username</Text>
+                <Text style={styles.labelText}>{data["Username"][settings]}</Text>
                 <TextInput
                   style={styles.formFieldText}
-                  value={values.username}
-                  onChangeText={handleChange('username')}
+                  value={values._username}
+                  onChangeText={handleChange('_username')}
                 />
                 </View>
-               <View style={styles.row}> 
+               {/* <View style={styles.row}> 
                
                 <Text style={styles.labelText}>Email        </Text>
                 <TextInput
@@ -115,8 +160,8 @@ export default function AccountEdit({navigation}){
                   onChangeText={handleChange('email')}
                   // secureTextEntry={true}
                 />
-                </View>
-                <Button onPress={handleSubmit} title="Submit"/>
+                </View> */}
+                <Button onPress={handleSubmit} title={data["Submit"][settings]}/>
 
                 </View>
               </View>

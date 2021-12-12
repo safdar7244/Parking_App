@@ -4,19 +4,28 @@ import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
 import ButtonMain from './common/button';
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import { TabView,ListItem, Tab,Button } from 'react-native-elements';
 import Maps from "./Maps"
 import AccountEdit from "./AccountEdit"
 import TabBottom from './TabBottom';
 import Options from "./common/Options"
+import { auth, db } from "../firebase";
+import SettingsContext from '../src/context/Setting';
+import { data } from '../src/Transaltion/translation';
 import AvatarCustom from './common/AvatarCustom';
 export default function AccountNotifications({navigation}){
- 
+  const {settings,saveSettings}= useContext(SettingsContext);
+
     const [Notification,setNotification]=useState('')
   const [Payment,setPayment]=useState('')
   const [newParking,setNewParking]=useState('')
-
+  const [username,setUsername]=useState("User")
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[])
 
 
   return (
@@ -29,14 +38,14 @@ export default function AccountNotifications({navigation}){
      
           <AvatarCustom />
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
 
                <Options
               
-              option1="Push Notification"
-              option2="Late Payment"
-              option3="Add Slot"
+              option1={data["Push_Notification"][settings]}
+              option2={data["Late_Payment"][settings]}
+              option3={data["Add_Slot"][settings]}
               
               param1={Notification}
               param2={Payment}

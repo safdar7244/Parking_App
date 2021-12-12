@@ -4,15 +4,26 @@ import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
 import ButtonMain from './common/button';
-import { useState } from 'react';
+import { useState ,useContext} from 'react';
 import { TabView,ListItem, Tab,Button } from 'react-native-elements';
 import Maps from "./Maps"
 import AccountEdit from "./AccountEdit"
 import TabBottom from './TabBottom';
-import { data } from './FormsData/formData';
+// import { data } from './FormsData/formData';
 import AvatarCustom from './common/AvatarCustom';
-export default function AccountAbout({navigation}){
- 
+import { auth, db } from "../firebase";
+import SettingsContext from '../src/context/Setting';
+import { data } from '../src/Transaltion/translation';
+export default function AccountParkings({navigation}){
+  const [username,setUsername]=useState("User")
+  const {settings,saveSettings}= useContext(SettingsContext);
+
+  React.useEffect(()=>{
+    const user=auth.currentUser.providerData[0]["displayName"]
+    setUsername(user)
+    console.log("CURRENT : ",user)
+  },[])
+
     const renderFunction=(key)=>{
     console.log("logged")
     }
@@ -48,10 +59,10 @@ stickyFooterIndices={[0]}
      
           <AvatarCustom />
           
-               <Text style={styles.UserName}>User</Text>
+               <Text style={styles.UserName}>{username}</Text>
 
                <View style={styles.innerContainer2}>
-<Text style={styles.innerText}>My Parking Slots</Text>
+<Text style={styles.innerText}>{data["My_Parking_Spaces"][settings]}</Text>
 {
       
         list.map((item, i) => (
@@ -72,7 +83,7 @@ stickyFooterIndices={[0]}
           {navigation.navigate('AccountAddParking')}}}
            key={100}  containerStyle={{width:"80%",fontSize:12}}>
             <ListItem.Content>
-              <ListItem.Title>Add Slot        <Icon
+              <ListItem.Title>{data["Add_Slot"][settings]}      <Icon
       name="plus"
       size={20}
       color="blue"

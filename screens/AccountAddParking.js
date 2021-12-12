@@ -139,7 +139,7 @@ export default function AccountAddParking({ navigation }) {
   return (
     <ScrollView
       style={{}}
-      acontentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
       stickyFooterIndices={[1]}
     >
       <TabBottom navigate={navigation} />

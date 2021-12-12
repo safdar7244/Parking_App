@@ -2,6 +2,8 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./screens/Login";
+import ReLogin from "./screens/ReLogin";
+
 import Main from "./screens/Main";
 import Register from "./screens/Register";
 import TabBottom from "./screens/TabBottom";
@@ -16,9 +18,10 @@ import MapsView from "./screens/MapsView";
 import AccountAddParking from "./screens/AccountAddParking";
 import Location from "./screens/Location";
 import TempScreen from "./screens/temp";
+import { SettingsProvider } from "./src/context/Setting";
 
 const Stack = createNativeStackNavigator();
-
+const settings =1;
 const globalScreenOptions = {
   headerStyle: {
     backgroundColor: "#5EA0EE",
@@ -34,6 +37,8 @@ const globalScreenOptions = {
 export default function MyStack() {
   return (
     <NavigationContainer>
+          <SettingsProvider settings={settings}>
+
       <Stack.Navigator screenOptions={globalScreenOptions}>
         <Stack.Screen name="Main" component={Main} options={{ title: "" }} />
 
@@ -95,7 +100,15 @@ export default function MyStack() {
           component={TabBottom}
           options={{ title: "", headerShown: false }}
         />
+         <Stack.Screen
+          name="ReLogin"
+          component={ReLogin}
+          options={{ title: "", headerShown: false }}
+        />
+
       </Stack.Navigator>
+      </SettingsProvider>
+
       {/* <TabBottom/> */}
     </NavigationContainer>
   );
