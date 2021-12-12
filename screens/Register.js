@@ -12,6 +12,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
 import { auth, db } from "../firebase";
+import * as Facebook from 'expo-facebook';
+import * as Google from 'expo-google-app-auth';
 // import { StackActions, NavigationActions } from "react-navigation";
 
 export default function Register({ navigation, route }) {
@@ -19,6 +21,69 @@ export default function Register({ navigation, route }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  //sconst [status, requestPermission] = Facebook.usePermissions();
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+  async function logIn() {
+    try {
+      await Facebook.initializeAsync({
+        appId: '557872115402556',
+      });
+      const { type, token, expirationDate, permissions, declinedPermissions } =
+        await Facebook.logInWithReadPermissionsAsync({
+          permissions: ['public_profile'],
+        });
+      if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+        Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  const [googleSubmitting, setGoogleSubmitting] = useState(false);
+
+   const handleGoogleSignin = () => {
+      setGoogleSubmitting(true);
+      const config = {
+        androidClientId:  '48070917160-u4rv1o65pgq3qh0tar021rko5kqohebb.apps.googleusercontent.com',
+        androidStandaloneAppClientId:'48070917160-14890me2n4l8hva09qofmfj07mjt0v41.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+      }
+
+      Google.logInAsync(config)
+      .then((result) => {
+       
+        const { type, user } = result;
+        if (type == 'success') {
+          
+          const { email, name} = user;
+          setTimeout(() => {setName(name)
+          setEmail(email) }, 1000);
+        } else {
+         // handleMessage('Google Signin was cancelled');
+        }
+        setGoogleSubmitting(false);
+      })
+      .catch((error) => {
+       // handleMessage('An error occurred. Check your network and try again');
+        console.log(error);
+        setGoogleSubmitting(false);
+      });
+    }
+
+  
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+
   const signUp = async () => {
     try {
       //console.log(email, password);
@@ -77,6 +142,8 @@ export default function Register({ navigation, route }) {
     }
   };
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -105,6 +172,7 @@ export default function Register({ navigation, route }) {
             }}
             placeholder="Felhasználónév"
             onChangeText={(text) => setName(text)}
+            value = {name}
           />
 
           <Input
@@ -117,6 +185,7 @@ export default function Register({ navigation, route }) {
             }}
             placeholder="E-mail"
             onChangeText={(text) => setEmail(text)}
+            value = {email}
           />
           <Input
             containerStyle={styles.buttonContainer}
@@ -154,7 +223,8 @@ export default function Register({ navigation, route }) {
             buttonStyle={styles.button}
             title="Continue with Facebook"
             onPress={() => {
-              navigation.replce("Login");
+              logIn()
+              // navigation.replce("Login");
             }}
           >
             {" "}
@@ -177,7 +247,7 @@ export default function Register({ navigation, route }) {
             buttonStyle={styles.button2}
             title="Continue with Google"
             onPress={() => {
-              navigation.navigate("Login");
+              handleGoogleSignin();
             }}
           >
             {" "}

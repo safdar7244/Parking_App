@@ -127,7 +127,7 @@ user.delete().then(function() {
   return (
     <View style={styles.container}>
 
-    <ScrollView>
+      
       <ImageBackground
         source={require("../pictures/bkg-user.jpeg")}
         resizeMode="cover"
@@ -180,7 +180,7 @@ user.delete().then(function() {
           <ListItem.Chevron />
         </ListItem>
       </View>
-      </ScrollView>
+
 
       <TabBottom navigate={navigation} />
     </View>
