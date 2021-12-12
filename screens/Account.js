@@ -58,7 +58,7 @@ export default function Account({ navigation }) {
   return (
     <View style={styles.container}>
 
-    <ScrollView>
+      
       <ImageBackground
         source={require("../pictures/bkg-user.jpeg")}
         resizeMode="cover"
@@ -111,7 +111,7 @@ export default function Account({ navigation }) {
           <ListItem.Chevron />
         </ListItem>
       </View>
-      </ScrollView>
+
 
       <TabBottom navigate={navigation} />
     </View>
