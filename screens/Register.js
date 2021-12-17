@@ -100,6 +100,7 @@ export default function Register({ navigation, route }) {
       const obj = {
         email,
         name,
+        StripeId=0
       };
 
       auth.onAuthStateChanged((authUser) => {
