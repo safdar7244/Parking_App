@@ -3,7 +3,7 @@ import { Image, View, Platform, TouchableOpacity, Text, StyleSheet } from 'react
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import {storage} from "../../firebase.js"
-import uuid from "uuid";
+import uuid from "react-native-uuid";
 
 export default function UploadImage(props) {
     // console.log("propjjjjj , ", props)
@@ -35,8 +35,9 @@ export default function UploadImage(props) {
     try {
       
       if (!pickerResult.cancelled) {
-        const uploadUrl = await uploadImageAsync(pickerResult.uri.split('.').pop());
-        setImage(uploadUrl);
+        // console.log("-> img uri : ",pickerResult)
+        const uploadUrl = await uploadImageAsync(pickerResult.uri);
+        // setImage(uploadUrl);
       }
     } catch (e) {
       console.log(e);
@@ -46,13 +47,15 @@ export default function UploadImage(props) {
   };
 
 async function uploadImageAsync(uri) {
-  console.log(uri)
+  // console.log(uri)
   // Why are we using XMLHttpRequest? See:
   // https://github.com/expo/expo/issues/2402#issuecomment-443726662
   const blob = await new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
-      resolve(xhr.response);
+      console.log("vlvolL : ",xhr._response)
+
+      resolve(xhr._response);
     };
     xhr.onerror = function (e) {
       console.log(e);
@@ -63,13 +66,14 @@ async function uploadImageAsync(uri) {
     xhr.send(null);
   });
 
-  const fileRef = storage.ref(storage, uuid.v4());
-  const result = await storage.uploadBytes(fileRef, blob);
+  const fileRef = storage.ref(uuid.v4());
+  console.log("fikle: ",fileRef)
+  // const result = await storage(fileRef, blob);
 
   // We're done with the blob, close and release it
-  blob.close();
+  // blob.close();
 
-  return await getDownloadURL(fileRef);
+  // return await storage.getDownloadURL(fileRef);
 }
 
 

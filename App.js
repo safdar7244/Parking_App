@@ -18,6 +18,8 @@ import MapsView from "./screens/MapsView";
 import AccountAddParking from "./screens/AccountAddParking";
 import Location from "./screens/Location";
 import TempScreen from "./screens/temp";
+import Tickets from "./screens/Tickets";
+import AccountLatePayment from "./screens/AccountLatePayment";
 import { SettingsProvider } from "./src/context/Setting";
 
 const Stack = createNativeStackNavigator();
@@ -104,6 +106,16 @@ export default function MyStack() {
           name="ReLogin"
           component={ReLogin}
           options={{ title: "", headerShown: false }}
+        />
+         <Stack.Screen
+          name="Tickets"
+          component={Tickets}
+          options={{ title: "", headerShown: true }}
+        />
+        <Stack.Screen
+          name="AccountLatePayment"
+          component={AccountLatePayment}
+          options={{ title: "", headerShown: true }}
         />
 
       </Stack.Navigator>

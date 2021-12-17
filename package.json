@@ -11,6 +11,7 @@
     "@react-native-firebase/app": "^13.1.0",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.2",
+    "axios": "^0.24.0",
     "expo": "~42.0.1",
     "expo-facebook": "~11.3.1",
     "expo-google-app-auth": "~8.2.5",
@@ -39,7 +40,8 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-unimodules": "0.14.10",
-    "react-native-vector-icons": "^8.1.0",
+    "react-native-uuid": "^2.0.1",
+    "react-native-vector-icons": "^4.4.3",
     "react-native-web": "^0.17.5",
     "uuid": "^8.3.2"
   },

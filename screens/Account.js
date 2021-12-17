@@ -28,7 +28,7 @@ import SettingsContext from '../src/context/Setting';
 export default function Account({ navigation }) {
   const {settings,saveSettings}= useContext(SettingsContext);
 
-console.log("setthings :  ",settings)
+// console.log("setthings :  ",settings)
 
   const [username,setUsername]=useState("User")
   React.useEffect(()=>{
@@ -59,11 +59,11 @@ console.log("setthings :  ",settings)
       title: data["My_Parking_Spaces"][settings],
       icon: "car",
       }
-      // ,
-      // {
-      //   title: data["Late_Payment"][settings],
-      //   icon: "dollar",
-      //   }
+      ,
+      {
+        title: data["Late_Payment"][settings],
+        icon: "dollar",
+        }
   ];
 
 
@@ -128,6 +128,9 @@ user.delete().then(function() {
     key == 3 && navigation.navigate("AccountLanguage");
     key == 4 && navigation.navigate("AccountAbout");
     key == 5 && navigation.navigate("AccountParkings");
+    key == 6 && navigation.navigate("AccountLatePayment");
+
+    
   };
   return (
 
@@ -174,10 +177,10 @@ user.delete().then(function() {
           button
           onPress={() => {
             {
-              deleteAccount(6);
+              deleteAccount(100);
             }
           }}
-          key={6}
+          key={100}
           containerStyle={{ width: "80%" }}
         >
           <Icon name="smile-o" size={20} />

@@ -47,7 +47,7 @@ export default function TabBottom(props){
           
           }} 
         icon={ <Icon name="place" size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} containerStyle={{color:"black"}} titleStyle={styles.tileButton} title={data["Map"][settings]} />
-        <Tab.Item icon={ <Icon name="confirmation-number"  onPress={()=> {}} size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title={data["Ticket"][settings]} />
+        <Tab.Item icon={ <Icon name="confirmation-number"  onPress={()=> {props.navigate.replace('Tickets')}} size={30} color="#5EA0EE"/>} buttonStyle={styles.tileCont} titleStyle={styles.tileButton} title={data["Ticket"][settings]} />
         <Tab.Item 
         onPressIn={()=>{
           //console.log("pressed3")

@@ -30,16 +30,16 @@ import { data } from "../src/Transaltion/translation";
 import SettingsContext from '../src/context/Setting';
 
 export default function AccountAddParking({route,navigation}  ) {
-  // const [Flatno, setFlatNo] = useState("");
-  // const [Building, setBuilding] = useState("");
-  // const [Street, setStreet] = useState("");
-  // const [Area, setArea] = useState("");
+  const [Flatno, setFlatNo] = useState("");
+  const [Building, setBuilding] = useState("");
+  const [Street, setStreet] = useState("");
+  const [Area, setArea] = useState("");
   const {settings,saveSettings}= useContext(SettingsContext);
 
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
   const [message, setmessage] = useState("");
-  // const [City, setCity] = useState("");
+  const [City, setCity] = useState("");
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
   const [camera, setCamera] = useState(false);
@@ -109,16 +109,16 @@ if(route.params){
       longitude: userLocation.longitude,
     };
     const obj = {
-      // Flatno,
-      // Building,
-      // Street,
+      Flatno,
+      Building,
+      Street,
       coordinates,
-      // Area,
+      Area,
       guard,
       covered,
       camera,
       Price,
-      // City,
+      City,
     };
 
     const ghash = geohash.encode(
@@ -184,20 +184,20 @@ if(route.params){
         <Text style={styles.UserName}>{data["Location_And_Details"][settings]}</Text>
 
         <MapsView
-          // Flatno={Flatno}
-          // Building={Building}
-          // Street={Street}
-          // Area={Area}
+          Flatno={Flatno}
+          Building={Building}
+          Street={Street}
+          Area={Area}
           Price={Price}
           userLocation={userLocation}
-          // setFlatNo={setFlatNo}
-          // setBuilding={setBuilding}
-          // setStreet={setStreet}
-          // setArea={setArea}
+          setFlatNo={setFlatNo}
+          setBuilding={setBuilding}
+          setStreet={setStreet}
+          setArea={setArea}
           setPrice={setPrice}
           setUserLocation={setUserLocation}
-          // City={City}
-          // setCity={setCity}
+          City={City}
+          setCity={setCity}
         />
 
         <Text style={styles.UserName}>{data["Features"][settings]}</Text>

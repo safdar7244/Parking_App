@@ -521,12 +521,11 @@ db.collection("users")
                             width: "100%",
                           }}
                         ></Avatar>
-
-                        <Text>Price </Text>
-                        <Text>Some Details </Text>
-                        <Text>Some More Details </Text>
-
-                       {loadingScreen ? 
+  {console.log("pppprrriiiiccee:",requestSpace)}
+                        <Text>{requestSpace && requestSpace.Price} </Text>
+                        <Text>{requestSpace && requestSpace.Flatno+" ,"+requestSpace.Area+" ,"+requestSpace.Building} </Text>
+                        <Text>{requestSpace && requestSpace.City+" ,"+requestSpace.Street}</Text>
+               {loadingScreen ? 
                         <View style={{flex:1,padding:20}}>
                         <ActivityIndicator size="large" color="#0000ff"/>
                           </View>
@@ -682,7 +681,7 @@ db.collection("users")
             spaces.map((space) => {
               const a = space;
               // ////console.log("user", user);
-              if (user && user.uid !== space.owner)
+              if (user && user.uid !== space.owner && space.camera===camera && space.guard===guard && space.covered===covered )
                 return (
                   <Marker
                     coordinate={{
