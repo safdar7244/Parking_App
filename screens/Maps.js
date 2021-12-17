@@ -67,7 +67,7 @@ export default function Maps({ navigation }) {
   const [bookedSpace, setBookedSpace] = useState(null);
   const [requestSpace,setrequestSpace] = useState(null);
   const [startGps,setStartGps] = useState(false);
-  const [parked,setParked]= useState(true);
+  const [parked,setParked]= useState(false);
   
     const [requestRejected, setRequestRejected] = useState(false);
 

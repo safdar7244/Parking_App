@@ -99,14 +99,14 @@ export default function Register({ navigation, route }) {
 
       const obj = {
         email,
-        name,
-        StripeId=0
+        name
       };
 
       auth.onAuthStateChanged((authUser) => {
         if (authUser) {
           //console.log(authUser);
           obj.id = authUser.uid;
+          obj.stripeId=0;
 
           db.collection("users")
             .doc(obj.id)
