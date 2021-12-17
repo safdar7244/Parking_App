@@ -16,6 +16,7 @@ import SettingsContext from '../src/context/Setting';
 import { data } from '../src/Transaltion/translation';
 export default function Tickets({navigation}){
 
+
   const list_spaces=[
 
   ]
@@ -82,6 +83,7 @@ list_spaces.push(dd)
       
 //   ]
   return (
+<View style={styles.container}> 
 <ScrollView style={{ minHeight:"100%" }} acontentContainerStyle={{ flexGrow: 1 ,      
 }}
 stickyFooterIndices={[0]}
@@ -123,6 +125,9 @@ stickyFooterIndices={[0]}
 
 
   </ScrollView>
+  <TabBottom  navigate={navigation} />
+
+  </View>
 
   );
 };

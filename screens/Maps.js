@@ -39,6 +39,7 @@ import PushNotification from "./PushNotification";
 import { schedulePushNotification } from "./PushNotification";
 import { data } from "../src/Transaltion/translation";
 import SettingsContext from '../src/context/Setting';
+import Parked from "./Parked";
 ///////////////////////////////////////////////////////////////////////
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -66,7 +67,7 @@ export default function Maps({ navigation }) {
   const [bookedSpace, setBookedSpace] = useState(null);
   const [requestSpace,setrequestSpace] = useState(null);
   const [startGps,setStartGps] = useState(false);
-
+  const [parked,setParked]= useState(true);
   
     const [requestRejected, setRequestRejected] = useState(false);
 
@@ -297,6 +298,26 @@ db.collection("users")
 //////////////////////////////////////////////////////////////////////////
 
 
+
+function ParkCar() 
+{
+  setStartGps(false)
+  stopDirections();
+  setParked(true);
+
+  db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        checkIntime: new Date()
+      })
+      .then(function () {
+})
+  
+}
+
+
+/////////////////////////////////////////////////////////////////////////
+
   function RejectRequest(bookedSpace) 
   {
 
@@ -476,9 +497,10 @@ db.collection("users")
         reject={RejectRequest}
         customer={customer}
         bookedSpace={bookedSpace}
-        
-
       />
+
+      <Parked visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
+
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
         isVisible={visible}
@@ -600,18 +622,14 @@ db.collection("users")
         }}
       >
         <Button
-                          onPress={() => {
-                            setStartGps(false)
-                            stopDirections();
-                            resetBackend();
-                          }}
+                          onPress={onPress={ParkCar}}
 
                           titleStyle={{ color: "white" }}
                           buttonStyle={{
                             backgroundColor: "red",
                           }}
                           containerStyle={{}}
-                          title="stop navigation"
+                          title="stop navigation and park"
         ></Button> 
       </View>}
 

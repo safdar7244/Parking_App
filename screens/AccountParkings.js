@@ -14,6 +14,9 @@ import AvatarCustom from './common/AvatarCustom';
 import { auth, db } from "../firebase";
 import SettingsContext from '../src/context/Setting';
 import { data } from '../src/Transaltion/translation';
+import axios from 'axios';
+
+
 export default function AccountParkings({navigation}){
 
   const list_spaces=[
@@ -21,6 +24,9 @@ export default function AccountParkings({navigation}){
   ]
   const [username,setUsername]=useState("User")
   const {settings,saveSettings}= useContext(SettingsContext);
+  const [stripe,SetStripe]= useState(0);
+  const [loading,setLoading]=useState(false)
+
 
   const [spaces,setSpaces]=useState([])
   React.useEffect(()=>{
@@ -81,6 +87,72 @@ list_spaces.push(dd)
             
       
 //   ]
+
+
+/////////////////////////////////////////////////////////////////
+
+async function Check (){
+
+  const cityRef = db.collection('users').doc(auth.currentUser.uid);
+  const doc = await cityRef.get();
+  if (!doc.exists) {
+    console.log('No such document!');
+  } else {
+    console.log('Document data:', doc.data().stripeId);
+    SetStripe(doc.data().stripeId)
+  }
+  console.log("stripe",stripe)
+  return doc.data().stripeId
+
+  }
+
+/////////////////////////////////////////////////////////////////
+const AccountLink = async ()=>
+{
+
+  try
+  {
+  setLoading(true)
+  const response = await axios.get('https://ancient-woodland-88729.herokuapp.com/onboard-user')
+  setLoading(false)
+  ///////////////////////////////////
+  if (response)
+  {
+      db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        stripeId:response.data.id_
+      })
+      .then(function () {  
+      });
+   SetStripe(response.data.id_)
+  ///////////////////////////////////
+  Linking.canOpenURL(response.data.url).then(supported => {
+  if (supported) 
+  {
+    Linking.openURL(response.data.url);
+  } else {
+    console.log("Don't know how to open URI: " + response.data.url);
+  }
+});
+  }
+
+  }
+  catch(err)
+  {
+    console.log(err)
+    setLoading(false)
+  }
+  ///////////////////////////////////
+
+}
+///////////////////////////////////////////////////////////////// 
+
+
+
+
+
+
   return (
 <ScrollView style={{ minHeight:"100%" }} acontentContainerStyle={{ flexGrow: 1 ,      
 }}
@@ -117,9 +189,21 @@ stickyFooterIndices={[0]}
 }
 </View>
 <View style={styles.innerContainer3}>
-<ListItem button onPress={() => {
+<ListItem button onPress={async () => {
           console.log("pressed")
-          {navigation.navigate('AccountAddParking')}}}
+          const check = await Check();
+          if(check != 0)
+          {
+          navigation.navigate('AccountAddParking')
+          }
+          else
+          {
+            AccountLink();
+          }
+        }
+        
+        
+        }
            key={100}  containerStyle={{width:"80%",fontSize:12}}>
             <ListItem.Content>
               <ListItem.Title>{data["Add_Slot"][settings]}      <Icon
@@ -135,7 +219,7 @@ stickyFooterIndices={[0]}
 /></ListItem.Title>
        
             </ListItem.Content>
-            <ListItem.Chevron />
+   
           </ListItem>
 
 </View>     
@@ -199,7 +283,7 @@ innerContainer2:
     marginTop:20,
   borderRadius:15,
     backgroundColor:"white",
-    width:"80%",
+    width:"85%",
     // marginTop:"10%",
     justifyContent:"center",
     alignItems:"center",
@@ -212,7 +296,7 @@ innerContainer3:
     marginBottom:"55%",
   borderRadius:15,
     backgroundColor:"white",
-    width:"80%",
+    width:"85%",
     marginTop:"20%",
     justifyContent:"center",
     alignItems:"center",
