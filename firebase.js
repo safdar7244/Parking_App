@@ -8,13 +8,13 @@ import "firebase/firestore";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBzaJcDueS7-N1XeLc89fD4WXhSQZQEPsc",
-  authDomain: "parking-app-9058e.firebaseapp.com",
-  projectId: "parking-app-9058e",
-  storageBucket: "parking-app-9058e.appspot.com",
-  messagingSenderId: "951274266277",
-  appId: "1:951274266277:web:40f01433ada2504785f74c",
-  measurementId: "G-3FN5S881GM",
+  apiKey: "AIzaSyAsp-zjL1XiddCr7HwEm33N5sPsDbRjvlo",
+  authDomain: "new-parking-app-ecfa0.firebaseapp.com",
+  projectId: "new-parking-app-ecfa0",
+  storageBucket: "new-parking-app-ecfa0.appspot.com",
+  messagingSenderId: "1049891039964",
+  appId: "1:1049891039964:web:d06f1fd2024ca7023ca219",
+  measurementId: "G-RDFXJ31JDY"
 };
 
 let app;

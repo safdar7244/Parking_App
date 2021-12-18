@@ -69,20 +69,33 @@ export default function Account({ navigation }) {
       // setDeleteUser(false)
 
 
+      const usr_=auth.currentUser
     
-      auth.currentUser.delete().then(async()=>{
-        // console.log("user id  : ",user.uid)
+      // auth.currentUser.delete().then(async()=>{
+      //   // console.log("user id  : ",user.uid)
 
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: "Register",
-              params: { someParam: "Param1" },
-            },
-          ],
-        });
-      })
+      //   navigation.reset({
+      //     index: 0,
+      //     routes: [
+      //       {
+      //         name: "Register",
+      //         params: { someParam: "Param1" },
+      //       },
+      //     ],
+      //   });
+      // })
+
+      auth.signOut().then(function() {
+        console.log('Signed Out')
+        // setFlag(true)
+
+        // navigation.replace("ReLogin")
+
+       
+      
+      }, function(error) {
+        console.error('Sign Out Error', error);
+      });
     setDeleteUser(false)
     
     })
