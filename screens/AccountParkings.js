@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground,StyleSheet, View,Picker, SafeAreaView, Text, Alert,ScrollView } from 'react-native';
+import { ImageBackground,StyleSheet, View,Picker, SafeAreaView, Text,Linking, Alert,ScrollView } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input ,Switch, Divider,Overlay} from 'react-native-elements';
@@ -91,30 +91,30 @@ list_spaces.push(dd)
 
 /////////////////////////////////////////////////////////////////
 
-async function Check (){
-
+async function Check ()
+{
   const cityRef = db.collection('users').doc(auth.currentUser.uid);
   const doc = await cityRef.get();
-  if (!doc.exists) {
+  if (!doc.exists) 
+  {
     console.log('No such document!');
-  } else {
+  } else 
+  {
     console.log('Document data:', doc.data().stripeId);
     SetStripe(doc.data().stripeId)
   }
   console.log("stripe",stripe)
+  
   return doc.data().stripeId
-
-  }
+}
 
 /////////////////////////////////////////////////////////////////
 const AccountLink = async ()=>
 {
-
   try
   {
   setLoading(true)
   const response = await axios.get('https://ancient-woodland-88729.herokuapp.com/onboard-user')
-  setLoading(false)
   ///////////////////////////////////
   if (response)
   {
@@ -124,14 +124,19 @@ const AccountLink = async ()=>
         stripeId:response.data.id_
       })
       .then(function () {  
+
       });
    SetStripe(response.data.id_)
+   setLoading(false)
   ///////////////////////////////////
-  Linking.canOpenURL(response.data.url).then(supported => {
+  Linking.canOpenURL(response.data.url).then(supported => 
+  {
   if (supported) 
   {
     Linking.openURL(response.data.url);
-  } else {
+  } 
+  else
+  {
     console.log("Don't know how to open URI: " + response.data.url);
   }
 });
@@ -221,6 +226,7 @@ stickyFooterIndices={[0]}
             </ListItem.Content>
    
           </ListItem>
+          <Text style={{fontSize:10}}> { loading? "Proecessing Request.." : "" }</Text>
 
 </View>     
 
@@ -236,9 +242,6 @@ stickyFooterIndices={[0]}
 
 const styles = StyleSheet.create({
     Scrollcontainer:{
-        // marginVertical:50,
-
-        // marginHorizontal:20
     },
     container: {
     flex: 1,
@@ -254,11 +257,6 @@ minHeight:120,
     
   },
   innerText:{
-// backgroundColor:"white",
-// width:"80%",
-// fontSize:19,
-// fontWeight:"bold",
-// marginRight:100
   },
   UserName:
 {

@@ -11,39 +11,36 @@ export default function UploadImage(props) {
   const [uploading, setUploading] = useState(false);
 
   const addImage = async () => {
-    let _image = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4,3],
-      quality: 1,
-    });
+    let _image = await ImagePicker.launchImageLibraryAsync();
 
     console.log(_image.uri);
 
-    if (!_image.cancelled) {
+    if (!_image.cancelled) 
+    {
       setImage(_image.uri);
-      _handleImagePicked(_image)
+      _handleImagePicked(_image.uri).then(()=>{
+        console.log("SUCCESS")
+      })
+      
+      .catch(()=>{
+        console.log("NO SUCCESS")
+      })
+
     }
-    
+
   };
 
-
-
-
-
-  async function _handleImagePicked (pickerResult){
-    try {
-      
-      if (!pickerResult.cancelled) {
-        // console.log("-> img uri : ",pickerResult)
-        const uploadUrl = await uploadImageAsync(pickerResult.uri);
-        // setImage(uploadUrl);
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Upload failed, sorry");
-    } finally {
-    }
+  async function _handleImagePicked (uri)
+  {
+    console.log("res")
+  //  const response = await fetch(uri);
+  //  console.log("res",response)
+   const blob = uri.blob();
+   console.log("blob",blob)
+   var ref = storage.ref().child("images/"+uri)
+   const metadata = response.headers;
+    await ref.put(blob, metadata)
+   return res
   };
 
 async function uploadImageAsync(uri) {
@@ -68,7 +65,8 @@ async function uploadImageAsync(uri) {
 
   const fileRef = storage.ref(uuid.v4());
   console.log("fikle: ",fileRef)
-  // const result = await storage(fileRef, blob);
+  const storageRef = ref(storage, 'images/' + file.name);
+  const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
   // We're done with the blob, close and release it
   // blob.close();

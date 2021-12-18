@@ -21,6 +21,7 @@ import TempScreen from "./screens/temp";
 import Tickets from "./screens/Tickets";
 import AccountLatePayment from "./screens/AccountLatePayment";
 import { SettingsProvider } from "./src/context/Setting";
+import Card from "./screens/CardPay";
 
 const Stack = createNativeStackNavigator();
 const settings =1;
@@ -115,6 +116,11 @@ export default function MyStack() {
         <Stack.Screen
           name="AccountLatePayment"
           component={AccountLatePayment}
+          options={{ title: "", headerShown: true }}
+        />
+        <Stack.Screen
+          name="Card"
+          component={Card}
           options={{ title: "", headerShown: true }}
         />
 

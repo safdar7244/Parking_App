@@ -68,9 +68,7 @@ export default function Maps({ navigation }) {
   const [requestSpace,setrequestSpace] = useState(null);
   const [startGps,setStartGps] = useState(false);
   const [parked,setParked]= useState(false);
-  
-    const [requestRejected, setRequestRejected] = useState(false);
-
+  const [requestRejected, setRequestRejected] = useState(false);
   const [loadingScreen, setLoadingScreen] = useState(false);
 
   const toggleOverlayRequest = () => {
@@ -499,7 +497,7 @@ function ParkCar()
         bookedSpace={bookedSpace}
       />
 
-      <Parked visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
+      <Parked navigation={navigation} visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
 
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}

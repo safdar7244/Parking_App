@@ -27,7 +27,7 @@ import {
 
 
 
-function Parked(props) {
+function Parked(props,navigation) {
 
 
     const [hours,setHours]=useState(0)
@@ -36,7 +36,7 @@ function Parked(props) {
 
     async function checkout() 
     {
-        //props.setParked(false)
+      
         let date
         console.log("Asdasdas")
 
@@ -52,7 +52,8 @@ function Parked(props) {
           const diffTime = Math.abs(date1 - date);
           const hours = diffTime/3600000;
           setHours(hours)
-          setPrice(hours*props.bookedSpace.Price)
+          setPrice('hours*props.bookedSpace.Price')
+          props.navigation.navigate('Card',{ pay: pay,ownerid:'props.bookedSpace.owner' ,price :200})
         }
     }
 
@@ -60,6 +61,16 @@ function Parked(props) {
     {
       props.setParked(false)
       props.reset()
+      db.collection("users")
+      .doc(auth.currentUser.uid)
+      .doc('history')
+      .add({
+        bookedSpace:props.bookedSpace,
+        date: new Date()
+      })
+      .then(function () {
+        ////console.log("Frank food updated");
+      });
     }
 
 
@@ -70,28 +81,16 @@ function Parked(props) {
           Car Has Been Parked!
         </Text>
 
-        {
-          hours!=0 &&
-
-        <TextInput
-        placeholder="Stripe Id"
-        style={styles.formFieldText}
-        onChangeText={(text) => setStripeId(text)}
-      />
-        }
         <View
           style={{
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          {hours==0 && <>
+  
           <ButtonMain title="Checkout and Pay Now" function={checkout}  />
           <ButtonMain title="Checkout and Pay Later" />
-          </>}
-          {hours!=0 && <>
-          <ButtonMain title="Pay Now" function={pay}  />
-          </>}
+
         </View>
           <View style={{padding:20}}></View>
             </View> 
