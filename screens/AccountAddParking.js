@@ -14,7 +14,7 @@ import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Switch, Divider, Overlay } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import { TabView, ListItem, Tab, Button } from "react-native-elements";
 import Maps from "./Maps";
 import AccountEdit from "./AccountEdit";
@@ -27,14 +27,15 @@ import MapsView from "./MapsView";
 import { auth, db } from "../firebase";
 import geohash from "ngeohash";
 import { data } from "../src/Transaltion/translation";
-import SettingsContext from '../src/context/Setting';
+import SettingsContext from "../src/context/Setting";
+import * as firebase from "firebase";
 
-export default function AccountAddParking({route,navigation}  ) {
+export default function AccountAddParking({ route, navigation }) {
   const [Flatno, setFlatNo] = useState("");
   const [Building, setBuilding] = useState("");
   const [Street, setStreet] = useState("");
   const [Area, setArea] = useState("");
-  const {settings,saveSettings}= useContext(SettingsContext);
+  const { settings, saveSettings } = useContext(SettingsContext);
 
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
@@ -43,41 +44,33 @@ export default function AccountAddParking({route,navigation}  ) {
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
   const [camera, setCamera] = useState(false);
-  const [flag,setFlag]=useState(false)
+  const [flag, setFlag] = useState(false);
+  const [imageUri, setImageUri] = useState(null);
 
-React.useEffect(()=>{
-  // const _item={}
-  // if(props){
-  //   const {item}=props.route.params.item
-  //   _item=item
-  // }
-  
-// console.log("props,",route,"NAV->",navigation)
-// console.log("--->>>",item)
-if(route.params){
-  console.log("props ener",route.params)
-  // setFlag(true)
-  setStreet(route.params.item.Street)
-  setFlatNo(route.params.item.Flatno)
-  setCity(route.params.item.City)
-  setBuilding(route.params.item.Building)
-  setMessage(route.params.item.message)
-  setArea(route.params.item.Area)
-  setPrice(route.params.item.Price)
-  setCamera(route.params.item.camera)
-  setCovered(route.params.item.covered)
-  setUserLocation({
-    latitude: route.params.item.coordinates.latitude,
-    longitude: route.params.item.coordinates.longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  })
+  React.useEffect(() => {
+    if (route.params) {
+      console.log("props ener", route.params);
+      // setFlag(true)
+      setStreet(route.params.item.Street);
+      setFlatNo(route.params.item.Flatno);
+      setCity(route.params.item.City);
+      setBuilding(route.params.item.Building);
+      setMessage(route.params.item.message);
+      setArea(route.params.item.Area);
+      setPrice(route.params.item.Price);
+      setCamera(route.params.item.camera);
+      setCovered(route.params.item.covered);
+      setUserLocation({
+        latitude: route.params.item.coordinates.latitude,
+        longitude: route.params.item.coordinates.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
 
-  setGuard(route.params.item.guard)
-}
-setFlag(true)
-
-},[])
+      setGuard(route.params.item.guard);
+    }
+    setFlag(true);
+  }, []);
 
   const getGeohashRange = (
     latitude,
@@ -112,7 +105,7 @@ setFlag(true)
       guard,
       covered,
       camera,
-      Price,
+      Price
       // City
     );
     const coordinates = {
@@ -130,7 +123,7 @@ setFlag(true)
       camera,
       Price,
       City,
-      message
+      message,
     };
 
     const ghash = geohash.encode(
@@ -144,38 +137,104 @@ setFlag(true)
       12
     );
 
-    // console.log("rang", range);
-    // db.collection("spaces")
-    //   .where("ghash", ">=", range.lower)
-    //   .where("ghash", "<=", range.upper)
-    //   .onSnapshot((snapshot) => {
-    //     // Your own custom logic here
-    //     snapshot.forEach((doc) => {
-    //       console.log(doc.id, doc.data());
-    //     });
-    //   });
-
-    auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        console.log(authUser);
-        obj.owner = authUser.uid;
-        obj.ghash = ghash;
-        db.collection("spaces")
-          .add(obj)
-          .then(() => {
-            console.log("Document successfully written!");
-                    navigation.replace("Maps")
-
-          })
-          .catch((error) => {
-            console.error("Error writing document: ", error);
-          });
-      }
-    });
-
     console.log(obj);
 
+    if (imageUri) {
+      console.log("ImageUri: ", imageUri);
+      uploadImageAsync(imageUri, obj);
+    }
   };
+
+  async function uploadImageAsync(uri, obj) {
+    console.log("->", uri);
+    //const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        console.log("vlvolL : ", xhr._response);
+
+        resolve(xhr._response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+    var metadata = {
+      contentType: "image/jpeg",
+    };
+    // const fileRef = firebase.storage().ref().child(new Date().toISOString());
+    const filename = uri.substring(uri.lastIndexOf("/") + 1);
+    const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+
+    var ref = firebase.storage().ref().child(new Date().toISOString());
+    console.log(blob);
+    console.log("fuck u khizer", uri, filename);
+    var uploadTask = ref.put(uploadUri);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case firebase.storage.TaskState.PAUSED: // or 'paused'
+            console.log("Upload is paused");
+            break;
+          case firebase.storage.TaskState.RUNNING: // or 'running'
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          console.log("File available at", downloadURL);
+        });
+      }
+    );
+
+    // const snapshot = fileRef
+    //   .put(blob)
+    //   .then((snapshot) => {
+    //     console.log("boga boga boagogaads");
+    //     snapshot.ref.getDownloadURL().then(function (downloadURL) {
+    //       console.log("File available at", downloadURL);
+    //     });
+
+    //     console.log("put wla then");
+    // auth.onAuthStateChanged((authUser) => {
+    //   if (authUser) {
+    //     console.log(authUser);
+    //     obj.owner = authUser.uid;
+    //     obj.ghash = ghash;
+    //     db.collection("spaces")
+    //       .add(obj)
+    //       .then(() => {
+    //         console.log("Document successfully written!");
+    //         navigation.replace("Maps");
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error writing document: ", error);
+    //       });
+    //   }
+    // });
+    // })
+    // .catch((e) => {
+    //   console.log("put wla error", e);
+    // });
+    console.log("fikle: ", blob);
+  }
+
   return (
     <ScrollView
       style={{}}
@@ -184,35 +243,33 @@ setFlag(true)
     >
       <TabBottom navigate={navigation} />
 
-
-      
       <View style={styles.innerContainer}>
-      <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
+        <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
 
-        <UploadImage />
-     
+        <UploadImage imageUri={imageUri} setImageUri={setImageUri} />
 
+        <Text style={styles.UserName}>
+          {data["Location_And_Details"][settings]}
+        </Text>
 
-        <Text style={styles.UserName}>{data["Location_And_Details"][settings]}</Text>
-
-       {flag && <MapsView
-          Flatno={Flatno}
-          Building={Building}
-          Street={Street}
-          Area={Area}
-          Price={Price}
-          userLocation={userLocation}
-          setFlatNo={setFlatNo}
-          setBuilding={setBuilding}
-          setStreet={setStreet}
-          setArea={setArea}
-          setPrice={setPrice}
-          setUserLocation={setUserLocation}
-          City={City}
-          setCity={setCity}
-          // flag={flag}
-          // setFlag={setFlag}
-        />}
+        {flag && (
+          <MapsView
+            Flatno={Flatno}
+            Building={Building}
+            Street={Street}
+            Area={Area}
+            Price={Price}
+            userLocation={userLocation}
+            setFlatNo={setFlatNo}
+            setBuilding={setBuilding}
+            setStreet={setStreet}
+            setArea={setArea}
+            setPrice={setPrice}
+            setUserLocation={setUserLocation}
+            City={City}
+            setCity={setCity}
+          />
+        )}
 
         <Text style={styles.UserName}>{data["Features"][settings]}</Text>
 
@@ -247,14 +304,14 @@ setFlag(true)
             {data["If_Any_Querry"][settings]}
           </Text>
           <TextInput
-          editable = {true}
-          multiline = {true}
-          numberOfLines={5}
+            editable={true}
+            multiline={true}
+            numberOfLines={5}
             style={{
               width: "100%",
               fontSize: 12,
               borderRadius: 7,
-              borderWidth: .5,
+              borderWidth: 0.5,
               padding: 5,
               marginBottom: 20,
               backgroundColor: "#eeeeee",
@@ -323,7 +380,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 40,
-    marginTop:40
+    marginTop: 40,
   },
   UserName2: {
     fontFamily: "sans-serif",
