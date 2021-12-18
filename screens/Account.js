@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
 import { useState ,useContext} from "react";
-import { TabView, ListItem, Tab, Button } from "react-native-elements";
+import { TabView, ListItem, Tab, Button,Divider } from "react-native-elements";
 import Maps from "./Maps";
 import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
@@ -24,6 +24,7 @@ import { auth, db } from "../firebase";
 // import ReLogin from "./ReLogin";
 import { data } from "../src/Transaltion/translation";
 import SettingsContext from '../src/context/Setting';
+import { Overlay } from "react-native-elements/dist/overlay/Overlay";
 
 export default function Account({ navigation }) {
   const {settings,saveSettings}= useContext(SettingsContext);
@@ -31,12 +32,52 @@ export default function Account({ navigation }) {
 // console.log("setthings :  ",settings)
 
   const [username,setUsername]=useState("User")
+  const [password,setPassword]=useState("")
+  const [email,setEmail]=useState("")
+  const [deleteUser,setDeleteUser]=useState(false)
+  const [nowDelete,setNowDelete]=useState(true)
+
+  const [flag,setFlag]=useState(false)
+
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
+    setEmail(auth.currentUser.providerData[0]["email"])    
     console.log("CURRENT : ",user)
   },[])
+
+
+
+  React.useEffect(()=>{
+    if(deleteUser){
+      db.collection("users").doc(auth.currentUser.uid).delete().then(()=>{console.log("user washhhhhh deleted")
+      setNowDelete(true)
+      setDeleteUser(false)
+    
+    
+    })
+//  let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
+//   // let batch = db.batch();
   
+//   doc_spaces
+//     .get()
+//     .then(snapshot => {
+//       snapshot.docs.forEach(doc => {
+//         doc.ref.delete();
+//       });
+//       // return batch.commit();
+//       setNowDelete(true)
+//       setDeleteUser(false)
+
+
+//     })
+console.log("NOW SETTIGN VALUES")
+
+    }
+  },[deleteUser])
+
+
+
   const list = [
     {
       title: data["Profile"][settings],
@@ -66,47 +107,71 @@ export default function Account({ navigation }) {
         }
   ];
 
+ async function clearFirestoreCollections(){
+  db.collection("users").doc(auth.currentUser.uid).delete()
 
+
+  var doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
+  let batch = db.batch();
+  
+  doc_spaces
+    .get()
+    .then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+      return batch.commit();
+    })
+    }
   const deleteAccount=(ley)=>{
 
+   
 const user = auth.currentUser;
 // console.log("usr :",user)
-user.delete().then(function() {
-  // User deleted.
-  // navigation.navigate()
-  // console.log("DELETEDDD")
-  Alert.alert(
-    "Account Deleted ! ",
-    "Press OK to continue",
-    [
+// user.delete().then(function() {
+//   // User deleted.
+//   // navigation.navigate()
+//   // console.log("DELETEDDD")
+//   Alert.alert(
+//     "Account Deleted ! ",
+//     "Press OK to continue",
+//     [
     
-      { text: "OK", onPress: () => {
+//       { text: "OK", onPress: () => {
 
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Register' }]
-     })
-      //  navigation.navigate("Register")
+//         navigation.reset({
+//           index: 0,
+//           routes: [{ name: 'Register' }]
+//      })
+//       //  navigation.navigate("Register")
 
         
-      } }
-    ]
-  );
-}).catch(function(error) {
+//       } }
+//     ]
+//   );
+// }).catch(function(error) {
   // An error happened.
   Alert.alert(
     "Alert !",
-    "Please, Enter your Credentials again before Deleting your Account",
+    "Are you sure you want to delete your Account?",
     [
     
-      { text: "OK", onPress: () => {
+      {
+        text:"Cancel",onPress:()=>{
+
+      }},
+      { text: "Proceed", onPress: () => {
 
 
 
         auth.signOut().then(function() {
           console.log('Signed Out')
-          navigation.replace("ReLogin")
+          setFlag(true)
+
+          // navigation.replace("ReLogin")
+
+         
         
         }, function(error) {
           console.error('Sign Out Error', error);
@@ -116,7 +181,7 @@ user.delete().then(function() {
       } }
     ]
   );
-});
+// });
 
   }
 
@@ -151,6 +216,121 @@ user.delete().then(function() {
 
         <Text style={styles.UserName}>{username}</Text>
       </View>
+
+
+
+      <Overlay overlayStyle={{ padding: 20, width: "80%" }}
+          isVisible={flag}
+          onBackdropPress={() => {
+            setFlag(!flag);
+            setPassword("")
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: "Login",
+                  params: { someParam: "Param1" },
+                },
+              ],
+            });
+          }}>
+                    <View style={{ width: "100%"}}                    >
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                        style={{fontWeight:"bold",fontSize:20,marginBottom:20}}
+                        >Confirm Credentials</Text>
+                        <Divider />
+                        <Input
+            containerStyle={styles.buttonContainer}
+            
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            value = {password}
+            secureTextEntry={true}
+          />
+          <Button
+                      // containerStyle={{color:"red"}}
+                      buttonStyle={{backgroundColor:"red"}}
+          // style={{width:"100%"}}
+          title="Submit"
+          onPress={()=>{
+            console.log("ACCOUNT DELETED")
+            auth
+      .signInWithEmailAndPassword(email, password)
+      .then(async () => {
+        console.log("dasdsdasd",email,password,auth.currentUser.uid);
+
+        const user = auth.currentUser;
+
+
+// firebase users and spaces deletion
+
+
+console.log("before ")
+setDeleteUser(true)
+// await db.collection("users").doc(user.uid).delete().then(()=>{console.log("user washhhhhh deleted")})
+
+
+  // let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
+  // // let batch = db.batch();
+  
+  // doc_spaces
+  //   .get()
+  //   .then(snapshot => {
+  //     snapshot.docs.forEach(doc => {
+  //       doc.ref.delete();
+  //     });
+  //     // return batch.commit();
+  //   })
+    console.log("after ")
+// console.log("COMMMM :",db.collection("users").doc(auth.currentUser.uid))
+// 
+//
+
+
+
+        // console.log("usr :",user)
+        console.log("before deleting user")
+       {nowDelete ? user.delete().then(async()=>{
+          // console.log("user id  : ",user.uid)
+
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: "Register",
+                params: { someParam: "Param1" },
+              },
+            ],
+          });
+        }):
+        console.log("false.....")
+      }
+
+
+       
+      })
+      .catch((err) => {
+        alert(err);
+      });
+
+
+
+          }}
+          ></Button>
+                      </View>
+                      </View>
+
+            </Overlay> 
+
+
+
+
       <View style={styles.ListStyle}>
         {list.map((item, i) => (
           <ListItem
@@ -266,6 +446,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "90%",
     borderRadius: 10,
+
   },
   tileButton: {
     color: "#5EA0EE",

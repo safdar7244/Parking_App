@@ -27,7 +27,8 @@ export const data = {
     If_Any_Querry:["If theres any Querry Please comment Below","Ha van kérdés, kérjük, kommentálja alább"],
     Guard:["Guard","Őr"],
     Covered:["Covered","Fedett"],
-    Camera:["Camera","Kamera"]
+    Camera:["Camera","Kamera"],
+    Email:["Email","Email"]
 
 
 

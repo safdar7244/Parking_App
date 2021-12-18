@@ -23,7 +23,7 @@ import AccountLatePayment from "./screens/AccountLatePayment";
 import { SettingsProvider } from "./src/context/Setting";
 
 const Stack = createNativeStackNavigator();
-const settings =1;
+const settings =0;
 const globalScreenOptions = {
   headerStyle: {
     backgroundColor: "#5EA0EE",

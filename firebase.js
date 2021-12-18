@@ -23,8 +23,10 @@ if (firebase.apps.length === 0) {
 } else {
   app = firebase.app();
 }
-
+app.firestore().settings({ persistence: false })
 const db = app.firestore();
+
+
 const auth = firebase.auth();
 const storage = firebase.storage()
 

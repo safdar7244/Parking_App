@@ -19,10 +19,13 @@ export default function AccountEdit({navigation}){
   console.log("setthings :  ",settings)
   
   const [username,setUsername]=useState("User")
+  const [email,setEmail]=useState("User")
+
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
-    console.log("CURRENT : ",user)
+    setEmail(auth.currentUser.providerData[0]["email"])
+    // console.log("CURRENT : ",auth.currentUser.providerData[0]["email"])
   },[]);
 
 function updateDbname(val)
@@ -144,23 +147,24 @@ function updateDbname(val)
 
               <View style={styles.row}>
 
-                <Text style={styles.labelText}>{data["Username"][settings]}</Text>
+                <Text style={styles.labelText}>{data["User"][settings]}</Text>
                 <TextInput
                   style={styles.formFieldText}
                   value={values._username}
                   onChangeText={handleChange('_username')}
                 />
                 </View>
-               {/* <View style={styles.row}> 
+               <View style={styles.row}> 
                
-                <Text style={styles.labelText}>Email        </Text>
+                <Text style={styles.labelText}>{data["Email"][settings]}</Text>
                 <TextInput
                   style={styles.formFieldText}
-                  value={values.email}
+                  value={email}
                   onChangeText={handleChange('email')}
+                  editable={false}
                   // secureTextEntry={true}
                 />
-                </View> */}
+                </View>
                 <Button onPress={handleSubmit} title={data["Submit"][settings]}/>
 
                 </View>
@@ -243,6 +247,7 @@ function updateDbname(val)
       paddingLeft: 10,
       marginLeft:-20,
       paddingTop: 10,
+      width:"40%"
       
     },
       image: {
