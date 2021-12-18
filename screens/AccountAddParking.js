@@ -38,11 +38,12 @@ export default function AccountAddParking({route,navigation}  ) {
 
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
-  const [message, setmessage] = useState("");
+  const [message, setMessage] = useState("");
   const [City, setCity] = useState("");
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
   const [camera, setCamera] = useState(false);
+  const [flag,setFlag]=useState(false)
 
 React.useEffect(()=>{
   // const _item={}
@@ -54,7 +55,14 @@ React.useEffect(()=>{
 // console.log("props,",route,"NAV->",navigation)
 // console.log("--->>>",item)
 if(route.params){
-  // console.log("props ener",route.params)
+  console.log("props ener",route.params)
+  // setFlag(true)
+  setStreet(route.params.item.Street)
+  setFlatNo(route.params.item.Flatno)
+  setCity(route.params.item.City)
+  setBuilding(route.params.item.Building)
+  setMessage(route.params.item.message)
+  setArea(route.params.item.Area)
   setPrice(route.params.item.Price)
   setCamera(route.params.item.camera)
   setCovered(route.params.item.covered)
@@ -64,8 +72,11 @@ if(route.params){
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   })
+
   setGuard(route.params.item.guard)
 }
+setFlag(true)
+
 },[])
 
   const getGeohashRange = (
@@ -119,6 +130,7 @@ if(route.params){
       camera,
       Price,
       City,
+      message
     };
 
     const ghash = geohash.encode(
@@ -183,7 +195,7 @@ if(route.params){
 
         <Text style={styles.UserName}>{data["Location_And_Details"][settings]}</Text>
 
-        <MapsView
+       {flag && <MapsView
           Flatno={Flatno}
           Building={Building}
           Street={Street}
@@ -198,7 +210,9 @@ if(route.params){
           setUserLocation={setUserLocation}
           City={City}
           setCity={setCity}
-        />
+          // flag={flag}
+          // setFlag={setFlag}
+        />}
 
         <Text style={styles.UserName}>{data["Features"][settings]}</Text>
 
@@ -246,7 +260,7 @@ if(route.params){
               backgroundColor: "#eeeeee",
               marginLeft: 20,
             }}
-            onChangeText={(message) => setmessage(message)}
+            onChangeText={(message) => setMessage(message)}
             defaultValue={message}
           />
 

@@ -31,7 +31,7 @@ export default function AccountLatePayment({navigation}){
           <AvatarCustom />
            
                <Text style={styles.UserName}>{username}</Text>
-<View style={{flexDirection:"row",padding:40}}> 
+<View style={{flexDirection:"row",padding:40,backgroundColor:"white",marginTop:40}}> 
     <Text style={{paddingTop:15 }}>  {data["Late_Payment"][settings]} </Text>
     <Switch value={latePayment} style={{marginLeft:"auto",paddingRight:60}} color="#00DB8C" onChange={()=>{setLatePayment(!latePayment)}} />
     </View>

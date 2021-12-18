@@ -84,7 +84,7 @@ list_spaces.push(dd)
 //   ]
   return (
 <View style={styles.container}> 
-<ScrollView style={{ minHeight:"100%" }} acontentContainerStyle={{ flexGrow: 1 ,      
+<ScrollView style={{ minHeight:"100%" }} contentContainerStyle={{ flexGrow: 1 ,      
 }}
 stickyFooterIndices={[0]}
 >
@@ -103,7 +103,7 @@ stickyFooterIndices={[0]}
                {/* <Text style={styles.UserName}>{username}</Text> */}
 
                <View style={styles.innerContainer2}>
-<Text style={styles.innerText}>{data["My_Parking_Spaces"][settings]}</Text>
+<Text style={styles.innerText}>{data["My_Tickets"][settings]}</Text>
 {
       
         spaces.map((item, i) => (

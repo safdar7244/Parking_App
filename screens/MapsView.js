@@ -60,7 +60,17 @@ export default function MapsView(props, { navigation }) {
         });
       } catch (err) {}
     };
+
+    console.log("USER LOCATION : ",props.userLocation)
+    if(!props.userLocation){
+
+    console.log(" NULL")
     getLocation();
+  }
+    else
+    {
+      console.log("NotNull ")
+    }
   }, []);
   ////
 

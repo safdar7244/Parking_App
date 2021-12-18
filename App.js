@@ -24,7 +24,7 @@ import { SettingsProvider } from "./src/context/Setting";
 import Card from "./screens/CardPay";
 
 const Stack = createNativeStackNavigator();
-const settings =1;
+const settings =0;
 const globalScreenOptions = {
   headerStyle: {
     backgroundColor: "#5EA0EE",

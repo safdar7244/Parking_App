@@ -3,6 +3,8 @@ export const data = {
     Notifications:["Notifications","Értesítések"],
     Language:["Language","Nyelv"],
     About:["About","Ról ről"],
+    My_Tickets:["My Tickets","Saját jegyeim"],
+
     My_Parking_Spaces:["My Parking Spaces","Saját parkolóhelyeim"],
     Delete_Account:["Delete Account","Fiók törlése"],
     Late_Payment:["Late Payment","Késedelmes fizetés"],
@@ -27,7 +29,8 @@ export const data = {
     If_Any_Querry:["If theres any Querry Please comment Below","Ha van kérdés, kérjük, kommentálja alább"],
     Guard:["Guard","Őr"],
     Covered:["Covered","Fedett"],
-    Camera:["Camera","Kamera"]
+    Camera:["Camera","Kamera"],
+    Email:["Email","Email"]
 
 
 
