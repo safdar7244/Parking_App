@@ -141,45 +141,26 @@ export default function AccountAddParking({ route, navigation }) {
 
     if (imageUri) {
       console.log("ImageUri: ", imageUri);
-      uploadImageAsync(imageUri, obj);
+      uploadImageAsync(imageUri, obj, ghash);
     }
   };
 
-  async function uploadImageAsync(uri, obj) {
-    console.log("->", uri);
-    //const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        console.log("vlvolL : ", xhr._response);
+  async function uploadImageAsync(uri, obj, ghash) {
+    console.log("uploadAsFile", uri);
+    const response = await fetch(uri);
+    const blob = await response.blob();
 
-        resolve(xhr._response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
     var metadata = {
       contentType: "image/jpeg",
     };
-    // const fileRef = firebase.storage().ref().child(new Date().toISOString());
-    const filename = uri.substring(uri.lastIndexOf("/") + 1);
-    const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri;
 
     var ref = firebase.storage().ref().child(new Date().toISOString());
-    console.log(blob);
-    console.log("fuck u khizer", uri, filename);
-    var uploadTask = ref.put(uploadUri);
+
+    var uploadTask = ref.put(blob);
 
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
@@ -192,47 +173,31 @@ export default function AccountAddParking({ route, navigation }) {
         }
       },
       (error) => {
-        // Handle unsuccessful uploads
+        console.log(error);
       },
       () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
           console.log("File available at", downloadURL);
+          auth.onAuthStateChanged((authUser) => {
+            if (authUser) {
+              console.log(authUser);
+              obj.owner = authUser.uid;
+              obj.ghash = ghash;
+              obj.imageUrl = downloadURL;
+              db.collection("spaces")
+                .add(obj)
+                .then(() => {
+                  console.log("Document successfully written!");
+                  navigation.replace("Maps");
+                })
+                .catch((error) => {
+                  console.error("Error writing document: ", error);
+                });
+            }
+          });
         });
       }
     );
-
-    // const snapshot = fileRef
-    //   .put(blob)
-    //   .then((snapshot) => {
-    //     console.log("boga boga boagogaads");
-    //     snapshot.ref.getDownloadURL().then(function (downloadURL) {
-    //       console.log("File available at", downloadURL);
-    //     });
-
-    //     console.log("put wla then");
-    // auth.onAuthStateChanged((authUser) => {
-    //   if (authUser) {
-    //     console.log(authUser);
-    //     obj.owner = authUser.uid;
-    //     obj.ghash = ghash;
-    //     db.collection("spaces")
-    //       .add(obj)
-    //       .then(() => {
-    //         console.log("Document successfully written!");
-    //         navigation.replace("Maps");
-    //       })
-    //       .catch((error) => {
-    //         console.error("Error writing document: ", error);
-    //       });
-    //   }
-    // });
-    // })
-    // .catch((e) => {
-    //   console.log("put wla error", e);
-    // });
-    console.log("fikle: ", blob);
   }
 
   return (
