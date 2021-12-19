@@ -211,7 +211,15 @@ export default function AccountAddParking({ route, navigation }) {
       <View style={styles.innerContainer}>
         <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
 
-        <UploadImage imageUri={imageUri} setImageUri={setImageUri} />
+        <UploadImage imageUri={imageUri} setImageUri={setImageUri} newStyle={
+       { width: 250,
+        height: 250,
+        elevation: 2,
+        backgroundColor: "#efefef",
+        // borderRadius:100,
+        position: "relative",
+        // borderRadius:999,
+        overflow: "hidden"}}/>
 
         <Text style={styles.UserName}>
           {data["Location_And_Details"][settings]}

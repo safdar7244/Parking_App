@@ -37,6 +37,7 @@ export default function Account({ navigation }) {
   const [email,setEmail]=useState("")
   const [deleteUser,setDeleteUser]=useState(false)
   const [nowDelete,setNowDelete]=useState(true)
+  const [profileUrl,setProfileUrl]=useState(false)
 
   const [flag,setFlag]=useState(false)
 
@@ -44,7 +45,16 @@ export default function Account({ navigation }) {
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
     setEmail(auth.currentUser.providerData[0]["email"])    
-    console.log("CURRENT : ",user)
+    // console.log("auth.",auth.currentUser.uid)
+    // const aUser = db.collection('users').doc(auth.currentUser.uid);
+    // console.log("AUSEE L ",aUser)
+    // const docData = await aUser.get()
+    // if(docData){
+    // console.log("docs: ",docData.data().profileImage)
+    // setProfileUrl(docData.data().profileImage)
+    // }
+    setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+
   },[])
 
 
@@ -263,7 +273,7 @@ const user = auth.currentUser;
       />
 
       <View style={styles.innerContainer}>
-        <AvatarCustom url="'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'" />
+        <AvatarCustom url={profileUrl} />
 
         <Text style={styles.UserName}>{username}</Text>
       </View>

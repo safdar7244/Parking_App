@@ -13,20 +13,116 @@ import { Formik } from 'formik'
 import { auth, db } from "../firebase";
 import SettingsContext from '../src/context/Setting';
 import { data } from '../src/Transaltion/translation';
+import UploadImage from './common/UploadImage';
+import * as firebase from "firebase";
+import { set } from 'react-native-reanimated';
+
 export default function AccountEdit({navigation}){
   const {settings,saveSettings}= useContext(SettingsContext);
+  const [imageUri, setImageUri] = useState(null);
 
   console.log("setthings :  ",settings)
   
   const [username,setUsername]=useState("User")
   const [email,setEmail]=useState("User")
+  const [photoUrl,setPhotoUrl]=useState(" ")
+  const [flag,setFlag]=useState(false)
+
 
   React.useEffect(()=>{
+    if(flag){
+    if (imageUri) {
+      console.log("max: ", imageUri);
+      uploadImageAsync(imageUri);
+    }
+  }
+  },[flag]);
+
+  React.useEffect(()=>{
+    // if(photoUrl=="1"){
+     
+    // }
+    // else{
+    //   console.log("YES LENGTH > 0",photoUrl)
+if(photoUrl==" ")
+      setFlag(true)
+    // }
+  },[photoUrl]);
+
+  React.useEffect(()=>{
+    console.log("auth : ",auth.currentUser.providerData)
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
     setEmail(auth.currentUser.providerData[0]["email"])
+    setPhotoUrl(auth.currentUser.providerData[0]["photoURL"])
+
+    // if(auth.currentUser.providerData[0]["photoURL"].length<3 ){
+    //   setPhotoUrl("1")
+    // }
+    // else  if(auth.currentUser.providerData[0]["photoURL"].length>3 )
+    // {
+    //   setPhotoUrl(auth.currentUser.providerData[0]["photoURL"])
+
+    // }
+    // setPhotoUrl(auth.currentUser.providerData[0]["photoURL"].length==0 ?auth.currentUser.providerData[0]["photoURL"] :"1" )
     // console.log("CURRENT : ",auth.currentUser.providerData[0]["email"])
   },[]);
+
+
+  async function uploadImageAsync(uri) {
+    console.log("uploadAsFile", uri);
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    var metadata = {
+      contentType: "image/jpeg",
+    };
+
+    var ref = firebase.storage().ref().child(new Date().toISOString());
+
+    var uploadTask = ref.put(blob);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case firebase.storage.TaskState.PAUSED: // or 'paused'
+            console.log("Upload is paused");
+            break;
+          case firebase.storage.TaskState.RUNNING: // or 'running'
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          auth.onAuthStateChanged((authUser) => {
+            if (authUser) {
+              console.log(authUser);
+              // obj.imageUrl = downloadURL;
+              db.collection("users")
+              .doc(auth.currentUser.uid)
+              .update({
+                profileImage: downloadURL
+              })
+              .then(function () {
+               console.log("Profile pic set")
+               auth.currentUser.updateProfile({
+                photoURL: downloadURL,
+              }).then(()=>{    setPhotoUrl(auth.currentUser.providerData[0]["photoURL"])            });
+              }); 
+            }
+          });
+        });
+      }
+    );
+  }
 
 function updateDbname(val)
 {
@@ -107,15 +203,28 @@ function updateDbname(val)
 
 
           <View style={styles.innerContainer}>
-          <AvatarCustom />
+          {/* <AvatarCustom /> */}
           
-               <Text style={styles.UserName}>{username}</Text>
+{     flag &&     <UploadImage imageUri={imageUri} setImageUri={setImageUri}  photoUrl={photoUrl} newStyle={
+       { width: 100,
+        height: 100,
+        elevation: 2,
+        backgroundColor: "#efefef",
+        borderRadius:100,
+        position: "relative",
+        // borderRadius:999,
+        overflow: "hidden"}}/>}       
+        <Text style={styles.UserName}>{username}</Text>
                </View>
 
           <Formik
             initialValues={{_username:''}}
             onSubmit={(values) =>{
                console.log('submitted', values._username)
+               if (imageUri) {
+                console.log("max: ", imageUri);
+                uploadImageAsync(imageUri);
+              }
               //  auth.currentUser.providerData[0]["displayName"]=values._username
               auth.currentUser.updateProfile({
                 displayName: values._username,
@@ -125,7 +234,7 @@ function updateDbname(val)
 
               Alert.alert(
                 "Success !",
-                "Username successfully changed ",
+                "Changed successfully  ",
                 [
                 
                   { text: "OK", onPress: () => {
@@ -151,6 +260,7 @@ function updateDbname(val)
                 <TextInput
                   style={styles.formFieldText}
                   value={values._username}
+                  placeholder={username}
                   onChangeText={handleChange('_username')}
                 />
                 </View>

@@ -144,10 +144,17 @@ export default function Maps({ navigation }) {
   {
     
       // if (!DirectionsTimer) {
+        if (!startGps)
+        {
         DirectionsTimer.current = setInterval(() => 
         {
           getLocationCurrent();
           }, 4000);
+        }
+        else
+        {
+          clearInterval(DirectionsTimer.current);
+        }
       // }
     
   };
@@ -155,15 +162,14 @@ export default function Maps({ navigation }) {
   //////////////////////////////// to stop interval
   function stopDirections()
   {
-    ////console.log("\n\n\n\n\n\n it is",DirectionsTimer)
-     
-          ////console.log("\n\n\n\n\n\n\n\nhello stop")
-          ////console.log("hello stop")
           clearInterval(DirectionsTimer.current);
-          
-     
+          DirectionsTimer.current=null;
   };
 
+  useEffect(()=> 
+  {
+    startDirections;
+  },[startGps])
 
   function Book(space) {
 
@@ -202,19 +208,23 @@ export default function Maps({ navigation }) {
             // ////console.log("Modified city: ", change.doc.data());
               
              if (change.doc.data().acceptedSession) {
-              if(change.doc.data().acceptedSession.status===1){
+              if(change.doc.data().acceptedSession.status===1)
+              {
               ////console.log("\n\n\n\nHELLO N2N","No : ",visibleRequest,bookedSpace)
+              console.log("MULTIPLE TIMES")
               setStartGps(true)
               setLoadingScreen(false)
               setShowmarkerdetails(false);
               startDirections();
-            }
+             }
             else
             if(change.doc.data().acceptedSession.status===-1){
               //console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
               resetBackend(change.doc.data().acceptedSession.id);
               setLoadingScreen(false)
               setRequestRejected(true)
+              setStartGps(false)
+              stopDirections()
             }
           }
           }
@@ -262,7 +272,7 @@ db.collection("users")
         },
       })
       .then(function () {
-        //////console.log("updating backend2 done")
+        stopNavigation();
 })
 }
 
@@ -295,12 +305,15 @@ db.collection("users")
 }
 //////////////////////////////////////////////////////////////////////////
 
-
+function stopNavigation()
+{
+  stopDirections();
+  setStartGps(false);
+}
 
 function ParkCar() 
 {
-  setStartGps(false)
-  stopDirections();
+   
   setParked(true);
 
   db.collection("users")
@@ -308,8 +321,10 @@ function ParkCar()
       .update({
         checkIntime: new Date()
       })
-      .then(function () {
-})
+      .then(function () 
+      {
+      
+      })
   
 }
 
@@ -497,7 +512,7 @@ function ParkCar()
         bookedSpace={bookedSpace}
       />
 
-      <Parked navigation={navigation} visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
+      <Parked stopNavigation={stopNavigation} navigation={navigation} visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
 
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
@@ -541,7 +556,7 @@ function ParkCar()
                             width: "100%",
                           }}
                         ></Avatar>
-  {console.log("pppprrriiiiccee:",requestSpace)}
+  
                         <Text>{requestSpace && requestSpace.Price} </Text>
                         <Text>{requestSpace && requestSpace.Flatno+" ,"+requestSpace.Area+" ,"+requestSpace.Building} </Text>
                         <Text>{requestSpace && requestSpace.City+" ,"+requestSpace.Street}</Text>
@@ -620,7 +635,7 @@ function ParkCar()
         }}
       >
         <Button
-                          onPress={onPress={ParkCar}}
+                          onPress={ParkCar}
 
                           titleStyle={{ color: "white" }}
                           buttonStyle={{

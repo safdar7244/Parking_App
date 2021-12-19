@@ -53,23 +53,39 @@ function Parked(props,navigation) {
           const hours = diffTime/3600000;
           setHours(hours)
           setPrice('hours*props.bookedSpace.Price')
-          props.navigation.navigate('Card',{ pay: pay,ownerid:'props.bookedSpace.owner' ,price :200})
+         //props.navigation.navigate('Card',{ pay: pay,ownerid:'props.bookedSpace.owner' ,price :200})
+         pay();
         }
     }
 
     async function pay()
     {
-      props.setParked(false)
-      props.reset()
+
+      var history=[];
+      const cityRef = db.collection('users').doc(auth.currentUser.uid);
+      const doc = await cityRef.get();
+      if (!doc.exists) 
+      {
+        console.log('No such document!');
+      } else 
+      {
+        if(doc.data().history){
+        history=doc.data().history;}
+        console.log("HISTORY",history)
+      }
+
+      history.push({
+        bookedSpace:props.bookedSpace,
+          date: new Date()})
+
       db.collection("users")
       .doc(auth.currentUser.uid)
-      .doc('history')
-      .add({
-        bookedSpace:props.bookedSpace,
-        date: new Date()
+      .update({
+        history:history
       })
       .then(function () {
-        ////console.log("Frank food updated");
+        props.setParked(false)
+        props.reset()
       });
     }
 

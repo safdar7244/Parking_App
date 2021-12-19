@@ -24,14 +24,14 @@ console.log("props of avatar , ",props)
             rounded
             source={{
                 uri:
-                  'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                  props.url,
                  }}
             containerStyle={{ backgroundColor: 'grey' }}
           >
-            <Avatar.Accessory size={23} 
+            {/* <Avatar.Accessory size={23} 
             onPress={() => console.log("Works!")}
 
-            />
+            /> */}
           </Avatar>
 
   );

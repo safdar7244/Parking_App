@@ -14,11 +14,20 @@ import * as firebase from "firebase";
 
 import axios from "axios";
 
-export default function UploadImage({ setImageUri }, { navigation }) {
-  //console.log("propjjjjj , ", props);
+export default function UploadImage(props) {
+  console.log("\n\n\n\n\n\n\n\nurl now , ", props);
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
+  // if(props.photoUrl.length>3){
+  //   setImage(props.photoUrl)
+  // }
+useEffect(()=>{
+  if(props.photoUrl)
+ if(props.photoUrl.length>3){
+    setImage(props.photoUrl)
+  }
+},[])
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync();
 
@@ -26,7 +35,7 @@ export default function UploadImage({ setImageUri }, { navigation }) {
 
     if (!_image.cancelled) {
       setImage(_image.uri);
-      setImageUri(_image.uri);
+      props.setImageUri(_image.uri);
     }
   };
 
@@ -62,15 +71,7 @@ export default function UploadImage({ setImageUri }, { navigation }) {
   //////////////////////////////////////////////////////////////////////////////////
   return (
     <View
-      style={{
-        width: 250,
-        height: 250,
-        elevation: 2,
-        backgroundColor: "#efefef",
-        position: "relative",
-        // borderRadius:999,
-        overflow: "hidden",
-      }}
+      style={props.newStyle}
     >
       {image && (
         <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
