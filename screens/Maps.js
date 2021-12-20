@@ -45,7 +45,7 @@ const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
-export default function Maps({ navigation }) {
+export default function Maps(props) {
   const {settings,saveSettings}= useContext(SettingsContext);
 
   const [visible, setVisible] = useState(false);
@@ -104,7 +104,6 @@ export default function Maps({ navigation }) {
                             ////console.log("SET BOOKED SPACES  : ",change.doc.data().activeRequest.slot_id)
 
               setCustomer(change.doc.data().activeRequest.id);
-                //khizer bit
               // setBookedSpace(change.doc.data().activeRequest.slot_id)
             }
           }
@@ -173,6 +172,7 @@ export default function Maps({ navigation }) {
 
   function Book(space) {
 
+    console.log("\n\n\n\n\n\n inside book: ",space)
     
     setBookedSpace(space);
 
@@ -183,7 +183,7 @@ export default function Maps({ navigation }) {
       .update({
         activeRequest: {
           status: 1,
-          id: user.uid,
+          id: auth.currentUser.uid,
           slot_id: space.id,
         },
       })
@@ -195,6 +195,21 @@ export default function Maps({ navigation }) {
   }
 
   useEffect(()=>{
+    // console.log("\n\n\nEFFF1 :")
+
+    console.log("\n\n\nEFFF :",props.route.params)
+
+    if(props.route.params){
+      setrequestSpace(props.route.params.historySpace)
+      setShowmarkerdetails(props.route.params.historyCheck)
+      // setBookedSpace(props.route.params.historySpace)
+    }
+    // console.log("\n\n\nEFFF2 :")
+
+  },[])
+  useEffect(()=>{
+    
+
  db.collection("users")
       .where("id", "==", auth.currentUser.uid)
       .onSnapshot((snapshot) => {
@@ -253,7 +268,7 @@ export default function Maps({ navigation }) {
       })
       .catch()
       {
-        console.log("error");
+        console.log("error in accept and updated");
       }
     }
   }
@@ -512,7 +527,7 @@ function ParkCar()
         bookedSpace={bookedSpace}
       />
 
-      <Parked stopNavigation={stopNavigation} navigation={navigation} visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
+      <Parked stopNavigation={stopNavigation} navigation={props.navigation} visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
 
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
@@ -570,8 +585,14 @@ function ParkCar()
                             setLoadingScreen(true)
                             // onPress={() => {
                         // ////console.log(space);
+                        if(props.route.params){
+                          console.log("USerss")
+                          Book(props.route.params.historySpace)
+                        }
+                        else{
+                          console.log("NO ONE SHOULD COME")
                         Book(requestSpace);
-  
+                        }
 
                             // ////console.log(a);
                           }}
@@ -721,7 +742,10 @@ function ParkCar()
                     }}
                     onPress={() => {
                     setrequestSpace(space)
-                    setShowmarkerdetails(true)}}
+                    setShowmarkerdetails(true)
+                  }
+                  
+                  }
                   >
 
                   </Marker>
@@ -732,7 +756,7 @@ function ParkCar()
             })}
         </MapView>
       </View>
-      <TabBottom navigate={navigation} />
+      <TabBottom navigate={props.navigation} />
     </View>
   );
 }

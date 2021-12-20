@@ -28,6 +28,7 @@ import { auth, db } from "../firebase";
 import geohash from "ngeohash";
 import { data } from "../src/Transaltion/translation";
 import SettingsContext from "../src/context/Setting";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function HistoryNavigate({ route, navigation }) {
   const [Flatno, setFlatNo] = useState("");
@@ -251,6 +252,11 @@ export default function HistoryNavigate({ route, navigation }) {
         </View>
         <Button
                           onPress={() => {
+
+                              navigation.replace(
+      'Maps',
+      { historyCheck:true,historySpace:route.params.item.bookedSpace},
+    );
                             // setLoadingScreen(true)
                             // onPress={() => {
                         // ////console.log(space);

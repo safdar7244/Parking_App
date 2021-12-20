@@ -95,7 +95,7 @@ func()
 
     const renderFunction=(item,key)=>{
     console.log("key : ",key)
-     navigation.replace(
+     navigation.navigate(
       'HistoryNavigate',
       { item },
     );
