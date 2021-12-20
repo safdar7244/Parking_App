@@ -134,7 +134,7 @@ export default function Register({ navigation, route }) {
         routes: [
           {
             name: "Maps",
-            params: { someParam: "Param1" },
+            // params: { someParam: "Param1" },
           },
         ],
       });

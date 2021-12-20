@@ -30,7 +30,7 @@ export default function ReLogin({ navigation, route }) {
           routes: [
             {
               name: "Account",
-              params: { someParam: "Param1" },
+              // params: { someParam: "Param1" },
             },
           ],
         });

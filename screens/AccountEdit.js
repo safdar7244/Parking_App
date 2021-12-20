@@ -21,18 +21,18 @@ export default function AccountEdit({navigation}){
   const {settings,saveSettings}= useContext(SettingsContext);
   const [imageUri, setImageUri] = useState(null);
 
-  console.log("setthings :  ",settings)
+  // console.log("setthings :  ",settings)
   
   const [username,setUsername]=useState("User")
   const [email,setEmail]=useState("User")
-  const [photoUrl,setPhotoUrl]=useState(" ")
+  const [photoUrl,setPhotoUrl]=useState(null)
   const [flag,setFlag]=useState(false)
 
 
   React.useEffect(()=>{
     if(flag){
     if (imageUri) {
-      console.log("max: ", imageUri);
+      // console.log("max: ", imageUri);
       uploadImageAsync(imageUri);
     }
   }
@@ -43,9 +43,20 @@ export default function AccountEdit({navigation}){
      
     // }
     // else{
-    //   console.log("YES LENGTH > 0",photoUrl)
-if(photoUrl==" ")
+      console.log("YES LENGTH > 0",photoUrl)
+     
+      
+if(photoUrl){
+  console.log("000-> ",photoUrl)
+  if(photoUrl=="2"){
+    console.log("000pp-> ",photoUrl)
+        setFlag(true)
+  }
+
+
       setFlag(true)
+}
+
     // }
   },[photoUrl]);
 
@@ -54,7 +65,7 @@ if(photoUrl==" ")
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
     setEmail(auth.currentUser.providerData[0]["email"])
-    setPhotoUrl(auth.currentUser.providerData[0]["photoURL"])
+    setPhotoUrl(auth.currentUser.providerData[0]["photoURL"] ? auth.currentUser.providerData[0]["photoURL"] :"2")
 
     // if(auth.currentUser.providerData[0]["photoURL"].length<3 ){
     //   setPhotoUrl("1")
@@ -70,7 +81,7 @@ if(photoUrl==" ")
 
 
   async function uploadImageAsync(uri) {
-    console.log("uploadAsFile", uri);
+    // console.log("uploadAsFile", uri);
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -78,9 +89,9 @@ if(photoUrl==" ")
       contentType: "image/jpeg",
     };
 
-    var ref = firebase.storage().ref().child(new Date().toISOString());
+    let ref = firebase.storage().ref().child(new Date().toISOString());
 
-    var uploadTask = ref.put(blob);
+    let uploadTask = ref.put(blob);
 
     uploadTask.on(
       "state_changed",
@@ -150,7 +161,7 @@ function updateDbname(val)
           name: val
         })
         .then(function () {
-         console.log("English set")
+        //  console.log("English set")
         }); 
 }
     return (
@@ -234,7 +245,7 @@ function updateDbname(val)
             onSubmit={(values) =>{
                console.log('submtted', values._username)
                if (imageUri) {
-                console.log("max: ", imageUri);
+                // console.log("max: ", imageUri);
                 uploadImageAsync(imageUri);
               }
               //  auth.currentUser.providerData[0]["displayName"]=values._username

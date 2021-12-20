@@ -32,7 +32,7 @@ export default function Login({ navigation, route }) {
           routes: [
             {
               name: "Maps",
-              params: { someParam: "Param1" },
+              // params: { someParam: "Param1" },
             },
           ],
         });

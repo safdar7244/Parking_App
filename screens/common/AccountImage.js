@@ -75,7 +75,7 @@ useEffect(()=>{
     <View
       style={props.newStyle}
     >
-      {image && (
+      
          <Avatar
          size={90}
          rounded
@@ -92,7 +92,7 @@ useEffect(()=>{
 
          />
        </Avatar>
-      )}
+      
 
       {/* <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity

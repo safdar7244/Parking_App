@@ -290,7 +290,7 @@ const user = auth.currentUser;
               routes: [
                 {
                   name: "Login",
-                  params: { someParam: "Param1" },
+                  // params: { someParam: "Param1" },
                 },
               ],
             });
