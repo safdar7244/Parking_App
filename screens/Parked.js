@@ -46,15 +46,15 @@ function Parked(props,navigation) {
           console.log('No such document!');
         } else 
         {
-          date = doc.data().checkIntime
+          date = new Date (doc.data().checkIntime.seconds*1000)
           const date1 = new Date();
           console.log(date1,date)
           const diffTime = Math.abs(date1 - date);
           const hours = diffTime/3600000;
           setHours(hours)
-          setPrice('hours*props.bookedSpace.Price')
-         //props.navigation.navigate('Card',{ pay: pay,ownerid:'props.bookedSpace.owner' ,price :200})
-         pay();
+          setPrice(hours*props.bookedSpace.Price)
+          console.log("HIURSSs",price)
+          props.navigation.navigate('Card',{ pay: pay,ownerid:props.bookedSpace.owner ,price :200})
         }
     }
 
@@ -71,7 +71,6 @@ function Parked(props,navigation) {
       {
         if(doc.data().history){
         history=doc.data().history;}
-        console.log("HISTORY",historys)
       }
       
       history.push({

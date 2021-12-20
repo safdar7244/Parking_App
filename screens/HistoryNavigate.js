@@ -118,12 +118,13 @@ export default function HistoryNavigate({ route, navigation }) {
 
 
   return (
+    <View>
     <ScrollView
       style={{}}
       contentContainerStyle={{ flexGrow: 1 }}
       stickyFooterIndices={[1]}
     >
-      <TabBottom navigate={navigation} />
+     
 
       <View style={styles.innerContainer}>
         <Text style={styles.UserName2}></Text>
@@ -287,6 +288,9 @@ export default function HistoryNavigate({ route, navigation }) {
        
       </View>
     </ScrollView>
+
+    <TabBottom navigate={navigation} />
+    </View>
   );
 }
 

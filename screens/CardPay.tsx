@@ -29,6 +29,7 @@ export default function Card({navigation,route}) {
   async function Check ()
 {
   const cityRef = db.collection('users').doc(route.params.ownerid);
+  console.log(route.params.ownerid)
   const doc = await cityRef.get();
   if (!doc.exists) 
   {
@@ -106,6 +107,7 @@ export default function Card({navigation,route}) {
     })
     .catch(()=>{
       Alert.alert('ERROR OCCURRED')
+      setLoading(false)
     }
     )
    

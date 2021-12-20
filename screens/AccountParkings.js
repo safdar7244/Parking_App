@@ -162,6 +162,7 @@ const AccountLink = async ()=>
 
 
   return (
+    <View>
 <ScrollView style={{ minHeight:"100%" }} acontentContainerStyle={{ flexGrow: 1 ,      
 }}
 stickyFooterIndices={[0]}
@@ -169,7 +170,7 @@ stickyFooterIndices={[0]}
     {/* <ScrollView 
     style={styles.Scrollcontainer}
 > */}
-<TabBottom navigate={navigation}/> 
+
 
        <ImageBackground source={require('../pictures/bkg-user.jpeg')} resizeMode="cover" style={styles.image} />
 
@@ -221,9 +222,6 @@ stickyFooterIndices={[0]}
       style={{
         //   marginLeft:"20%"
       }}
-      onPress={() => {
-          console.log("pressed")
-          {navigation.navigate('AccountAddParking')}}}
 /></ListItem.Title>
        
             </ListItem.Content>
@@ -239,6 +237,8 @@ stickyFooterIndices={[0]}
   {/* </ScrollView> */}
 
   </ScrollView>
+  <TabBottom navigate={navigation}/> 
+  </View>
 
   );
 };

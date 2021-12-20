@@ -259,7 +259,7 @@ const user = auth.currentUser;
     
   };
   return (
-
+<View>
 <ScrollView
       style={{}}
       contentContainerStyle={{ flexGrow: 1 }}
@@ -434,8 +434,10 @@ setDeleteUser(true)
       </View>
 
 
-      <TabBottom navigate={navigation} />
+    
     </ScrollView>
+    <TabBottom navigate={navigation} />
+    </View>
     
   );
 }

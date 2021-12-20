@@ -90,12 +90,14 @@ export default function Maps(props) {
             // //console.log("Modified city: ", change.doc.data());
                         if (change.doc.data().activeRequest) {
 
-            if (change.doc.data().activeRequest.status==1) {
+            if (change.doc.data().activeRequest.status==1) 
+            {
               
               if (!visibleRequest)
               {
                 schedulePushNotification();
                 setVisibleRequest(true);
+                setBookedSpace(change.doc.data().activeRequest.space)
               }
 
              
@@ -107,10 +109,11 @@ export default function Maps(props) {
               // setBookedSpace(change.doc.data().activeRequest.slot_id)
             }
           }
-             if (change.doc.data().acceptedSession) {
+             if (change.doc.data().acceptedSession) 
+             {
               if(change.doc.data().acceptedSession.status===1){
               setVisibleRequest(false);
-            
+              
 
               // setCustomer(change.doc.data().activeRequest.id);
 
@@ -170,12 +173,11 @@ export default function Maps(props) {
     startDirections();
   },[startGps])
 
-  function Book(space) {
+  function Book(space) 
+  {
 
-    console.log("\n\n\n\n\n\n inside book: ",space)
-    
-    setBookedSpace(space);
-
+   setBookedSpace(space);
+  
     ////console.log("BOOK NOW",space)
     const b = null;
     db.collection("users")
@@ -185,10 +187,12 @@ export default function Maps(props) {
           status: 1,
           id: auth.currentUser.uid,
           slot_id: space.id,
+          space:space
         },
       })
       .then(function () {
-        ////console.log("Frank food updated");
+          setBookedSpace(space);
+          console.log(bookedSpace);
       });
     // const a = db.collection("users").doc(''));
     //  ////console.log(a);
@@ -198,8 +202,8 @@ export default function Maps(props) {
     // console.log("\n\n\nEFFF1 :")
 
     console.log("\n\n\nEFFF :",props.route.params)
-
-    if(props.route.params){
+    if(props.route.params)
+    {
       setrequestSpace(props.route.params.historySpace)
       setShowmarkerdetails(props.route.params.historyCheck)
       console.log("\n\n\nEFFF2 :",props.route.params.historySpace.coordinates)
@@ -227,10 +231,11 @@ export default function Maps(props) {
               if(change.doc.data().acceptedSession.status===1)
               {
               ////console.log("\n\n\n\nHELLO N2N","No : ",visibleRequest,bookedSpace)
+              setBookedSpace(change.doc.data().acceptedSession.space)
               console.log("MULTIPLE TIMES")
-              setStartGps(true)
               setLoadingScreen(false)
               setShowmarkerdetails(false);
+              setStartGps(true)
               startDirections();
              }
             else
@@ -261,6 +266,7 @@ export default function Maps(props) {
       .update({
         acceptedSession: {
           status: 1,
+          space:bookedSpace
         },
       })
       .then(function () {
@@ -720,6 +726,7 @@ function ParkCar()
           { userLocation &&
         <Marker coordinate={userLocation}/>
           }
+          
        {startGps && <MapViewDirections
           lineDashPattern={[1]}
           origin={userLocation}
@@ -728,6 +735,8 @@ function ParkCar()
           strokeWidth={3}
           strokeColor="blue"
         />}
+
+
           
 
           {spaces &&
