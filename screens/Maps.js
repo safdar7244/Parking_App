@@ -202,6 +202,7 @@ export default function Maps(props) {
     if(props.route.params){
       setrequestSpace(props.route.params.historySpace)
       setShowmarkerdetails(props.route.params.historyCheck)
+      console.log("\n\n\nEFFF2 :",props.route.params.historySpace.coordinates)
       // setBookedSpace(props.route.params.historySpace)
     }
     // console.log("\n\n\nEFFF2 :")
