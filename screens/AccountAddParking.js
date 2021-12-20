@@ -9,6 +9,7 @@ import {
   Alert,
   ScrollView,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -36,8 +37,8 @@ export default function AccountAddParking({ route, navigation }) {
   const [Street, setStreet] = useState("");
   const [Area, setArea] = useState("");
   const { settings, saveSettings } = useContext(SettingsContext);
-  const [photoUrl,setPhotoUrl]=useState(null)
-
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
   const [message, setMessage] = useState("");
@@ -67,7 +68,7 @@ export default function AccountAddParking({ route, navigation }) {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
-      setPhotoUrl(route.params.item.imageUrl)
+      setPhotoUrl(route.params.item.imageUrl);
 
       setGuard(route.params.item.guard);
     }
@@ -98,6 +99,7 @@ export default function AccountAddParking({ route, navigation }) {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     console.log(
       // Flatno,
       // Building,
@@ -190,6 +192,7 @@ export default function AccountAddParking({ route, navigation }) {
                 .add(obj)
                 .then(() => {
                   console.log("Document successfully written!");
+                  setLoading(false);
                   navigation.replace("Maps");
                 })
                 .catch((error) => {
@@ -213,18 +216,20 @@ export default function AccountAddParking({ route, navigation }) {
       <View style={styles.innerContainer}>
         <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
 
-       <UploadImage imageUri={imageUri} setImageUri={setImageUri}  photoUrl={photoUrl} newStyle={
-       { width: 250,
-        height: 250,
-        // elevation: 2,
-        // backgroundColor: "#efefef",
-        // // borderRadius:100,
-        // position: "relative",
-        // // borderRadius:999,
-        // overflow: "hidden"
-      
-      }
-      }
+        <UploadImage
+          imageUri={imageUri}
+          setImageUri={setImageUri}
+          photoUrl={photoUrl}
+          newStyle={{
+            width: 250,
+            height: 250,
+            // elevation: 2,
+            // backgroundColor: "#efefef",
+            // // borderRadius:100,
+            // position: "relative",
+            // // borderRadius:999,
+            // overflow: "hidden"
+          }}
         />
 
         <Text style={styles.UserName}>
@@ -300,7 +305,16 @@ export default function AccountAddParking({ route, navigation }) {
             defaultValue={message}
           />
 
-          <Button onPress={handleSubmit} title={data["Submit"][settings]} />
+          <Button
+            disabled={loading}
+            onPress={handleSubmit}
+            title={data["Submit"][settings]}
+          />
+          {loading && (
+            <View style={{ padding: 20 }}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          )}
         </View>
       </View>
     </ScrollView>

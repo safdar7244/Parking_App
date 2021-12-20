@@ -71,7 +71,7 @@ export default function ReLogin({ navigation, route }) {
             containerStyle={styles.buttonContainer}
             leftIcon={{ type: "font-awesome-5", name: "key", color: "grey" }}
             placeholder="Jelszó"
-            secureTextEntry={true} 
+            secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
           />
 

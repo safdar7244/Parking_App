@@ -12,39 +12,39 @@ import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { useState ,useContext} from "react";
-import { TabView, ListItem, Tab, Button,Divider } from "react-native-elements";
+import { useState, useContext } from "react";
+import { TabView, ListItem, Tab, Button, Divider } from "react-native-elements";
 import Maps from "./Maps";
 import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
 // import AccountAbout from "./AccountAbout"
 import AvatarCustom from "./common/AvatarCustom";
-import ReLogin from "./ReLogin"
+import ReLogin from "./ReLogin";
 import { auth, db } from "../firebase";
 // import ReLogin from "./ReLogin";
 import { data } from "../src/Transaltion/translation";
-import SettingsContext from '../src/context/Setting';
+import SettingsContext from "../src/context/Setting";
 import { Overlay } from "react-native-elements/dist/overlay/Overlay";
 
 export default function Account({ navigation }) {
-  const {settings,saveSettings}= useContext(SettingsContext);
+  const { settings, saveSettings } = useContext(SettingsContext);
 
-// console.log("setthings :  ",settings)
-// const [usr,setUsr]=useState(auth.currentUser.uid)
+  // console.log("setthings :  ",settings)
+  // const [usr,setUsr]=useState(auth.currentUser.uid)
 
-  const [username,setUsername]=useState("User")
-  const [password,setPassword]=useState("")
-  const [email,setEmail]=useState("")
-  const [deleteUser,setDeleteUser]=useState(false)
-  const [nowDelete,setNowDelete]=useState(true)
-  const [profileUrl,setProfileUrl]=useState(false)
+  const [username, setUsername] = useState("User");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [deleteUser, setDeleteUser] = useState(false);
+  const [nowDelete, setNowDelete] = useState(true);
+  const [profileUrl, setProfileUrl] = useState(false);
 
-  const [flag,setFlag]=useState(false)
+  const [flag, setFlag] = useState(false);
 
-  React.useEffect(()=>{
-    const user=auth.currentUser.providerData[0]["displayName"]
-    setUsername(user)
-    setEmail(auth.currentUser.providerData[0]["email"])    
+  React.useEffect(() => {
+    const user = auth.currentUser.providerData[0]["displayName"];
+    setUsername(user);
+    setEmail(auth.currentUser.providerData[0]["email"]);
     // console.log("auth.",auth.currentUser.uid)
     // const aUser = db.collection('users').doc(auth.currentUser.uid);
     // console.log("AUSEE L ",aUser)
@@ -53,91 +53,82 @@ export default function Account({ navigation }) {
     // console.log("docs: ",docData.data().profileImage)
     // setProfileUrl(docData.data().profileImage)
     // }
-    setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+    setProfileUrl(auth.currentUser.providerData[0]["photoURL"]);
+  }, []);
 
-  },[])
-
-
-
-  React.useEffect(()=>{
-
-    if(deleteUser){
-      console.log("INDIDE OUT",auth.currentUser.uid)
+  React.useEffect(() => {
+    if (deleteUser) {
+      console.log("INDIDE OUT", auth.currentUser.uid);
       // const usr=auth.currentUser.uid
-    db.collection("users").doc(auth.currentUser.uid).delete().then(()=>{console.log("user washhhhhh deleted")
-      // setNowDelete(true)
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .delete()
+        .then(() => {
+          console.log("user washhhhhh deleted");
+          // setNowDelete(true)
 
+          db.collection("spaces")
+            .where("owner", "==", auth.currentUser.uid)
+            .get()
+            .then((snapshot) => {
+              snapshot.docs.forEach((doc) => {
+                doc.ref.delete();
+              });
+              // return batch.commit();
+              // setNowDelete(true)
+              // setDeleteUser(false)
 
-        db.collection('spaces').where('owner','==',auth.currentUser.uid)
-    .get()
-    .then(snapshot => {
-      snapshot.docs.forEach(doc => {
-        doc.ref.delete();
-      });
-      // return batch.commit();
-      // setNowDelete(true)
-      // setDeleteUser(false)
+              const usr_ = auth.currentUser;
 
+              // auth.currentUser.delete().then(async()=>{
+              //   // console.log("user id  : ",user.uid)
 
-      const usr_=auth.currentUser
-    
-      // auth.currentUser.delete().then(async()=>{
-      //   // console.log("user id  : ",user.uid)
+              //   navigation.reset({
+              //     index: 0,
+              //     routes: [
+              //       {
+              //         name: "Register",
+              //         params: { someParam: "Param1" },
+              //       },
+              //     ],
+              //   });
+              // })
 
-      //   navigation.reset({
-      //     index: 0,
-      //     routes: [
-      //       {
-      //         name: "Register",
-      //         params: { someParam: "Param1" },
-      //       },
-      //     ],
-      //   });
-      // })
+              auth.signOut().then(
+                function () {
+                  console.log("Signed Out");
+                  // setFlag(true)
 
-      auth.signOut().then(function() {
-        console.log('Signed Out')
-        // setFlag(true)
+                  // navigation.replace("ReLogin")
+                },
+                function (error) {
+                  console.error("Sign Out Error", error);
+                }
+              );
+              setDeleteUser(false);
+            });
+        })
+        .catch((e) => {
+          console.log("error : ", e);
+        });
+    }
 
-        // navigation.replace("ReLogin")
+    //  let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
+    //   // let batch = db.batch();
 
-       
-      
-      }, function(error) {
-        console.error('Sign Out Error', error);
-      });
-    setDeleteUser(false)
-    
-    })
-  
-    
-    
+    //   doc_spaces
+    //     .get()
+    //     .then(snapshot => {
+    //       snapshot.docs.forEach(doc => {
+    //         doc.ref.delete();
+    //       });
+    //       // return batch.commit();
+    //       setNowDelete(true)
+    //       setDeleteUser(false)
 
-    }).catch((e)=>{console.log("error : ",e)})
-  }
-  
-  
-//  let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
-//   // let batch = db.batch();
-  
-//   doc_spaces
-//     .get()
-//     .then(snapshot => {
-//       snapshot.docs.forEach(doc => {
-//         doc.ref.delete();
-//       });
-//       // return batch.commit();
-//       setNowDelete(true)
-//       setDeleteUser(false)
-
-
-//     })
-console.log("NOW SETTIGN VALUES")
-
-    
-  },[deleteUser])
-
-
+    //     })
+    console.log("NOW SETTIGN VALUES");
+  }, [deleteUser]);
 
   const list = [
     {
@@ -160,131 +151,117 @@ console.log("NOW SETTIGN VALUES")
     {
       title: data["My_Parking_Spaces"][settings],
       icon: "car",
-      }
-      ,
-      {
-        title: data["Late_Payment"][settings],
-        icon: "dollar",
-        }
+    },
+    {
+      title: data["Late_Payment"][settings],
+      icon: "dollar",
+    },
+    {
+      title: data["Stripe"][settings],
+      icon: "s",
+    },
   ];
 
-//  async function clearFirestoreCollections(){
-//   db.collection("users").doc(auth.currentUser.uid).delete()
+  //  async function clearFirestoreCollections(){
+  //   db.collection("users").doc(auth.currentUser.uid).delete()
 
+  //   var doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
+  //   let batch = db.batch();
 
-//   var doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
-//   let batch = db.batch();
-  
-//   doc_spaces
-//     .get()
-//     .then(snapshot => {
-//       snapshot.docs.forEach(doc => {
-//         batch.delete(doc.ref);
-//       });
-//       return batch.commit();
-//     })
-//     }
-  const deleteAccount=(ley)=>{
+  //   doc_spaces
+  //     .get()
+  //     .then(snapshot => {
+  //       snapshot.docs.forEach(doc => {
+  //         batch.delete(doc.ref);
+  //       });
+  //       return batch.commit();
+  //     })
+  //     }
+  const deleteAccount = (ley) => {
+    const user = auth.currentUser;
+    // console.log("usr :",user)
+    // user.delete().then(function() {
+    //   // User deleted.
+    //   // navigation.navigate()
+    //   // console.log("DELETEDDD")
+    //   Alert.alert(
+    //     "Account Deleted ! ",
+    //     "Press OK to continue",
+    //     [
 
-   
-const user = auth.currentUser;
-// console.log("usr :",user)
-// user.delete().then(function() {
-//   // User deleted.
-//   // navigation.navigate()
-//   // console.log("DELETEDDD")
-//   Alert.alert(
-//     "Account Deleted ! ",
-//     "Press OK to continue",
-//     [
-    
-//       { text: "OK", onPress: () => {
+    //       { text: "OK", onPress: () => {
 
+    //         navigation.reset({
+    //           index: 0,
+    //           routes: [{ name: 'Register' }]
+    //      })
+    //       //  navigation.navigate("Register")
 
-//         navigation.reset({
-//           index: 0,
-//           routes: [{ name: 'Register' }]
-//      })
-//       //  navigation.navigate("Register")
-
-        
-//       } }
-//     ]
-//   );
-// }).catch(function(error) {
-  // An error happened.
-  Alert.alert(
-    "Alert !",
-    "Are you sure you want to delete your Account?",
-    [
-    
+    //       } }
+    //     ]
+    //   );
+    // }).catch(function(error) {
+    // An error happened.
+    Alert.alert("Alert !", "Are you sure you want to delete your Account?", [
       {
-        text:"Cancel",onPress:()=>{
+        text: "Cancel",
+        onPress: () => {},
+      },
+      {
+        text: "Proceed",
+        onPress: () => {
+          auth.signOut().then(
+            function () {
+              console.log("Signed Out");
+              setFlag(true);
 
-      }},
-      { text: "Proceed", onPress: () => {
-
-
-
-        auth.signOut().then(function() {
-          console.log('Signed Out')
-          setFlag(true)
-
-          // navigation.replace("ReLogin")
-
-         
-        
-        }, function(error) {
-          console.error('Sign Out Error', error);
-        });
-
-        
-      } }
-    ]
-  );
-// });
-
-  }
+              // navigation.replace("ReLogin")
+            },
+            function (error) {
+              console.error("Sign Out Error", error);
+            }
+          );
+        },
+      },
+    ]);
+    // });
+  };
 
   const renderFunction = (key) => {
     console.log("yaya");
-
     key == 1 && navigation.navigate("AccountEdit");
     key == 2 && navigation.navigate("AccountNotifications");
     key == 3 && navigation.navigate("AccountLanguage");
     key == 4 && navigation.navigate("AccountAbout");
     key == 5 && navigation.navigate("AccountParkings");
     key == 6 && navigation.navigate("AccountLatePayment");
-
-    
+    key == 7 && navigation.navigate("Stripe");
   };
   return (
-<View>
-<ScrollView
-      style={{}}
-      contentContainerStyle={{ flexGrow: 1 }}
-      stickyFooterIndices={[1]}
-    >
-      
-      <ImageBackground
-        source={require("../pictures/bkg-user.jpeg")}
-        resizeMode="cover"
-        style={styles.image}
-      />
+    <View>
+      <ScrollView
+        style={{}}
+        contentContainerStyle={{ flexGrow: 1 }}
+        stickyFooterIndices={[1]}
+      >
+        <ImageBackground
+          source={require("../pictures/bkg-user.jpeg")}
+          resizeMode="cover"
+          style={styles.image}
+        />
 
-      <View style={styles.innerContainer}>
-        <AvatarCustom url={profileUrl} />
+        <View style={styles.innerContainer}>
+          <AvatarCustom url={profileUrl} />
 
-        <Text style={styles.UserName}>{username}</Text>
-      </View>
+          <Text style={styles.UserName}>{username}</Text>
+        </View>
 
-
-
-      <Overlay overlayStyle={{ padding: 20, width: "80%" }}
+        <Overlay
+          overlayStyle={{ padding: 20, width: "80%" }}
           isVisible={flag}
           onBackdropPress={() => {
             setFlag(!flag);
-            setPassword("")
+            setPassword("");
             navigation.reset({
               index: 0,
               routes: [
@@ -294,151 +271,138 @@ const user = auth.currentUser;
                 },
               ],
             });
-          }}>
-                    <View style={{ width: "100%"}}                    >
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
-                        style={{fontWeight:"bold",fontSize:20,marginBottom:20}}
-                        >Confirm Credentials</Text>
-                        <Divider />
-                        <Input
-            containerStyle={styles.buttonContainer}
-            
-            placeholder="Password"
-            onChangeText={(text) => setPassword(text)}
-            value = {password}
-            secureTextEntry={true}
-          />
-          <Button
-                      // containerStyle={{color:"red"}}
-                      buttonStyle={{backgroundColor:"red"}}
-          // style={{width:"100%"}}
-          title="Submit"
-          onPress={()=>{
-            console.log("ACCOUNT DELETED")
-            auth
-      .signInWithEmailAndPassword(email, password)
-      .then(async () => {
-        console.log("dasdsdasd",email,password,auth.currentUser.uid);
-
-        const user = auth.currentUser;
-
-
-// firebase users and spaces deletion
-
-
-console.log("before ")
-setDeleteUser(true)
-// await db.collection("users").doc(user.uid).delete().then(()=>{console.log("user washhhhhh deleted")})
-
-
-  // let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
-  // // let batch = db.batch();
-  
-  // doc_spaces
-  //   .get()
-  //   .then(snapshot => {
-  //     snapshot.docs.forEach(doc => {
-  //       doc.ref.delete();
-  //     });
-  //     // return batch.commit();
-  //   })
-    console.log("after ")
-// console.log("COMMMM :",db.collection("users").doc(auth.currentUser.uid))
-// 
-//
-
-
-
-        // console.log("usr :",user)
-        console.log("before deleting user")
-      //  user.delete().then(async()=>{
-      //     // console.log("user id  : ",user.uid)
-
-      //     navigation.reset({
-      //       index: 0,
-      //       routes: [
-      //         {
-      //           name: "Register",
-      //           params: { someParam: "Param1" },
-      //         },
-      //       ],
-      //     });
-      //   })
-      
-
-
-       
-      })
-      .catch((err) => {
-        alert(err);
-      });
-
-
-
           }}
-          ></Button>
-                      </View>
-                      </View>
+        >
+          <View style={{ width: "100%" }}>
+            <View
+              style={{
+                backgroundColor: "white",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{ fontWeight: "bold", fontSize: 20, marginBottom: 20 }}
+              >
+                Confirm Credentials
+              </Text>
+              <Divider />
+              <Input
+                containerStyle={styles.buttonContainer}
+                placeholder="Password"
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                secureTextEntry={true}
+              />
+              <Button
+                // containerStyle={{color:"red"}}
+                buttonStyle={{ backgroundColor: "red" }}
+                // style={{width:"100%"}}
+                title="Submit"
+                onPress={() => {
+                  console.log("ACCOUNT DELETED");
+                  auth
+                    .signInWithEmailAndPassword(email, password)
+                    .then(async () => {
+                      console.log(
+                        "dasdsdasd",
+                        email,
+                        password,
+                        auth.currentUser.uid
+                      );
 
-            </Overlay> 
+                      const user = auth.currentUser;
 
+                      // firebase users and spaces deletion
 
+                      console.log("before ");
+                      setDeleteUser(true);
+                      // await db.collection("users").doc(user.uid).delete().then(()=>{console.log("user washhhhhh deleted")})
 
+                      // let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
+                      // // let batch = db.batch();
 
-      <View style={styles.ListStyle}>
-        {list.map((item, i) => (
+                      // doc_spaces
+                      //   .get()
+                      //   .then(snapshot => {
+                      //     snapshot.docs.forEach(doc => {
+                      //       doc.ref.delete();
+                      //     });
+                      //     // return batch.commit();
+                      //   })
+                      console.log("after ");
+                      // console.log("COMMMM :",db.collection("users").doc(auth.currentUser.uid))
+                      //
+                      //
+
+                      // console.log("usr :",user)
+                      console.log("before deleting user");
+                      //  user.delete().then(async()=>{
+                      //     // console.log("user id  : ",user.uid)
+
+                      //     navigation.reset({
+                      //       index: 0,
+                      //       routes: [
+                      //         {
+                      //           name: "Register",
+                      //           params: { someParam: "Param1" },
+                      //         },
+                      //       ],
+                      //     });
+                      //   })
+                    })
+                    .catch((err) => {
+                      alert(err);
+                    });
+                }}
+              ></Button>
+            </View>
+          </View>
+        </Overlay>
+
+        <View style={styles.ListStyle}>
+          {list.map((item, i) => (
+            <ListItem
+              button
+              onPress={() => {
+                {
+                  renderFunction(i + 1);
+                }
+              }}
+              key={i + 1}
+              bottomDivider
+              containerStyle={{ width: "80%" }}
+            >
+              <Icon name={item.icon} size={20} />
+              <ListItem.Content>
+                <ListItem.Title>{item.title}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+          ))}
+        </View>
+        <View style={styles.ListStyle1}>
           <ListItem
             button
             onPress={() => {
               {
-                renderFunction(i + 1);
+                deleteAccount(100);
               }
             }}
-            key={i + 1}
-            bottomDivider
+            key={100}
             containerStyle={{ width: "80%" }}
           >
-            <Icon name={item.icon} size={20} />
+            <Icon name="smile-o" size={20} />
             <ListItem.Content>
-              <ListItem.Title>{item.title}</ListItem.Title>
+              <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
+                {data["Delete_Account"][settings]}
+              </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
-        ))}
-      </View>
-      <View style={styles.ListStyle1}>
-        <ListItem
-          button
-          onPress={() => {
-            {
-              deleteAccount(100);
-            }
-          }}
-          key={100}
-          containerStyle={{ width: "80%" }}
-        >
-          <Icon name="smile-o" size={20} />
-          <ListItem.Content>
-            <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
-              {data["Delete_Account"][settings]}
-            </ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-      </View>
-
-
-    
-    </ScrollView>
-    <TabBottom navigate={navigation} />
+        </View>
+      </ScrollView>
+      <TabBottom navigate={navigation} />
     </View>
-    
   );
 }
 
@@ -471,7 +435,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    marginBottom:"30%",
+    marginBottom: "30%",
   },
   innerContainer: {
     // justifyContent:"center",
@@ -508,7 +472,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "90%",
     borderRadius: 10,
-
   },
   tileButton: {
     color: "#5EA0EE",

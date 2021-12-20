@@ -1,4 +1,4 @@
-import React, { useEffect,useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -12,16 +12,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import MapView, { Callout } from "react-native-maps";
-import {
-  TabView,
-  Tab,
-  Button,
-  Overlay,
-  Switch,
-  Divider,
-} from "react-native-elements";
+import { Button, Overlay } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import OverlaySet from "./Overlay";
 import City from "./City";
 import { Marker } from "react-native-maps";
@@ -32,21 +25,21 @@ import { auth, db } from "../firebase";
 import Account from "./Account";
 import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 import AvatarCustom from "./common/AvatarCustom";
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
 import ParkingRequest from "./ParkingRequest";
 import PushNotification from "./PushNotification";
 import { schedulePushNotification } from "./PushNotification";
 import { data } from "../src/Transaltion/translation";
-import SettingsContext from '../src/context/Setting';
+import SettingsContext from "../src/context/Setting";
 import Parked from "./Parked";
 ///////////////////////////////////////////////////////////////////////
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 export default function Maps(props) {
-  const {settings,saveSettings}= useContext(SettingsContext);
+  const { settings, saveSettings } = useContext(SettingsContext);
 
   const [visible, setVisible] = useState(false);
   const [visibleSearch, setVisiblesearch] = useState(false);
@@ -57,17 +50,19 @@ export default function Maps(props) {
   const [camera, setCamera] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [spaces, setSpaces] = useState(null);
-  const [currentLocation,setCurrentlocation] =useState(data["Search"][settings])
+  const [currentLocation, setCurrentlocation] = useState(
+    data["Search"][settings]
+  );
   const DirectionsTimer = useRef(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);
-    const [requestAccepted, setRequestAccepted] = useState(0);
+  const [requestAccepted, setRequestAccepted] = useState(0);
 
   const [customer, setCustomer] = useState(null);
   const [bookedSpace, setBookedSpace] = useState(null);
-  const [requestSpace,setrequestSpace] = useState(null);
-  const [startGps,setStartGps] = useState(false);
-  const [parked,setParked]= useState(false);
+  const [requestSpace, setrequestSpace] = useState(null);
+  const [startGps, setStartGps] = useState(false);
+  const [parked, setParked] = useState(false);
   const [requestRejected, setRequestRejected] = useState(false);
   const [loadingScreen, setLoadingScreen] = useState(false);
 
@@ -75,7 +70,6 @@ export default function Maps(props) {
     setVisibleRequest(!visibleRequest);
   };
 
-  
   if (user) {
     db.collection("users")
       .where("id", "==", user.uid)
@@ -83,44 +77,32 @@ export default function Maps(props) {
         snapshot.docChanges().forEach((change) => {
           ////console.log("hehrehrhehrehrhehrer");
 
-          if (change.type === "added") {
-            // //console.log("New city: ", change.doc.data());
-          }
           if (change.type === "modified") {
-            // //console.log("Modified city: ", change.doc.data());
-                        if (change.doc.data().activeRequest) {
+            console.log("Modified city: ", change.doc.data());
+            if (change.doc.data().activeRequest) {
+              if (change.doc.data().activeRequest.status == 1) {
+                if (!visibleRequest) {
+                  schedulePushNotification();
+                  setVisibleRequest(true);
+                  setBookedSpace(change.doc.data().activeRequest.space);
+                }
 
-            if (change.doc.data().activeRequest.status==1) 
-            {
-              
-              if (!visibleRequest)
-              {
-                schedulePushNotification();
-                setVisibleRequest(true);
-                setBookedSpace(change.doc.data().activeRequest.space)
+                ////console.log("SET CUSTOMER  : ",change.doc.data().activeRequest.id)
+                ////console.log("SET BOOKED SPACES  : ",change.doc.data().activeRequest.slot_id)
+
+                setCustomer(change.doc.data().activeRequest.id);
+                // setBookedSpace(change.doc.data().activeRequest.slot_id)
               }
-
-             
-              
-              ////console.log("SET CUSTOMER  : ",change.doc.data().activeRequest.id)
-                            ////console.log("SET BOOKED SPACES  : ",change.doc.data().activeRequest.slot_id)
-
-              setCustomer(change.doc.data().activeRequest.id);
-              // setBookedSpace(change.doc.data().activeRequest.slot_id)
             }
-          }
-             if (change.doc.data().acceptedSession) 
-             {
-              if(change.doc.data().acceptedSession.status===1){
-              setVisibleRequest(false);
-              
+            if (change.doc.data().acceptedSession) {
+              if (change.doc.data().acceptedSession.status === 1) {
+                setVisibleRequest(false);
 
-              // setCustomer(change.doc.data().activeRequest.id);
+                // setCustomer(change.doc.data().activeRequest.id);
 
-
-              // setBookedSpace(change.doc.data().activeRequest.slot_id)
+                // setBookedSpace(change.doc.data().activeRequest.slot_id)
+              }
             }
-          }
           }
           if (change.type === "removed") {
             // //console.log("Removed city: ", change.doc.data());
@@ -140,44 +122,32 @@ export default function Maps(props) {
     setVisiblesearch(true);
   }
 
-
   //////////////////////////////// to start interval
-  function startDirections()
-  {
-    
-      // if (!DirectionsTimer) {
-        if (startGps)
-        {
-        DirectionsTimer.current = setInterval(() => 
-        {
-          getLocationCurrent();
-          }, 4000);
-        }
-        else
-        {
-          clearInterval(DirectionsTimer.current);
-        }
-      // }
-    
-  };
+  function startDirections() {
+    // if (!DirectionsTimer) {
+    if (startGps) {
+      DirectionsTimer.current = setInterval(() => {
+        getLocationCurrent();
+      }, 4000);
+    } else {
+      clearInterval(DirectionsTimer.current);
+    }
+    // }
+  }
 
   //////////////////////////////// to stop interval
-  function stopDirections()
-  {
-          clearInterval(DirectionsTimer.current);
-          DirectionsTimer.current=null;
-  };
+  function stopDirections() {
+    clearInterval(DirectionsTimer.current);
+    DirectionsTimer.current = null;
+  }
 
-  useEffect(()=> 
-  {
+  useEffect(() => {
     startDirections();
-  },[startGps])
+  }, [startGps]);
 
-  function Book(space) 
-  {
+  function Book(space) {
+    setBookedSpace(space);
 
-   setBookedSpace(space);
-  
     ////console.log("BOOK NOW",space)
     const b = null;
     db.collection("users")
@@ -187,118 +157,104 @@ export default function Maps(props) {
           status: 1,
           id: auth.currentUser.uid,
           slot_id: space.id,
-          space:space
+          space: space,
         },
       })
       .then(function () {
-          setBookedSpace(space);
-          console.log(bookedSpace);
+        setBookedSpace(space);
+        console.log(bookedSpace);
       });
   }
 
-  useEffect(()=>{
-    console.log("\n\n\nEFFF :",props.route.params)
-    if(props.route.params)
-    {
-      setrequestSpace(props.route.params.historySpace)
-      setShowmarkerdetails(props.route.params.historyCheck)
+  useEffect(() => {
+    console.log("\n\n\nEFFF :", props.route.params);
+    if (props.route.params) {
+      setrequestSpace(props.route.params.historySpace);
+      setShowmarkerdetails(props.route.params.historyCheck);
     }
-  },[])
-  useEffect(()=>{
-    
-
- db.collection("users")
+  }, []);
+  useEffect(() => {
+    db.collection("users")
       .where("id", "==", auth.currentUser.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
           }
           if (change.type === "modified") {
-             if (change.doc.data().acceptedSession) {
-              if(change.doc.data().acceptedSession.status===1)
-              {
-              setBookedSpace(change.doc.data().acceptedSession.space)
-              console.log("MULTIPLE TIMES")
-              setLoadingScreen(false)
-              setShowmarkerdetails(false);
-              setStartGps(true)
-              startDirections();
-             }
-            else
-            if(change.doc.data().acceptedSession.status===-1){
-              //console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
-              resetBackend(change.doc.data().acceptedSession.id);
-              setLoadingScreen(false)
-              setRequestRejected(true)
-              setStartGps(false)
-              stopDirections()
+            if (change.doc.data().acceptedSession) {
+              if (change.doc.data().acceptedSession.status === 1) {
+                setBookedSpace(change.doc.data().acceptedSession.space);
+                console.log("MULTIPLE TIMES");
+                setLoadingScreen(false);
+                setShowmarkerdetails(false);
+                setStartGps(true);
+                startDirections();
+              } else if (change.doc.data().acceptedSession.status === -1) {
+                //console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
+                resetBackend(change.doc.data().acceptedSession.id);
+                setLoadingScreen(false);
+                setRequestRejected(true);
+                setStartGps(false);
+                stopDirections();
+              }
             }
-          }
           }
           if (change.type === "removed") {
             // ////console.log("Removed city: ", change.doc.data());
           }
         });
       });
-  },[])
+  }, []);
 
-  function AcceptRequest(customer, bookedSpace) 
-  {
-
-    if (customer)
-    {
+  function AcceptRequest(customer, bookedSpace) {
+    if (customer) {
       db.collection("users")
-      .doc(customer)
-      .update({
-        acceptedSession: {
-          status: 1,
-          space:bookedSpace
-        },
-      })
-      .then(function () {
-    console.log("accepte and updatedd");
-    setVisibleRequest(false);
-      })
-      .catch()
-      {
-        console.log("error in accept and updated");
-      }
+        .doc(customer)
+        .update({
+          acceptedSession: {
+            status: 1,
+            space: bookedSpace,
+          },
+        })
+        .then(function () {
+          console.log("accepte and updatedd");
+          setVisibleRequest(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }
 
-//////////////////////////////////////////////////////////////////// 
-function resetBackend(slotId)
-{
+  ////////////////////////////////////////////////////////////////////
+  function resetBackend(slotId) {
+    if (bookedSpace) {
+      db.collection("users")
+        .doc(bookedSpace.owner)
+        .update({
+          activeRequest: {
+            status: 0,
+          },
+        })
+        .then(function () {
+          stopNavigation();
+        });
+    }
 
-if (bookedSpace)
-{
-db.collection("users")
-      .doc(bookedSpace.owner)
-      .update({
-        activeRequest: {
-          status: 0,
-        },
-      })
-      .then(function () {
-        stopNavigation();
-})
-}
+    if (slotId) {
+      db.collection("users")
+        .doc(slotId)
+        .update({
+          activeRequest: {
+            status: 0,
+          },
+        })
+        .then(function () {
+          //////console.log("updating backend2 done")
+        });
+    }
 
-if (slotId)
-{
-  db.collection("users")
-      .doc(slotId)
-      .update({
-        activeRequest: {
-          status: 0,
-        },
-      })
-      .then(function () {
-        //////console.log("updating backend2 done")
-})
-}
-
-db.collection("users")
+    db.collection("users")
       .doc(auth.currentUser.uid)
       .update({
         acceptedSession: {
@@ -307,55 +263,45 @@ db.collection("users")
       })
       .then(function () {
         //////console.log("updating backend1 done")
-})
+      });
+  }
+  //////////////////////////////////////////////////////////////////////////
 
+  function stopNavigation() {
+    setStartGps(false);
+    stopDirections();
+  }
 
-}
-//////////////////////////////////////////////////////////////////////////
+  function ParkCar() {
+    setParked(true);
 
-function stopNavigation()
-{
-  setStartGps(false);
-  stopDirections();
-}
-
-function ParkCar() 
-{
-   
-  setParked(true);
-
-  db.collection("users")
+    db.collection("users")
       .doc(auth.currentUser.uid)
       .update({
-        checkIntime: new Date()
+        checkIntime: new Date(),
       })
-      .then(function () 
-      {
-      
-      })
-  
-}
+      .then(function () {});
+  }
 
+  /////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////
-
-  function RejectRequest(bookedSpace) 
-  {
-
-    console.log("HOLO",bookedSpace)
-      db.collection("users")
+  function RejectRequest(bookedSpace) {
+    console.log("HOLO", bookedSpace);
+    db.collection("users")
       .doc(customer)
       .update({
         acceptedSession: {
           status: -1,
-          id:auth.currentUser.uid
+          id: auth.currentUser.uid,
         },
       })
       .then(function () {
-    //////console.log("rejected and updatedd");
-    setVisibleRequest(false);
+        //////console.log("rejected and updatedd");
+        setVisibleRequest(false);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-
   }
 
   const getGeohashRange = (
@@ -381,8 +327,7 @@ function ParkCar()
     });
   };
 
-
-  async function getLocationCurrent(){
+  async function getLocationCurrent() {
     //////console.log("shdaudasdk");
     const verifyPersmission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -406,7 +351,7 @@ function ParkCar()
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
           latitudeDelta: 0.0009,
-          longitudeDelta: 0.0020,
+          longitudeDelta: 0.002,
         });
         // ////console.log("hererererer",location);
         const range = await getGeohashRange(
@@ -441,77 +386,14 @@ function ParkCar()
     };
     getLocation();
   }
-  
-
-  // useEffect(() => {
-  //   ////console.log("shdaudasdk");
-  //   const verifyPersmission = async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       setErrorMsg("Permission to access location was denied");
-  //       return false;
-  //     }
-  //     return true;
-  //   };
-  //   const getLocation = async () => {
-  //     const done = await verifyPersmission();
-  //     if (!done) {
-  //       return;
-  //     }
-  //     try {
-  //       const location = await Location.getCurrentPositionAsync({
-  //         timeout: 4000,
-  //       });
-
-  //       setUserLocation({
-  //         latitude: location.coords.latitude,
-  //         longitude: location.coords.longitude,
-  //         latitudeDelta: 0.0009,
-  //         longitudeDelta: 0.0020,
-  //       });
-  //       // ////console.log("hererererer",location);
-  //       const range = await getGeohashRange(
-  //         location.coords.latitude,
-  //         location.coords.longitude,
-  //         12
-  //       );
-  //       // ////console.log("rang", range);
-
-  //       auth.onAuthStateChanged((authUser) => {
-  //         if (authUser) {
-  //           ////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
-  //           setUser(authUser);
-  //           // ////console.log("sdsadsadsadsadsadsad", user);
-  //         }
-  //       });
-  //       const a = [];
-  //       db.collection("spaces")
-  //         .where("ghash", ">=", range.lower)
-  //         .where("ghash", "<=", range.upper)
-  //         .onSnapshot((snapshot) => {
-  //           // Your own custom logic here
-  //           snapshot.forEach((doc) => {
-  //             // ////console.log(doc.id, doc.data());
-  //             let b = doc.data();
-  //             b.id = doc.id;
-  //             a.push(b);
-  //           });
-  //           setSpaces(a);
-  //         });
-  //     } catch (err) {}
-  //   };
-  //   getLocation();
-  // }, []);
-  // ////
 
   return (
-    
     <View style={{ flex: 1 }}>
-      {////console.log("GPS  ????? : ",startGps)
-}
+      {
+        ////console.log("GPS  ????? : ",startGps)
+      }
 
-  
-        <ParkingRequest
+      <ParkingRequest
         visible={visibleRequest}
         toggleOverlay={toggleOverlayRequest}
         accept={AcceptRequest}
@@ -520,7 +402,14 @@ function ParkCar()
         bookedSpace={bookedSpace}
       />
 
-      <Parked stopNavigation={stopNavigation} navigation={props.navigation} visible={parked} reset={resetBackend} setParked={setParked} bookedSpace={bookedSpace} />
+      <Parked
+        stopNavigation={stopNavigation}
+        navigation={props.navigation}
+        visible={parked}
+        reset={resetBackend}
+        setParked={setParked}
+        bookedSpace={bookedSpace}
+      />
 
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
@@ -539,129 +428,139 @@ function ParkCar()
         />
       </Overlay>
 
-
       {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
-  {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
-  <Overlay overlayStyle={{ padding: 20, width: "80%" }}
+      {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
+      <Overlay
+        overlayStyle={{ padding: 20, width: "80%" }}
         isVisible={Showmarkerdetails}
         onBackdropPress={() => {
           setShowmarkerdetails(!Showmarkerdetails);
-        }}>
+        }}
+      >
+        <View style={{ width: "100%" }}>
+          <View
+            style={{
+              backgroundColor: "white",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              size={90}
+              source={{
+                uri: requestSpace
+                  ? requestSpace.imageUrl
+                  : "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+              }}
+              containerStyle={{
+                backgroundColor: "grey",
+                width: "100%",
+              }}
+            ></Avatar>
 
-        <View style={{ width: "100%"}}                    >
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Avatar
-                          size={90}
-                          source={{
-                            uri: requestSpace ? requestSpace.imageUrl : "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-                          }}
-                          containerStyle={{
-                            backgroundColor: "grey",
-                            width: "100%",
-                          }}
-                        ></Avatar>
-  
-                        <Text style={{fontSize:20,margin:5}} >Price:  {requestSpace && requestSpace.Price} </Text>
-                        <Text style={{fontSize:15,margin:5}}>Adress: {requestSpace && requestSpace.Flatno+requestSpace.Area+requestSpace.Building} </Text>
-                        <Text style={{fontSize:15,margin:5}}>{requestSpace && requestSpace.Street+","+requestSpace.City}</Text>
-                        <Text style={{fontSize:15,margin:5}}>{requestSpace && requestSpace.message}</Text>
-                        <View style={{fontSize:15,margin:5}}></View>
-               {loadingScreen ? 
-                        <View style={{flex:1,padding:20}}>
-                        <ActivityIndicator size="large" color="#0000ff"/>
-                          </View>
-                          :
-                          <Button
-                          onPress={() => {
-                            setLoadingScreen(true)
-                            // onPress={() => {
-                        // ////console.log(space);
-                        if(props.route.params){
-                          console.log("USerss")
-                          Book(props.route.params.historySpace)
-                        }
-                        else{
-                          console.log("NO ONE SHOULD COME")
-                        Book(requestSpace);
-                        }
+            <Text style={{ fontSize: 20, margin: 5 }}>
+              Price: {requestSpace && requestSpace.Price}{" "}
+            </Text>
+            <Text style={{ fontSize: 15, margin: 5 }}>
+              Adress:{" "}
+              {requestSpace &&
+                requestSpace.Flatno +
+                  requestSpace.Area +
+                  requestSpace.Building}{" "}
+            </Text>
+            <Text style={{ fontSize: 15, margin: 5 }}>
+              {requestSpace && requestSpace.Street + "," + requestSpace.City}
+            </Text>
+            <Text style={{ fontSize: 15, margin: 5 }}>
+              {requestSpace && requestSpace.message}
+            </Text>
+            <View style={{ fontSize: 15, margin: 5 }}></View>
+            {loadingScreen ? (
+              <View style={{ flex: 1, padding: 20 }}>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            ) : (
+              <Button
+                onPress={() => {
+                  setLoadingScreen(true);
+                  // onPress={() => {
+                  // ////console.log(space);
+                  if (props.route.params) {
+                    console.log("USerss");
+                    Book(props.route.params.historySpace);
+                  } else {
+                    console.log("NO ONE SHOULD COME");
+                    Book(requestSpace);
+                  }
 
-                            // ////console.log(a);
-                          }}
+                  // ////console.log(a);
+                }}
+                titleStyle={{ color: "white" }}
+                buttonStyle={{
+                  backgroundColor: "#5EA0EE",
+                }}
+                containerStyle={{}}
+                title="Book"
+              ></Button>
+            )}
 
-                          titleStyle={{ color: "white" }}
-                          buttonStyle={{
-                            backgroundColor: "#5EA0EE",
-                          }}
-                          containerStyle={{}}
-                          title="Book"
-                        ></Button>
-                        
+            {loadingScreen && (
+              <Button
+                onPress={() => {
+                  setLoadingScreen(false);
+                  resetBackend();
+                }}
+                titleStyle={{ color: "white" }}
+                buttonStyle={{
+                  backgroundColor: "red",
+                }}
+                containerStyle={{}}
+                title="Cancel"
+              ></Button>
+            )}
 
-                          }
-
-                          {
-                            loadingScreen &&
-                            <Button
-                          onPress={() => {
-                            setLoadingScreen(false)
-                            resetBackend();
-                          }}
-
-                          titleStyle={{ color: "white" }}
-                          buttonStyle={{
-                            backgroundColor: "red",
-                          }}
-                          containerStyle={{}}
-                          title="Cancel"
-                        ></Button>
-                          }
-
-                          {
-                            requestRejected && <Text>Your Request was Rejected</Text>
-
-                          }
-                      </View>
-                    </View>
+            {requestRejected && <Text>Your Request was Rejected</Text>}
+          </View>
+        </View>
       </Overlay>
       {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
 
       <Overlay
-        overlayStyle={{width: "90%" }}
+        overlayStyle={{ width: "90%" }}
         isVisible={visibleSearch}
         onBackdropPress={() => {
           setVisiblesearch(!visibleSearch);
         }}
       >
-        <City setVisiblesearch={setVisiblesearch} setUserLocation={setUserLocation} setCurrentlocation={setCurrentlocation} />
+        <City
+          setVisiblesearch={setVisiblesearch}
+          setUserLocation={setUserLocation}
+          setCurrentlocation={setCurrentlocation}
+        />
       </Overlay>
 
-     {startGps && <View
-        style={{
-          position: "absolute",
-          width: "100%",
-          zIndex: 10,
-          bottom: '20%',
-          flexDirection: "row",
-          justifyContent:"center",
-          alignItems:"center"
-        }}
-      >
-        <Button
-                          onPress={ParkCar}
-
-                          titleStyle={{ color: "white" }}
-                          buttonStyle={{
-                            backgroundColor: "red",
-                          }}
-                          containerStyle={{}}
-                          title="stop navigation and park"
-        ></Button> 
-      </View>}
+      {startGps && (
+        <View
+          style={{
+            position: "absolute",
+            width: "100%",
+            zIndex: 10,
+            bottom: "20%",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            onPress={ParkCar}
+            titleStyle={{ color: "white" }}
+            buttonStyle={{
+              backgroundColor: "red",
+            }}
+            containerStyle={{}}
+            title="stop navigation and park"
+          ></Button>
+        </View>
+      )}
 
       <View
         style={{
@@ -670,8 +569,8 @@ function ParkCar()
           zIndex: 10,
           top: 50,
           flexDirection: "row",
-          justifyContent:"center",
-          alignItems:"center"
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Button
@@ -698,41 +597,46 @@ function ParkCar()
       </View>
 
       <View style={{ flex: 1, zIndex: 2 }}>
-      <GooglePlacesAutocomplete
-      placeholder='Search'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        // ////console.log(data, details);
-      }}
-      query={{
-        key: 'AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA',
-        language: 'en',
-      }}
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          onPress={(data, details = null) => {
+            // 'details' is provided when fetchDetails = true
+            // ////console.log(data, details);
+          }}
+          query={{
+            key: "AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA",
+            language: "en",
+          }}
+        />
+        <MapView
+          initialRegion={userLocation}
+          style={styles.map}
+          region={userLocation}
+        >
+          {userLocation && <Marker coordinate={userLocation} />}
 
-   
-    />
-        <MapView initialRegion={userLocation} style={styles.map} region={userLocation}>
-          { userLocation &&
-        <Marker coordinate={userLocation}/>
-          }
-          
-       {startGps && <MapViewDirections
-          lineDashPattern={[1]}
-          origin={userLocation}
-          destination={bookedSpace.coordinates}
-          apikey={"AIzaSyBF4pISVkNESXEyzdHxDXZjupKC9n-xyTQ"}
-          strokeWidth={3}
-          strokeColor="blue"
-        />}
-
-
-          
+          {startGps && (
+            <MapViewDirections
+              lineDashPattern={[1]}
+              origin={userLocation}
+              destination={bookedSpace.coordinates}
+              apikey={"AIzaSyBF4pISVkNESXEyzdHxDXZjupKC9n-xyTQ"}
+              strokeWidth={3}
+              strokeColor="blue"
+            />
+          )}
 
           {spaces &&
             spaces.map((space) => {
               const a = space;
               // ////console.log("user", user);
-              if (user && user.uid !== space.owner && space.camera===camera && space.guard===guard && space.covered===covered )
+              if (
+                user &&
+                user.uid !== space.owner &&
+                space.camera === camera &&
+                space.guard === guard &&
+                space.covered === covered
+              )
                 return (
                   <Marker
                     coordinate={{
@@ -740,14 +644,10 @@ function ParkCar()
                       longitude: space.coordinates.longitude,
                     }}
                     onPress={() => {
-                    setrequestSpace(space)
-                    setShowmarkerdetails(true)
-                  }
-                  
-                  }
-                  >
-
-                  </Marker>
+                      setrequestSpace(space);
+                      setShowmarkerdetails(true);
+                    }}
+                  ></Marker>
                 );
               else {
                 return null;

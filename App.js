@@ -23,9 +23,10 @@ import AccountLatePayment from "./screens/AccountLatePayment";
 import HistoryNavigate from "./screens/HistoryNavigate";
 import { SettingsProvider } from "./src/context/Setting";
 import Card from "./screens/CardPay";
+import Stripe from "./screens/Stripe";
 
 const Stack = createNativeStackNavigator();
-const settings =0;
+const settings = 0;
 const globalScreenOptions = {
   headerStyle: {
     backgroundColor: "#5EA0EE",
@@ -41,96 +42,103 @@ const globalScreenOptions = {
 export default function MyStack() {
   return (
     <NavigationContainer>
-          <SettingsProvider settings={settings}>
+      <SettingsProvider settings={settings}>
+        <Stack.Navigator screenOptions={globalScreenOptions}>
+          <Stack.Screen name="Main" component={Main} options={{ title: "" }} />
 
-      <Stack.Navigator screenOptions={globalScreenOptions}>
-        <Stack.Screen name="Main" component={Main} options={{ title: "" }} />
-
-        <Stack.Screen name="Login" component={Login} options={{ title: "" }} />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ title: "" }}
-        />
-        <Stack.Screen
-          name="Account"
-          component={Account}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="Temp"
-          component={TempScreen}
-          options={{ title: "", headerShown: false }}
-        />
-        <Stack.Screen
-          name="Maps"
-          component={Maps}
-          options={{ title: "", headerShown: false }}
-        />
-        <Stack.Screen
-          name="AccountEdit"
-          component={AccountEdit}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="AccountNotifications"
-          component={AccountNotifications}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="AccountLanguage"
-          component={AccountLanguage}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="AccountAbout"
-          component={AccountAbout}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="AccountParkings"
-          component={AccountParkings}
-          options={{ title: "", headerShown: true }}
-        />
-
-        <Stack.Screen
-          name="AccountAddParking"
-          component={AccountAddParking}
-          options={{ title: "", headerShown: true }}
-        />
-
-        <Stack.Screen
-          name="TabBottom"
-          component={TabBottom}
-          options={{ title: "", headerShown: false }}
-        />
-         <Stack.Screen
-          name="ReLogin"
-          component={ReLogin}
-          options={{ title: "", headerShown: false }}
-        />
-         <Stack.Screen
-          name="Tickets"
-          component={Tickets}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="AccountLatePayment"
-          component={AccountLatePayment}
-          options={{ title: "", headerShown: true }}
-        />
-        <Stack.Screen
-          name="Card"
-          component={Card}
-          options={{ title: "", headerShown: true }}
-        />
           <Stack.Screen
-          name="HistoryNavigate"
-          component={HistoryNavigate}
-          options={{ title: "", headerShown: true }}
-        />
+            name="Login"
+            component={Login}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="Account"
+            component={Account}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="Temp"
+            component={TempScreen}
+            options={{ title: "", headerShown: false }}
+          />
+          <Stack.Screen
+            name="Maps"
+            component={Maps}
+            options={{ title: "", headerShown: false }}
+          />
+          <Stack.Screen
+            name="AccountEdit"
+            component={AccountEdit}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="AccountNotifications"
+            component={AccountNotifications}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="AccountLanguage"
+            component={AccountLanguage}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="AccountAbout"
+            component={AccountAbout}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="AccountParkings"
+            component={AccountParkings}
+            options={{ title: "", headerShown: true }}
+          />
 
-      </Stack.Navigator>
+          <Stack.Screen
+            name="AccountAddParking"
+            component={AccountAddParking}
+            options={{ title: "", headerShown: true }}
+          />
+
+          <Stack.Screen
+            name="TabBottom"
+            component={TabBottom}
+            options={{ title: "", headerShown: false }}
+          />
+          <Stack.Screen
+            name="ReLogin"
+            component={ReLogin}
+            options={{ title: "", headerShown: false }}
+          />
+          <Stack.Screen
+            name="Tickets"
+            component={Tickets}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="AccountLatePayment"
+            component={AccountLatePayment}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="Card"
+            component={Card}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="HistoryNavigate"
+            component={HistoryNavigate}
+            options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="Stripe"
+            component={Stripe}
+            options={{ title: "", headerShown: true }}
+          />
+        </Stack.Navigator>
       </SettingsProvider>
 
       {/* <TabBottom/> */}
