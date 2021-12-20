@@ -14,41 +14,76 @@ import AvatarCustom from './common/AvatarCustom';
 import { auth, db } from "../firebase";
 import SettingsContext from '../src/context/Setting';
 import { data } from '../src/Transaltion/translation';
+import HistoryNavigate from './HistoryNavigate';
 export default function Tickets({navigation}){
+    const [history,setHistroy]=useState([])
+    const [flag,setFlag]=useState(false)
 
 
-  const list_spaces=[
-
-  ]
+    async function func(){
+        console.log("Entered")
+        //console.log("auth.",auth.currentUser.uid)       
+            const aUser = db.collection('users').doc(auth.currentUser.uid);
+            // console.log("AUSEE L ",aUser)
+            const docData = await aUser.get()
+            if(docData){
+            // console.log("docs: ",docData.data().history)
+            // console.log("History : ",history_spaces)
+            setHistroy(docData.data().history)
+            setFlag(true)
+        // const dta={
+        //   title:2
+        // }
+        // dd.append(dta)
+        // list_spaces.push(dd)
+            }
+    }
+    
 //   const [username,setUsername]=useState("User")
   const {settings,saveSettings}= useContext(SettingsContext);
 
-  const [spaces,setSpaces]=useState([])
   React.useEffect(()=>{
     // const user=auth.currentUser.providerData[0]["displayName"]
     // setUsername(user)
     // console.log("CURRENT : ",user)
 
-console.log("Entered")
-    db.collection("spaces")
-    .where("owner", "==", auth.currentUser.uid)
-    .onSnapshot((snapshot) => {
-      // Your own custom logic here
-      snapshot.forEach((doc) => {
-        // ////console.log(doc.id, doc.data());
-// console.log("PARKING SLOT YAAAY",doc.data())
-let dd=doc.data()
-dd["title"]="Slot "+(list_spaces.length+1)
-// const dta={
-//   title:2
-// }
-// dd.append(dta)
-list_spaces.push(dd)
-      });
-      // console.log(list_spaces)
-      // console.log(list_spaces.length)
-      setSpaces(list_spaces);
-    });
+
+
+func()
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+//     db.collection("users")
+//     .where("id", "==", auth.currentUser.uid)
+//     .onSnapshot((snapshot) => {
+//       // Your own custom logic here
+//       snapshot.forEach((doc) => {
+
+//         // ////console.log(doc.id, doc.data());
+// // console.log("PARKING SLOT YAAAY",doc.data())
+// let dd=doc.data()
+// dd["title"]="Slot "+(list_spaces.length+1)
+// // const dta={
+// //   title:2
+// // }
+// // dd.append(dta)
+// // list_spaces.push(dd)
+//     //   });
+//       // console.log(list_spaces)
+//       // console.log(list_spaces.length)
+//       setSpaces(list_spaces);
+//     });
 
 
 
@@ -60,7 +95,7 @@ list_spaces.push(dd)
     const renderFunction=(item,key)=>{
     console.log("key : ",key)
      navigation.replace(
-      'AccountAddParking',
+      'HistoryNavigate',
       { item },
     );
 
@@ -106,10 +141,10 @@ stickyFooterIndices={[0]}
 <Text style={styles.innerText}>{data["My_Tickets"][settings]}</Text>
 {
       
-        spaces.map((item, i) => (
+    flag  &&  history.map((item, i) => (
           <ListItem button onPress={() => {{renderFunction(item,i+1)}}} key={i+1} bottomDivider containerStyle={{width:"100%",fontSize:12}}>
             <ListItem.Content>
-              <ListItem.Title>{item.title}</ListItem.Title>
+              <ListItem.Title>{"Ticket\t\t"}{i+1}</ListItem.Title>
               
             </ListItem.Content>
             <ListItem.Chevron />

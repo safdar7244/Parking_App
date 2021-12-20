@@ -13,10 +13,11 @@ import TabBottom from './TabBottom';
 import { auth, db } from "../firebase";
 import { data } from '../src/Transaltion/translation';
 import SettingsContext from '../src/context/Setting';
-
+import AvatarCustom from './common/AvatarCustom';
 
 export default function AccountAbout({navigation}){
- 
+  const [profileUrl,setProfileUrl]=useState(false)
+
   const {settings,saveSettings}= useContext(SettingsContext);
   // setTimeout(() => {
   //   saveSettings(1)
@@ -28,7 +29,9 @@ const [link,setLink]=useState("")
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
-    console.log("CURRENT : ",user)
+    // console.log("CURRENT : ",user)
+    setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+
   },[])
 
   function handleClick(){
@@ -51,21 +54,8 @@ const [link,setLink]=useState("")
 <View style={styles.innerContainer}>
 
      
-          <Avatar
-          rounded
-            size={90}
-            
-            source={{
-                uri:
-                  'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                 }}
-            containerStyle={{ backgroundColor: 'grey', }}
-          >
-            <Avatar.Accessory size={0} 
-            onPress={() => {}}
+<AvatarCustom url={profileUrl} />
 
-            />
-          </Avatar>
           
                <Text style={styles.UserName}>{username}</Text>
             

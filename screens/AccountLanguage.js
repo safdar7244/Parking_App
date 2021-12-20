@@ -21,7 +21,8 @@ export default function AccountLanguage({navigation}){
     // data["b"]="ddddd"
     const [username,setUsername]=useState("User")
     const {settings,saveSettings}= useContext(SettingsContext);
-   
+    const [profileUrl,setProfileUrl]=useState(false)
+
    
     React.useEffect(()=>{
       if(settings==0){
@@ -35,7 +36,9 @@ export default function AccountLanguage({navigation}){
       }
       const user=auth.currentUser.providerData[0]["displayName"]
       setUsername(user)
-      console.log("CURRENT : ",user)
+      setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+
+      // console.log("CURRENT : ",user)
     },[])
 
 
@@ -92,7 +95,7 @@ export default function AccountLanguage({navigation}){
 <View style={styles.innerContainer}>
 
      
-          <AvatarCustom />
+<AvatarCustom url={profileUrl} />
           
                <Text style={styles.UserName}>{username}</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}

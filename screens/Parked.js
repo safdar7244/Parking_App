@@ -71,9 +71,9 @@ function Parked(props,navigation) {
       {
         if(doc.data().history){
         history=doc.data().history;}
-        console.log("HISTORY",history)
+        console.log("HISTORY",historys)
       }
-
+      
       history.push({
         bookedSpace:props.bookedSpace,
           date: new Date()})

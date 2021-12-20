@@ -11,11 +11,14 @@ export default function AccountLatePayment({navigation}){
   const {settings,saveSettings}= useContext(SettingsContext);
 
   const [latePayment,setLatePayment]=useState('')
+  const [profileUrl,setProfileUrl]=useState(false)
 
   const [username,setUsername]=useState("User")
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
+    setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+
     // console.log("CURRENT : ",user)
   },[])
 
@@ -28,7 +31,7 @@ export default function AccountLatePayment({navigation}){
 <View style={styles.innerContainer}>
 
      
-          <AvatarCustom />
+<AvatarCustom url={profileUrl} />
            
                <Text style={styles.UserName}>{username}</Text>
 <View style={{flexDirection:"row",padding:40,backgroundColor:"white",marginTop:40}}> 

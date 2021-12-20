@@ -16,7 +16,8 @@ import { data } from '../src/Transaltion/translation';
 import AvatarCustom from './common/AvatarCustom';
 export default function AccountNotifications({navigation}){
   const {settings,saveSettings}= useContext(SettingsContext);
-
+  const [profileUrl,setProfileUrl]=useState(false)
+s
     const [Notification,setNotification]=useState('')
   const [Payment,setPayment]=useState('')
   const [newParking,setNewParking]=useState('')
@@ -24,7 +25,9 @@ export default function AccountNotifications({navigation}){
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
-    console.log("CURRENT : ",user)
+    setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+
+    // console.log("CURRENT : ",user)
   },[])
 
 
@@ -36,7 +39,7 @@ export default function AccountNotifications({navigation}){
 <View style={styles.innerContainer}>
 
      
-          <AvatarCustom />
+<AvatarCustom url={profileUrl} />
           
                <Text style={styles.UserName}>{username}</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}

@@ -20,6 +20,7 @@ import Location from "./screens/Location";
 import TempScreen from "./screens/temp";
 import Tickets from "./screens/Tickets";
 import AccountLatePayment from "./screens/AccountLatePayment";
+import HistoryNavigate from "./screens/HistoryNavigate";
 import { SettingsProvider } from "./src/context/Setting";
 import Card from "./screens/CardPay";
 
@@ -121,6 +122,11 @@ export default function MyStack() {
         <Stack.Screen
           name="Card"
           component={Card}
+          options={{ title: "", headerShown: true }}
+        />
+          <Stack.Screen
+          name="HistoryNavigate"
+          component={HistoryNavigate}
           options={{ title: "", headerShown: true }}
         />
 

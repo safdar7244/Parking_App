@@ -14,9 +14,10 @@ import * as firebase from "firebase";
 
 import axios from "axios";
 import { Avatar } from 'react-native-elements';
+import { add } from "react-native-reanimated";
 
-export default function UploadImage(props) {
-  console.log("\n\n\n\n\n\n\n\nurl now , ", props);
+export default function AccountImage(props) {
+  // console.log("\n\n\n\n\n\n\n\nurl now , ", props);
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -75,10 +76,25 @@ useEffect(()=>{
       style={props.newStyle}
     >
       {image && (
-        <Image source={{ uri: image }} />
+         <Avatar
+         size={90}
+         rounded
+         source={{
+             uri:
+               image,
+              }}
+         containerStyle={{ backgroundColor: 'grey' }}
+       >
+         <Avatar.Accessory size={23} 
+         onPress={() => {
+        {addImage()}
+        }}
+
+         />
+       </Avatar>
       )}
 
-      <View style={imageUploaderStyles.uploadBtnContainer}>
+      {/* <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity
           onPress={addImage}
           style={imageUploaderStyles.uploadBtn}
@@ -86,7 +102,7 @@ useEffect(()=>{
           <Text>{image ? "Edit" : "Upload"} Image</Text>
           <AntDesign name="camera" size={20} color="black" />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }

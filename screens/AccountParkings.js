@@ -18,6 +18,7 @@ import axios from 'axios';
 
 
 export default function AccountParkings({navigation}){
+  const [profileUrl,setProfileUrl]=useState(false)
 
   const list_spaces=[
 
@@ -32,6 +33,8 @@ export default function AccountParkings({navigation}){
   React.useEffect(()=>{
     const user=auth.currentUser.providerData[0]["displayName"]
     setUsername(user)
+    setProfileUrl(auth.currentUser.providerData[0]["photoURL"])
+
     // console.log("CURRENT : ",user)
 
 console.log("Entered")
@@ -173,7 +176,7 @@ stickyFooterIndices={[0]}
 <View style={styles.innerContainer}>
 
      
-          <AvatarCustom />
+<AvatarCustom url={profileUrl} />
           
                <Text style={styles.UserName}>{username}</Text>
 

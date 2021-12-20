@@ -219,7 +219,8 @@ export default function AccountAddParking({ route, navigation }) {
         // borderRadius:100,
         position: "relative",
         // borderRadius:999,
-        overflow: "hidden"}}/>
+        overflow: "hidden"}}
+        />
 
         <Text style={styles.UserName}>
           {data["Location_And_Details"][settings]}

@@ -144,7 +144,7 @@ export default function Maps({ navigation }) {
   {
     
       // if (!DirectionsTimer) {
-        if (!startGps)
+        if (startGps)
         {
         DirectionsTimer.current = setInterval(() => 
         {
@@ -168,7 +168,7 @@ export default function Maps({ navigation }) {
 
   useEffect(()=> 
   {
-    startDirections;
+    startDirections();
   },[startGps])
 
   function Book(space) {
@@ -307,8 +307,8 @@ db.collection("users")
 
 function stopNavigation()
 {
-  stopDirections();
   setStartGps(false);
+  stopDirections();
 }
 
 function ParkCar() 

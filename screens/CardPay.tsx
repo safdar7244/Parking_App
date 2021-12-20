@@ -106,7 +106,8 @@ export default function Card({navigation,route}) {
     })
     .catch(()=>{
       Alert.alert('ERROR OCCURRED')
-    })
+    }
+    )
    
     route.params.pay();
   }

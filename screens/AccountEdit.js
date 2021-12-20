@@ -16,7 +16,7 @@ import { data } from '../src/Transaltion/translation';
 import UploadImage from './common/UploadImage';
 import * as firebase from "firebase";
 import { set } from 'react-native-reanimated';
-
+import AccountImage from './common/AccountImage';
 export default function AccountEdit({navigation}){
   const {settings,saveSettings}= useContext(SettingsContext);
   const [imageUri, setImageUri] = useState(null);
@@ -115,7 +115,25 @@ if(photoUrl==" ")
                console.log("Profile pic set")
                auth.currentUser.updateProfile({
                 photoURL: downloadURL,
-              }).then(()=>{    setPhotoUrl(auth.currentUser.providerData[0]["photoURL"])            });
+              }).then(()=>{    setPhotoUrl(auth.currentUser.providerData[0]["photoURL"])   
+            
+              Alert.alert(
+                "Success !",
+                "Changed successfully  ",
+                [
+                
+                  { text: "OK", onPress: () => {
+                    navigation.navigate('Maps')
+
+                    setTimeout(()=>{
+                      navigation.navigate('Account')
+
+                    },500)
+
+                  }}
+                ]
+              );
+            });
               }); 
             }
           });
@@ -205,49 +223,38 @@ function updateDbname(val)
           <View style={styles.innerContainer}>
           {/* <AvatarCustom /> */}
           
-{     flag &&     <UploadImage imageUri={imageUri} setImageUri={setImageUri}  photoUrl={photoUrl} newStyle={
-       { width: 100,
-        height: 100,
-        elevation: 2,
-        backgroundColor: "#efefef",
-        borderRadius:100,
-        position: "relative",
-        // borderRadius:999,
-        overflow: "hidden"}}/>}       
+{     flag &&     <AccountImage imageUri={imageUri} setImageUri={setImageUri}  photoUrl={photoUrl}
+       
+        />}       
         <Text style={styles.UserName}>{username}</Text>
                </View>
 
           <Formik
             initialValues={{_username:''}}
             onSubmit={(values) =>{
-               console.log('submitted', values._username)
+               console.log('submtted', values._username)
                if (imageUri) {
                 console.log("max: ", imageUri);
                 uploadImageAsync(imageUri);
               }
               //  auth.currentUser.providerData[0]["displayName"]=values._username
-              auth.currentUser.updateProfile({
-                displayName: values._username,
-              });
-              updateDbname(values._username)
-               setUsername(values._username)
+              if(values._username.length<1){
+                auth.currentUser.updateProfile({
+                  displayName: username,
+                });
+                updateDbname(username)
+                 setUsername(username)
+              }
+              else{
+                auth.currentUser.updateProfile({
+                  displayName: values._username,
+                });
+                updateDbname(values._username)
+                 setUsername(values._username)
+              }
+              
 
-              Alert.alert(
-                "Success !",
-                "Changed successfully  ",
-                [
-                
-                  { text: "OK", onPress: () => {
-                    navigation.navigate('Maps')
-
-                    setTimeout(()=>{
-                      navigation.navigate('Account')
-
-                    },500)
-
-                  }}
-                ]
-              );
+             
               }}
           >
              {({handleChange, handleSubmit, values})=>(
