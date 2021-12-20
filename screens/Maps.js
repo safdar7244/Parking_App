@@ -194,23 +194,15 @@ export default function Maps(props) {
           setBookedSpace(space);
           console.log(bookedSpace);
       });
-    // const a = db.collection("users").doc(''));
-    //  ////console.log(a);
   }
 
   useEffect(()=>{
-    // console.log("\n\n\nEFFF1 :")
-
     console.log("\n\n\nEFFF :",props.route.params)
     if(props.route.params)
     {
       setrequestSpace(props.route.params.historySpace)
       setShowmarkerdetails(props.route.params.historyCheck)
-      console.log("\n\n\nEFFF2 :",props.route.params.historySpace.coordinates)
-      // setBookedSpace(props.route.params.historySpace)
     }
-    // console.log("\n\n\nEFFF2 :")
-
   },[])
   useEffect(()=>{
     
@@ -219,18 +211,12 @@ export default function Maps(props) {
       .where("id", "==", auth.currentUser.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          ////console.log("hehrehrhehrehrhehrer");
-
           if (change.type === "added") {
-            // ////console.log("New city: ", change.doc.data());
           }
           if (change.type === "modified") {
-            // ////console.log("Modified city: ", change.doc.data());
-              
              if (change.doc.data().acceptedSession) {
               if(change.doc.data().acceptedSession.status===1)
               {
-              ////console.log("\n\n\n\nHELLO N2N","No : ",visibleRequest,bookedSpace)
               setBookedSpace(change.doc.data().acceptedSession.space)
               console.log("MULTIPLE TIMES")
               setLoadingScreen(false)
@@ -555,7 +541,8 @@ function ParkCar()
 
 
       {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
-      <Overlay overlayStyle={{ padding: 20, width: "80%" }}
+  {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
+  <Overlay overlayStyle={{ padding: 20, width: "80%" }}
         isVisible={Showmarkerdetails}
         onBackdropPress={() => {
           setShowmarkerdetails(!Showmarkerdetails);
@@ -571,7 +558,7 @@ function ParkCar()
                         <Avatar
                           size={90}
                           source={{
-                            uri: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+                            uri: requestSpace ? requestSpace.imageUrl : "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
                           }}
                           containerStyle={{
                             backgroundColor: "grey",
@@ -579,9 +566,11 @@ function ParkCar()
                           }}
                         ></Avatar>
   
-                        <Text>{requestSpace && requestSpace.Price} </Text>
-                        <Text>{requestSpace && requestSpace.Flatno+" ,"+requestSpace.Area+" ,"+requestSpace.Building} </Text>
-                        <Text>{requestSpace && requestSpace.City+" ,"+requestSpace.Street}</Text>
+                        <Text style={{fontSize:20,margin:5}} >Price:  {requestSpace && requestSpace.Price} </Text>
+                        <Text style={{fontSize:15,margin:5}}>Adress: {requestSpace && requestSpace.Flatno+requestSpace.Area+requestSpace.Building} </Text>
+                        <Text style={{fontSize:15,margin:5}}>{requestSpace && requestSpace.Street+","+requestSpace.City}</Text>
+                        <Text style={{fontSize:15,margin:5}}>{requestSpace && requestSpace.message}</Text>
+                        <View style={{fontSize:15,margin:5}}></View>
                {loadingScreen ? 
                         <View style={{flex:1,padding:20}}>
                         <ActivityIndicator size="large" color="#0000ff"/>
