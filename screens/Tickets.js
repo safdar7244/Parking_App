@@ -22,15 +22,16 @@ export default function Tickets({navigation}){
 
     async function func(){
         console.log("Entered")
-        //console.log("auth.",auth.currentUser.uid)       
+        console.log("auth.",auth.currentUser.uid)       
             const aUser = db.collection('users').doc(auth.currentUser.uid);
             // console.log("AUSEE L ",aUser)
             const docData = await aUser.get()
             if(docData){
-            // console.log("docs: ",docData.data().history)
+            console.log("docs: ",docData.data().history)
             // console.log("History : ",history_spaces)
+            if(docData.data().history){
             setHistroy(docData.data().history)
-            setFlag(true)
+            setFlag(true)}
         // const dta={
         //   title:2
         // }

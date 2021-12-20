@@ -17,7 +17,6 @@ import AvatarCustom from './common/AvatarCustom';
 export default function AccountNotifications({navigation}){
   const {settings,saveSettings}= useContext(SettingsContext);
   const [profileUrl,setProfileUrl]=useState(false)
-s
     const [Notification,setNotification]=useState('')
   const [Payment,setPayment]=useState('')
   const [newParking,setNewParking]=useState('')

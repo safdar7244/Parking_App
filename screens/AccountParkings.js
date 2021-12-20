@@ -282,7 +282,7 @@ innerContainer2:
 {
     // marginBottom:"20%",
     marginTop:20,
-  borderRadius:15,
+  // borderRadius:15,
     backgroundColor:"white",
     width:"85%",
     // marginTop:"10%",
@@ -295,7 +295,7 @@ padding:40,
 innerContainer3:
 {
     marginBottom:"55%",
-  borderRadius:15,
+  // borderRadius:15,
     backgroundColor:"white",
     width:"85%",
     marginTop:"20%",
