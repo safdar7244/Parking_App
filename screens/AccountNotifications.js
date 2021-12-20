@@ -43,7 +43,7 @@ export default function AccountNotifications({navigation}){
                <Text style={styles.UserName}>{username}</Text>
                {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
 
-               <Options
+               {/* <Options
               
               option1={data["Push_Notification"][settings]}
               option2={data["Late_Payment"][settings]}
@@ -59,7 +59,11 @@ export default function AccountNotifications({navigation}){
             
             
                
-               />
+               /> */}
+               <View style={{flexDirection:"row",padding:40,backgroundColor:"white",marginTop:40}}> 
+    <Text style={{paddingTop:15 }}>  {data["Notifications"][settings]} </Text>
+    <Switch value={Notification} style={{marginLeft:"auto",paddingRight:60}} color="#00DB8C" onChange={()=>{setNotification(!Notification)}} />
+    </View>
     {/* </Overlay> */}
 
 </View>
