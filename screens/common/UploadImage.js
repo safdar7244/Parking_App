@@ -20,15 +20,21 @@ export default function UploadImage(props) {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // if(props.photoUrl.length>3){
-  //   setImage(props.photoUrl)
-  // }
-useEffect(()=>{
-  if(props.photoUrl)
- if(props.photoUrl.length>3){
-    setImage(props.photoUrl)
-  }
-},[])
+// if(props.photoUrl){
+//   console.log("KOOKOKO")
+//   setImage(props.photoUrl)
+// }
+
+// if(props.photoUrl)
+//   {if(props.photoUrl.length>3){
+//     setImage(props.photoUrl)
+//   }}
+// useEffect(()=>{
+//   if(props.photoUrl)
+//  if(props.photoUrl.length>3){
+//     setImage(props.imageUri)
+//   }
+// },[])
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync();
 
@@ -72,11 +78,26 @@ useEffect(()=>{
   //////////////////////////////////////////////////////////////////////////////////
   return (
     <View
-      style={props.newStyle}
+      style={{}}
     >
-      {image && (
-        <Image source={{ uri: image }} />
-      )}
+       
+         <Avatar
+         size={90}
+        //  rounded
+         source={{
+             uri:
+               image,
+              }}
+         containerStyle={props.newStyle}
+       >
+         {/* <Avatar.Accessory size={23} 
+         onPress={() => {
+        {addImage()}
+        }}
+
+         /> */}
+       </Avatar>
+      
 
       <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity
@@ -99,7 +120,7 @@ const imageUploaderStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "lightgrey",
-    width: "100%",
+    width: "70%",
     height: "25%",
   },
   uploadBtn: {

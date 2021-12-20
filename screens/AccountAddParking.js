@@ -36,6 +36,7 @@ export default function AccountAddParking({ route, navigation }) {
   const [Street, setStreet] = useState("");
   const [Area, setArea] = useState("");
   const { settings, saveSettings } = useContext(SettingsContext);
+  const [photoUrl,setPhotoUrl]=useState(null)
 
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
@@ -66,6 +67,7 @@ export default function AccountAddParking({ route, navigation }) {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
+      setPhotoUrl(route.params.item.imageUrl)
 
       setGuard(route.params.item.guard);
     }
@@ -211,15 +213,18 @@ export default function AccountAddParking({ route, navigation }) {
       <View style={styles.innerContainer}>
         <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
 
-        <UploadImage imageUri={imageUri} setImageUri={setImageUri} newStyle={
+       <UploadImage imageUri={imageUri} setImageUri={setImageUri}  photoUrl={photoUrl} newStyle={
        { width: 250,
         height: 250,
-        elevation: 2,
-        backgroundColor: "#efefef",
-        // borderRadius:100,
-        position: "relative",
-        // borderRadius:999,
-        overflow: "hidden"}}
+        // elevation: 2,
+        // backgroundColor: "#efefef",
+        // // borderRadius:100,
+        // position: "relative",
+        // // borderRadius:999,
+        // overflow: "hidden"
+      
+      }
+      }
         />
 
         <Text style={styles.UserName}>
