@@ -13,34 +13,41 @@ import uuid from "react-native-uuid";
 import * as firebase from "firebase";
 
 import axios from "axios";
-import { Avatar } from 'react-native-elements';
+import { Avatar } from "react-native-elements";
 
 export default function UploadImage(props) {
   console.log("\n\n\n\n\n\n\n\nurl now , ", props);
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-// if(props.photoUrl){
-//   console.log("KOOKOKO")
-//   setImage(props.photoUrl)
-// }
+  useEffect(() => {
+    if (props.photoUrl)
+      if (props.photoUrl.length > 3) {
+        setImage(props.photoUrl);
+      }
+  }, []);
+  // if(props.photoUrl){
+  //   console.log("KOOKOKO")
+  //   setImage(props.photoUrl)
+  // }
 
-// if(props.photoUrl)
-//   {if(props.photoUrl.length>3){
-//     setImage(props.photoUrl)
-//   }}
-// useEffect(()=>{
-//   if(props.photoUrl)
-//  if(props.photoUrl.length>3){
-//     setImage(props.imageUri)
-//   }
-// },[])
+  // if(props.photoUrl)
+  //   {if(props.photoUrl.length>3){
+  //     setImage(props.photoUrl)
+  //   }}
+  // useEffect(()=>{
+  //   if(props.photoUrl)
+  //  if(props.photoUrl.length>3){
+  //     setImage(props.imageUri)
+  //   }
+  // },[])
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync();
 
     console.log("IMAGE DETAILS : ", _image);
 
     if (!_image.cancelled) {
+      props.setImageSetFlag(true);
       setImage(_image.uri);
       props.setImageUri(_image.uri);
     }
@@ -77,27 +84,22 @@ export default function UploadImage(props) {
 
   //////////////////////////////////////////////////////////////////////////////////
   return (
-    <View
-      style={{}}
-    >
-       
-         <Avatar
-         size={90}
+    <View style={{}}>
+      <Avatar
+        size={90}
         //  rounded
-         source={{
-             uri:
-               image,
-              }}
-         containerStyle={props.newStyle}
-       >
-         {/* <Avatar.Accessory size={23} 
+        source={{
+          uri: image,
+        }}
+        containerStyle={props.newStyle}
+      >
+        {/* <Avatar.Accessory size={23} 
          onPress={() => {
         {addImage()}
         }}
 
          /> */}
-       </Avatar>
-      
+      </Avatar>
 
       <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity

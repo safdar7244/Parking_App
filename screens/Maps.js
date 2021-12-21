@@ -65,6 +65,7 @@ export default function Maps(props) {
   const [parked, setParked] = useState(false);
   const [requestRejected, setRequestRejected] = useState(false);
   const [loadingScreen, setLoadingScreen] = useState(false);
+  const [filter, setFilter] = useState(false);
 
   const toggleOverlayRequest = () => {
     setVisibleRequest(!visibleRequest);
@@ -416,6 +417,7 @@ export default function Maps(props) {
         isVisible={visible}
         onBackdropPress={() => {
           setVisible(!visible);
+          setFilter(true);
         }}
       >
         <OverlaySet
@@ -630,27 +632,59 @@ export default function Maps(props) {
             spaces.map((space) => {
               const a = space;
               // ////console.log("user", user);
-              if (
-                user &&
-                user.uid !== space.owner &&
-                space.camera === camera &&
-                space.guard === guard &&
-                space.covered === covered
-              )
-                return (
-                  <Marker
-                    coordinate={{
-                      latitude: space.coordinates.latitude,
-                      longitude: space.coordinates.longitude,
-                    }}
-                    onPress={() => {
-                      setrequestSpace(space);
-                      setShowmarkerdetails(true);
-                    }}
-                  ></Marker>
-                );
-              else {
-                return null;
+              // <<<<<<< HEAD
+              //               if (
+              //                 user &&
+              //                 user.uid !== space.owner &&
+              //                 space.camera === camera &&
+              //                 space.guard === guard &&
+              //                 space.covered === covered
+              //               )
+              // =======
+              if (user && filter) {
+                console.log("NON BB");
+                if (
+                  user &&
+                  user.uid !== space.owner &&
+                  space.camera === camera &&
+                  space.guard === guard &&
+                  space.covered === covered
+                )
+                  // >>>>>>> newPopBranch
+                  return (
+                    <Marker
+                      coordinate={{
+                        latitude: space.coordinates.latitude,
+                        longitude: space.coordinates.longitude,
+                      }}
+                      onPress={() => {
+                        setrequestSpace(space);
+                        setShowmarkerdetails(true);
+                      }}
+                    ></Marker>
+                  );
+                else {
+                  return null;
+                }
+              } else {
+                console.log("NON BB2");
+
+                if (user && user.uid !== space.owner)
+                  return (
+                    <Marker
+                      coordinate={{
+                        latitude: space.coordinates.latitude,
+                        longitude: space.coordinates.longitude,
+                      }}
+                      onPress={() => {
+                        setrequestSpace(space);
+                        setShowmarkerdetails(true);
+                      }}
+                    ></Marker>
+                  );
+                else {
+                  return null;
+                }
               }
             })}
         </MapView>

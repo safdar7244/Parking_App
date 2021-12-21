@@ -52,7 +52,13 @@ export default function AccountParkings({ navigation }) {
           // ////console.log(doc.id, doc.data());
           // console.log("PARKING SLOT YAAAY",doc.data())
           let dd = doc.data();
+          // <<<<<<< HEAD
+          //           dd["title"] = "Slot " + (list_spaces.length + 1);
+          // =======
+
           dd["title"] = "Slot " + (list_spaces.length + 1);
+          dd["id"] = doc.id;
+          // >>>>>>> newPopBranch
           // const dta={
           //   title:2
           // }
@@ -96,6 +102,42 @@ export default function AccountParkings({ navigation }) {
 
     return doc.data().stripeId;
   }
+  // <<<<<<< HEAD
+  // =======
+
+  /////////////////////////////////////////////////////////////////
+  const AccountLink = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://ancient-woodland-88729.herokuapp.com/onboard-user"
+      );
+      ///////////////////////////////////
+      if (response) {
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            stripeId: response.data.id_,
+          })
+          .then(function () {});
+        SetStripe(response.data.id_);
+        setLoading(false);
+        ///////////////////////////////////
+        Linking.canOpenURL(response.data.url).then((supported) => {
+          if (supported) {
+            Linking.openURL(response.data.url);
+          } else {
+            console.log("Don't know how to open URI: " + response.data.url);
+          }
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+    ///////////////////////////////////
+  };
+  // >>>>>>> newPopBranch
   /////////////////////////////////////////////////////////////////
 
   return (
@@ -108,6 +150,7 @@ export default function AccountParkings({ navigation }) {
         {/* <ScrollView 
     style={styles.Scrollcontainer}
 > */}
+
         <ImageBackground
           source={require("../pictures/bkg-user.jpeg")}
           resizeMode="cover"
@@ -175,7 +218,11 @@ export default function AccountParkings({ navigation }) {
             </ListItem>
             <Text style={{ fontSize: 10 }}>
               {" "}
+              {/* <<<<<<< HEAD */}
               {loading ? "Make Stripe Account First" : ""}
+              {/* // ======= */}
+              {/* // {loading ? "Proecessing Request.." : ""} */}
+              {/* >>>>>>> newPopBranch */}
             </Text>
           </View>
         </View>

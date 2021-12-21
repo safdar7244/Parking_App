@@ -158,7 +158,7 @@ export default function Account({ navigation }) {
     },
     {
       title: data["Stripe"][settings],
-      icon: "s",
+      icon: "scribd",
     },
   ];
 
