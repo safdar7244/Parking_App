@@ -10,12 +10,16 @@ import {
 import { Button, Avatar } from "react-native-elements";
 import ButtonMain from "./common/button";
 import TabBottom from "./TabBottom";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 export default function Main({ navigation }) {
+  const [render, setRender] = React.useState(false);
   React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
+        console.log("here");
         navigation.replace("Maps");
+      } else {
+        setRender(true);
       }
     });
 
@@ -23,51 +27,56 @@ export default function Main({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("../pictures/bkg.png")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <View style={styles.innerContainer}>
-          <Text style={styles.logoStyle}>Szia!</Text>
-          <Avatar
-            rounded
-            source={{
-              uri: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-            }}
-            size="xlarge"
-            containerStyle={{ marginTop: 20, marginBottom: 100 }}
-          />
-          <Button
-            raised={true}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={styles.button}
-            title="Bejelentkezés"
-            onPress={() => {
-              navigation.navigate("Login");
-
-            }}
-          >
-            {" "}
-          </Button>
-          <Button
-            raised={true}
-            titleStyle={{ color: "black" }}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={styles.button2}
-            title="Regisztráció"
-            onPress={() => {
-              navigation.navigate("Register");
-            }}
-          >
-            {" "}
-          </Button>
-          <View style={{ height: 100 }}></View>
-        </View>
-      </ImageBackground>
-      {/* <Home /> */}
-    </View>
+    <>
+      {render && (
+        <>
+          <View style={styles.container}>
+            <ImageBackground
+              source={require("../pictures/bkg.png")}
+              resizeMode="cover"
+              style={styles.image}
+            >
+              <View style={styles.innerContainer}>
+                <Text style={styles.logoStyle}>Szia!</Text>
+                <Avatar
+                  rounded
+                  source={{
+                    uri: "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+                  }}
+                  size="xlarge"
+                  containerStyle={{ marginTop: 20, marginBottom: 100 }}
+                />
+                <Button
+                  raised={true}
+                  containerStyle={styles.buttonContainer}
+                  buttonStyle={styles.button}
+                  title="Bejelentkezés"
+                  onPress={() => {
+                    navigation.navigate("Login");
+                  }}
+                >
+                  {" "}
+                </Button>
+                <Button
+                  raised={true}
+                  titleStyle={{ color: "black" }}
+                  containerStyle={styles.buttonContainer}
+                  buttonStyle={styles.button2}
+                  title="Regisztráció"
+                  onPress={() => {
+                    navigation.navigate("Register");
+                  }}
+                >
+                  {" "}
+                </Button>
+                <View style={{ height: 100 }}></View>
+              </View>
+            </ImageBackground>
+            {/* <Home /> */}
+          </View>
+        </>
+      )}
+    </>
   );
 }
 

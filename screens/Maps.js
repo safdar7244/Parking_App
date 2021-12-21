@@ -71,6 +71,45 @@ export default function Maps(props) {
     setVisibleRequest(!visibleRequest);
   };
 
+  const checkBan = async () => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          let userData = doc.data();
+          if (userData.history) {
+            console.log(userData.history);
+            let unpaid = userData.history.filter((history) => {
+              console.log(
+                history.isPayed,
+                history.date,
+                new Date().getTime() / 1000 - history.date.seconds > 3600,
+                new Date().getTime() / 1000
+              );
+              if (
+                !history.isPayed &&
+                new Date().getTime() / 1000 - history.date.seconds > 172800
+              ) {
+                return history;
+              }
+            });
+            console.log("Banned: ", unpaid);
+            if (unpaid) {
+              props.navigation.replace("Banned");
+            }
+          }
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  };
+
   if (user) {
     db.collection("users")
       .where("id", "==", user.uid)
@@ -143,6 +182,7 @@ export default function Maps(props) {
   }
 
   useEffect(() => {
+    checkBan();
     startDirections();
   }, [startGps]);
 

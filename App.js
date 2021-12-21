@@ -24,6 +24,7 @@ import HistoryNavigate from "./screens/HistoryNavigate";
 import { SettingsProvider } from "./src/context/Setting";
 import Card from "./screens/CardPay";
 import Stripe from "./screens/Stripe";
+import Banned from "./screens/Banned";
 
 const Stack = createNativeStackNavigator();
 const settings = 0;
@@ -45,7 +46,6 @@ export default function MyStack() {
       <SettingsProvider settings={settings}>
         <Stack.Navigator screenOptions={globalScreenOptions}>
           <Stack.Screen name="Main" component={Main} options={{ title: "" }} />
-
           <Stack.Screen
             name="Login"
             component={Login}
@@ -96,13 +96,11 @@ export default function MyStack() {
             component={AccountParkings}
             options={{ title: "", headerShown: true }}
           />
-
           <Stack.Screen
             name="AccountAddParking"
             component={AccountAddParking}
             options={{ title: "", headerShown: true }}
           />
-
           <Stack.Screen
             name="TabBottom"
             component={TabBottom}
@@ -137,6 +135,11 @@ export default function MyStack() {
             name="Stripe"
             component={Stripe}
             options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="Banned"
+            component={Banned}
+            options={{ title: "" }}
           />
         </Stack.Navigator>
       </SettingsProvider>
