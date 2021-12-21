@@ -108,6 +108,7 @@ export default function Card({ navigation, route }) {
           })
           .then((res) => {
             setLoading(false);
+            route.params.pay();
             Alert.alert("Payment Successful");
             navigation.navigate("Maps");
           })
@@ -115,8 +116,6 @@ export default function Card({ navigation, route }) {
             Alert.alert("ERROR OCCURRED");
             setLoading(false);
           });
-
-        route.params.pay();
       } catch (err) {
         console.log("Error Occurred");
       }
