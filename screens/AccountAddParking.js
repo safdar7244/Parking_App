@@ -36,7 +36,7 @@ export default function AccountAddParking({ route, navigation }) {
   const [Street, setStreet] = useState("");
   const [Area, setArea] = useState("");
   const { settings, saveSettings } = useContext(SettingsContext);
-  const [photoUrl,setPhotoUrl]=useState(null)
+  const [photoUrl, setPhotoUrl] = useState(null);
 
   const [Price, setPrice] = useState("");
   const [userLocation, setUserLocation] = useState(null);
@@ -47,6 +47,28 @@ export default function AccountAddParking({ route, navigation }) {
   const [camera, setCamera] = useState(false);
   const [flag, setFlag] = useState(false);
   const [imageUri, setImageUri] = useState(null);
+
+  const [imageSetFlag, setImageSetFlag] = useState(false);
+
+  React.useEffect(() => {
+    // if(photoUrl=="1"){
+
+    // }
+    // else{
+    console.log("YES LENGTH > 0", photoUrl);
+
+    if (photoUrl) {
+      console.log("000-> ", photoUrl);
+      if (photoUrl == "2") {
+        console.log("000pp-> ", photoUrl);
+        setFlag(true);
+      }
+
+      setFlag(true);
+    }
+
+    // }
+  }, [photoUrl]);
 
   React.useEffect(() => {
     if (route.params) {
@@ -67,7 +89,9 @@ export default function AccountAddParking({ route, navigation }) {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
-      setPhotoUrl(route.params.item.imageUrl)
+      setPhotoUrl(
+        route.params.item.imageUrl ? route.params.item.imageUrl : "2"
+      );
 
       setGuard(route.params.item.guard);
     }
@@ -145,6 +169,24 @@ export default function AccountAddParking({ route, navigation }) {
       console.log("ImageUri: ", imageUri);
       uploadImageAsync(imageUri, obj, ghash);
     }
+    if (!imageSetFlag) {
+      console.log("EDIT without image", auth.currentUser.uid);
+      obj.owner = auth.currentUser.uid;
+      obj.ghash = ghash;
+      // obj.imageUrl = downloadURL;
+
+      db.collection("spaces")
+        .doc(route.params.item.id)
+
+        .update(obj)
+        .then(() => {
+          console.log("Document successfully written!");
+          navigation.replace("Maps");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    }
   };
 
   async function uploadImageAsync(uri, obj, ghash) {
@@ -182,19 +224,38 @@ export default function AccountAddParking({ route, navigation }) {
           console.log("File available at", downloadURL);
           auth.onAuthStateChanged((authUser) => {
             if (authUser) {
-              console.log(authUser);
-              obj.owner = authUser.uid;
-              obj.ghash = ghash;
-              obj.imageUrl = downloadURL;
-              db.collection("spaces")
-                .add(obj)
-                .then(() => {
-                  console.log("Document successfully written!");
-                  navigation.replace("Maps");
-                })
-                .catch((error) => {
-                  console.error("Error writing document: ", error);
-                });
+              if (!route.params) {
+                console.log("NOT EDIT", authUser);
+                obj.owner = authUser.uid;
+                obj.ghash = ghash;
+                obj.imageUrl = downloadURL;
+                db.collection("spaces")
+                  .add(obj)
+                  .then(() => {
+                    console.log("Document successfully written!");
+                    navigation.replace("Maps");
+                  })
+                  .catch((error) => {
+                    console.error("Error writing document: ", error);
+                  });
+              } else {
+                console.log("EDIT", authUser);
+                obj.owner = authUser.uid;
+                obj.ghash = ghash;
+                obj.imageUrl = downloadURL;
+
+                db.collection("spaces")
+                  .doc(route.params.item.id)
+
+                  .update(obj)
+                  .then(() => {
+                    console.log("Document successfully written!");
+                    navigation.replace("Maps");
+                  })
+                  .catch((error) => {
+                    console.error("Error writing document: ", error);
+                  });
+              }
             }
           });
         });
@@ -213,19 +274,24 @@ export default function AccountAddParking({ route, navigation }) {
       <View style={styles.innerContainer}>
         <Text style={styles.UserName2}>{data["Location_Image"][settings]}</Text>
 
-       <UploadImage imageUri={imageUri} setImageUri={setImageUri}  photoUrl={photoUrl} newStyle={
-       { width: 250,
-        height: 250,
-        // elevation: 2,
-        // backgroundColor: "#efefef",
-        // // borderRadius:100,
-        // position: "relative",
-        // // borderRadius:999,
-        // overflow: "hidden"
-      
-      }
-      }
-        />
+        {flag && (
+          <UploadImage
+            imageUri={imageUri}
+            setImageUri={setImageUri}
+            setImageSetFlag={setImageSetFlag}
+            photoUrl={photoUrl}
+            newStyle={{
+              width: 250,
+              height: 250,
+              // elevation: 2,
+              // backgroundColor: "#efefef",
+              // // borderRadius:100,
+              // position: "relative",
+              // // borderRadius:999,
+              // overflow: "hidden"
+            }}
+          />
+        )}
 
         <Text style={styles.UserName}>
           {data["Location_And_Details"][settings]}

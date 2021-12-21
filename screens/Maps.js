@@ -70,6 +70,7 @@ export default function Maps(props) {
   const [parked,setParked]= useState(false);
   const [requestRejected, setRequestRejected] = useState(false);
   const [loadingScreen, setLoadingScreen] = useState(false);
+  const [filter, setFilter] = useState(false);
 
   const toggleOverlayRequest = () => {
     setVisibleRequest(!visibleRequest);
@@ -527,6 +528,7 @@ function ParkCar()
         isVisible={visible}
         onBackdropPress={() => {
           setVisible(!visible);
+          setFilter(true)
         }}
       >
         <OverlaySet
@@ -732,6 +734,8 @@ function ParkCar()
             spaces.map((space) => {
               const a = space;
               // ////console.log("user", user);
+              if(user && filter){
+                console.log("NON BB")
               if (user && user.uid !== space.owner && space.camera===camera && space.guard===guard && space.covered===covered )
                 return (
                   <Marker
@@ -749,9 +753,37 @@ function ParkCar()
 
                   </Marker>
                 );
+
               else {
                 return null;
               }
+            }
+              else{
+                console.log("NON BB2")
+
+                if (user && user.uid !== space.owner )
+                return (
+                  <Marker
+                    coordinate={{
+                      latitude: space.coordinates.latitude,
+                      longitude: space.coordinates.longitude,
+                    }}
+                    onPress={() => {
+                    setrequestSpace(space)
+                    setShowmarkerdetails(true)
+                  }
+                  
+                  }
+                  >
+
+                  </Marker>
+                );
+
+              else {
+                return null;
+              }
+              }
+              
             })}
         </MapView>
       </View>
