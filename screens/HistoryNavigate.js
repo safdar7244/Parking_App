@@ -47,11 +47,11 @@ export default function HistoryNavigate({ route, navigation }) {
   const [flag, setFlag] = useState(false);
   const [imageUri, setImageUri] = useState(null);
 
-  const slot_Filters=["Guarded","Covered","Camera"]
+  const slot_Filters = ["Guarded", "Covered", "Camera"];
   React.useEffect(() => {
-      console.log("route: ",route.params.item.bookedSpace)
-      if(route.params){
-      setImageUri(route.params.item.bookedSpace.imageUrl)
+    console.log("route: ", route.params.item.bookedSpace);
+    if (route.params) {
+      setImageUri(route.params.item.bookedSpace.imageUrl);
       setStreet(route.params.item.bookedSpace.Street);
       setFlatNo(route.params.item.bookedSpace.Flatno);
       setCity(route.params.item.bookedSpace.City);
@@ -61,7 +61,7 @@ export default function HistoryNavigate({ route, navigation }) {
       setPrice(route.params.item.bookedSpace.Price);
       setCamera(route.params.item.bookedSpace.camera);
       setCovered(route.params.item.bookedSpace.covered);
-      }
+    }
     // if (route.params) {
     //   console.log("props ener", route.params);
     //   // setFlag(true)
@@ -86,210 +86,267 @@ export default function HistoryNavigate({ route, navigation }) {
     // setFlag(true);
   }, []);
 
-  const getGeohashRange = (
-    latitude,
-    longitude,
-    distance // miles
-  ) => {
-    const lat = 0.0144927536231884; // degrees latitude per mile
-    const lon = 0.0181818181818182; // degrees longitude per mile
-
-    const lowerLat = latitude - lat * distance;
-    const lowerLon = longitude - lon * distance;
-
-    const upperLat = latitude + lat * distance;
-    const upperLon = longitude + lon * distance;
-
-    const lower = geohash.encode(lowerLat, lowerLon);
-    const upper = geohash.encode(upperLat, upperLon);
-
-    return {
-      lower,
-      upper,
-    };
-  };
-
-  const handleSubmit = async () => {
-    
-
-
-    
-  };
-
+  async function pay() {
+    var history = [];
+    const cityRef = db.collection("users").doc(auth.currentUser.uid);
+    const doc = await cityRef.get();
+    if (!doc.exists) {
+      console.log("No such document!");
+    } else {
+      if (doc.data().history) {
+        history = doc.data().history;
+      }
+    }
+    history[route.params.index].isPayed = true;
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        history: history,
+      })
+      .then(function () {});
+  }
 
   return (
     <View>
-    <ScrollView
-      style={{}}
-      contentContainerStyle={{ flexGrow: 1 }}
-      stickyFooterIndices={[1]}
-    >
-     
-
-      <View style={styles.innerContainer}>
-        <Text style={styles.UserName2}></Text>
-      
-      <View
-      style={{
-          width:"80%",
-          height:300
-      }}
+      <ScrollView
+        style={{}}
+        contentContainerStyle={{ flexGrow: 1 }}
+        stickyFooterIndices={[1]}
       >
-        <Avatar
-            // size={90}
-            source={{
-                uri:imageUri
-                  ,
-                 }}
-            containerStyle={{ backgroundColor: 'grey' ,width:"100%",height:"100%"}}
-          >
-          </Avatar>
-</View>
+        <View style={styles.innerContainer}>
+          <Text style={styles.UserName2}></Text>
 
           <View
-          style={{
-            // marginBottom:"20%",
-            borderRadius: 15,
-            backgroundColor: "white",
-            width: "80%",
-            // justifyContent: "center",
-            // alignItems: "center",
-            padding: 20,
-            marginTop:40,
-          }}
-        >
-            <Text
             style={{
-             fontSize:16,
-             fontWeight:"bold",
-             marginBottom:5
+              width: "80%",
+              height: 300,
+            }}
+          >
+            <Avatar
+              // size={90}
+              source={{
+                uri: imageUri,
               }}
-            >Parking Slots Specifics</Text>
-            <Text><Text
+              containerStyle={{
+                backgroundColor: "grey",
+                width: "100%",
+                height: "100%",
+              }}
+            ></Avatar>
+          </View>
+          <View
             style={{
-                fontSize:15,
-                fontWeight:"bold"
-                 }}
-            >Address:</Text>
-            {"  "}{Flatno}{" "}{Area}{" "}{Street}{" "}{Building}{" , "}{City}
-             </Text>
-            <Text>             
-                <Text
+              borderRadius: 15,
+              backgroundColor: "white",
+              width: "80%",
+              padding: 20,
+              marginTop: 40,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                marginBottom: 5,
+              }}
+            >
+              Payment Details:
+            </Text>
+
+            <Text>
+              <Text
                 style={{
-                    fontSize:15,
-                    fontWeight:"bold"
-                     }}
-                >Price:</Text> 
-                {" "}
-            <Icon name={"dollar"} size={13} />
-                {Price}
-                </Text>
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Time:
+              </Text>
+              {"  "}
+              {route.params.item.time ? route.params.item.time : " 0"}
+            </Text>
+            <Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Payment Status:
+              </Text>
+              {"  "}
+              {route.params.item.isPayed ? "payed" : "un-payed"}
+            </Text>
+            <Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Payable:
+              </Text>{" "}
+              <Icon name={"dollar"} size={13} />
+              {Price}
+            </Text>
+            {!route.params.item.isPayed && (
+              <ButtonMain
+                title="Pay Now"
+                function={() => {
+                  navigation.navigate("Card", {
+                    pay: pay,
+                    ownerid: route.params.item.bookedSpace.owner,
+                    price: route.params.item.bookedSpace.Price,
+                    time: route.params.item.time,
+                    checkoutFunc: () => {
+                      navigation.navigate("Maps");
+                    },
+                  });
+                }}
+              ></ButtonMain>
+            )}
           </View>
 
-        <View
-          style={{
-            // marginBottom:"20%",
-            borderRadius: 15,
-            backgroundColor: "white",
-            width: "80%",
-            // justifyContent: "center",
-            // alignItems: "center",
-            padding: 20,
-            marginTop:40
-
-          }}
-        >
-             <Text
+          <View
+            style={{
+              borderRadius: 15,
+              backgroundColor: "white",
+              width: "80%",
+              padding: 20,
+              marginTop: 40,
+            }}
+          >
+            <Text
               style={{
-                fontSize:16,
-                fontWeight:"bold",
-                marginBottom:5
+                fontSize: 16,
+                fontWeight: "bold",
+                marginBottom: 5,
               }}
-             >Parking Slots Basic Derails</Text>
+            >
+              Parking Slots Specifics
+            </Text>
+            <Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Address:
+              </Text>
+              {"  "}
+              {Flatno} {Area} {Street} {Building}
+              {" , "}
+              {City}
+            </Text>
+            <Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Price:
+              </Text>{" "}
+              <Icon name={"dollar"} size={13} />
+              {Price}
+            </Text>
+          </View>
 
-
-           {
-               slot_Filters.map((item,i)=>(
-                   <Text>{item}
-                   
-                   <Text
-                   
-                   >
-           
-           {                   {covered}?
-                              
-                              <Icon  name={"check"} size={20} />
-                           :
-                           <Icon name={"times"} size={20} />}
-           </Text>
-                   </Text>
-               )
-               )
-}
-        </View>
-        <View
-          style={{
-            // marginBottom:"20%",
-            borderRadius: 15,
-            backgroundColor: "white",
-            width: "80%",
-            // justifyContent: "center",
-            // alignItems: "center",
-            padding: 20,
-            marginTop:40
-          }}
-        >
-             <Text
-             style={{
-                fontSize:16,
-                fontWeight:"bold",
-                marginBottom:5
+          <View
+            style={{
+              // marginBottom:"20%",
+              borderRadius: 15,
+              backgroundColor: "white",
+              width: "80%",
+              // justifyContent: "center",
+              // alignItems: "center",
+              padding: 20,
+              marginTop: 40,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                marginBottom: 5,
               }}
-             >Message</Text>
+            >
+              Parking Slots Basic Derails
+            </Text>
+
+            {slot_Filters.map((item, i) => (
+              <Text>
+                {item}
+
+                <Text>
+                  {{ covered } ? (
+                    <Icon name={"check"} size={20} />
+                  ) : (
+                    <Icon name={"times"} size={20} />
+                  )}
+                </Text>
+              </Text>
+            ))}
+          </View>
+          <View
+            style={{
+              // marginBottom:"20%",
+              borderRadius: 15,
+              backgroundColor: "white",
+              width: "80%",
+              // justifyContent: "center",
+              // alignItems: "center",
+              padding: 20,
+              marginTop: 40,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                marginBottom: 5,
+              }}
+            >
+              Message
+            </Text>
             <Text> {message}</Text>
-            
-            
-          
+          </View>
+          <Button
+            onPress={() => {
+              navigation.replace("Maps", {
+                historyCheck: true,
+                historySpace: route.params.item.bookedSpace,
+              });
+              // setLoadingScreen(true)
+              // onPress={() => {
+              // ////console.log(space);
+              // Book(requestSpace);
+
+              // ////console.log(a);
+            }}
+            titleStyle={{ color: "white" }}
+            buttonStyle={{
+              backgroundColor: "#5EA0EE",
+              padding: 17,
+              // width:"100%",
+              // marginRight:"20%"
+              // alignItems:"center",
+              // justifyContent:"center"
+              // alignContent:"center"
+            }}
+            containerStyle={{
+              marginTop: "10%",
+              marginBottom: "25%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            title="Navigate Me !"
+          ></Button>
         </View>
-        <Button
-                          onPress={() => {
+      </ScrollView>
 
-                              navigation.replace(
-      'Maps',
-      { historyCheck:true,historySpace:route.params.item.bookedSpace},
-    );
-                            // setLoadingScreen(true)
-                            // onPress={() => {
-                        // ////console.log(space);
-                        // Book(requestSpace);
-  
-
-                            // ////console.log(a);
-                          }}
-
-                          titleStyle={{ color: "white" }}
-                          buttonStyle={{
-                            backgroundColor: "#5EA0EE",
-                            padding:17
-                            // width:"100%",
-                            // marginRight:"20%"
-                            // alignItems:"center",
-                            // justifyContent:"center"
-                            // alignContent:"center"
-                          }}
-                          containerStyle={{
-                              marginTop:"10%",
-                              marginBottom:"25%",
-                              alignItems:"center",
-                              justifyContent:"center"
-                          }}
-                          title="Navigate Me !"
-                        ></Button>
-       
-      </View>
-    </ScrollView>
-
-    <TabBottom navigate={navigation} />
+      <TabBottom navigate={navigation} />
     </View>
   );
 }

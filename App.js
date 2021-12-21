@@ -126,7 +126,7 @@ export default function MyStack() {
           <Stack.Screen
             name="Card"
             component={Card}
-            options={{ title: "", headerShown: true }}
+            options={{ title: "", headerShown: false }}
           />
           <Stack.Screen
             name="HistoryNavigate"

@@ -48,7 +48,9 @@ function Parked(props, navigation) {
       props.navigation.navigate("Card", {
         pay: pay,
         ownerid: props.bookedSpace.owner,
-        price: 200,
+        price: price,
+        time: hours,
+        checkoutFunc: checkoutLater,
       });
     }
   }
@@ -68,11 +70,6 @@ function Parked(props, navigation) {
       setHours(hours);
       setPrice(hours * props.bookedSpace.Price);
       console.log("HIURSSs", props.bookedSpace.Price);
-      props.navigation.navigate("Card", {
-        pay: pay,
-        ownerid: props.bookedSpace.owner,
-        price: 200,
-      });
     }
 
     var history = [];
