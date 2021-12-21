@@ -7,6 +7,7 @@ import {
   Text,
   Alert,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -38,7 +39,7 @@ export default function Account({ navigation }) {
   const [deleteUser, setDeleteUser] = useState(false);
   const [nowDelete, setNowDelete] = useState(true);
   const [profileUrl, setProfileUrl] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [flag, setFlag] = useState(false);
 
   React.useEffect(() => {
@@ -98,10 +99,24 @@ export default function Account({ navigation }) {
                 function () {
                   console.log("Signed Out");
                   // setFlag(true)
+                  usr_.delete().then(async () => {
+                    // console.log("user id  : ",user.uid)
+                    setLoading(false);
+                    navigation.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: "Register",
+                          // params: { someParam: "Param1" },
+                        },
+                      ],
+                    });
+                  });
 
                   // navigation.replace("ReLogin")
                 },
                 function (error) {
+                  setLoading(false);
                   console.error("Sign Out Error", error);
                 }
               );
@@ -109,6 +124,7 @@ export default function Account({ navigation }) {
             });
         })
         .catch((e) => {
+          setLoading(false);
           console.log("error : ", e);
         });
     }
@@ -300,6 +316,7 @@ export default function Account({ navigation }) {
                 title="Submit"
                 onPress={() => {
                   console.log("ACCOUNT DELETED");
+                  setLoading(true);
                   auth
                     .signInWithEmailAndPassword(email, password)
                     .then(async () => {
@@ -352,9 +369,15 @@ export default function Account({ navigation }) {
                     })
                     .catch((err) => {
                       alert(err);
+                      setLoading(false);
                     });
                 }}
               ></Button>
+              {loading && (
+                <View style={{ padding: 20 }}>
+                  <ActivityIndicator size="large" color="#0000ff" />
+                </View>
+              )}
             </View>
           </View>
         </Overlay>

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 function Banned() {
   return (
     <View style={styles.container}>
-      <Text>Congratulations! You have been banned. Go away!</Text>
+      <Text>Congratulations! You have been banned.</Text>
     </View>
   );
 }
