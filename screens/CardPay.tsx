@@ -232,7 +232,7 @@ export default function Card({ navigation, route }) {
                 fontWeight: "bold",
               }}
             >
-              Payable:
+              Price:
             </Text>{" "}
             {route.params.price ? route.params.price : "0"}
           </Text>

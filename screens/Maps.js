@@ -72,32 +72,41 @@ export default function Maps(props) {
   };
 
   const checkBan = async () => {
+    const time = new Date().getTime() / 1000;
     db.collection("users")
       .doc(auth.currentUser.uid)
       .get()
       .then((doc) => {
         if (doc.exists) {
-          console.log("Document data:", doc.data());
+          // console.log("Document data:", doc.data());
           let userData = doc.data();
           if (userData.history) {
-            console.log(userData.history);
+            //console.log(userData.history);
+            const check = time - history.date.seconds;
+            console.log("CHECK", check);
             let unpaid = userData.history.filter((history) => {
-              console.log(
-                history.isPayed,
-                history.date,
-                new Date().getTime() / 1000 - history.date.seconds > 3600,
-                new Date().getTime() / 1000
-              );
-              if (
-                !history.isPayed &&
-                new Date().getTime() / 1000 - history.date.seconds > 172800
-              ) {
+              if (!history.isPayed && time - history.date.seconds > 172800) {
+                console.log("here", isPayed, time - history.date.seconds);
                 return history;
-              }
+              } else return null;
             });
-            console.log("Banned: ", unpaid);
+            console.log("Banned: ", new Date().getTime());
+
             if (unpaid) {
+              db.collection("users")
+                .doc(auth.currentUser.uid)
+                .update({
+                  Ban: true,
+                })
+                .then(function () {});
               props.navigation.replace("Banned");
+            } else {
+              db.collection("users")
+                .doc(auth.currentUser.uid)
+                .update({
+                  Ban: false,
+                })
+                .then(function () {});
             }
           }
         } else {
@@ -106,7 +115,7 @@ export default function Maps(props) {
         }
       })
       .catch((error) => {
-        console.log("Error getting document:", error);
+        //console.log("Error getting document:", error);
       });
   };
 
@@ -208,7 +217,7 @@ export default function Maps(props) {
   }
 
   useEffect(() => {
-    console.log("\n\n\nEFFF :", props.route.params);
+    //console.log("\n\n\nEFFF :", props.route.params);
     if (props.route.params) {
       setrequestSpace(props.route.params.historySpace);
       setShowmarkerdetails(props.route.params.historyCheck);
@@ -225,7 +234,7 @@ export default function Maps(props) {
             if (change.doc.data().acceptedSession) {
               if (change.doc.data().acceptedSession.status === 1) {
                 setBookedSpace(change.doc.data().acceptedSession.space);
-                console.log("MULTIPLE TIMES");
+                //console.log("MULTIPLE TIMES");
                 setLoadingScreen(false);
                 setShowmarkerdetails(false);
                 setStartGps(true);
@@ -258,7 +267,7 @@ export default function Maps(props) {
           },
         })
         .then(function () {
-          console.log("accepte and updatedd");
+          // console.log("accepte and updatedd");
           setVisibleRequest(false);
         })
         .catch((err) => {
@@ -327,7 +336,7 @@ export default function Maps(props) {
   /////////////////////////////////////////////////////////////////////////
 
   function RejectRequest(bookedSpace) {
-    console.log("HOLO", bookedSpace);
+    //console.log("HOLO", bookedSpace);
     db.collection("users")
       .doc(customer)
       .update({
@@ -506,14 +515,16 @@ export default function Maps(props) {
               Adress:{" "}
               {requestSpace &&
                 requestSpace.Flatno +
+                  " " +
                   requestSpace.Area +
+                  " " +
                   requestSpace.Building}{" "}
             </Text>
             <Text style={{ fontSize: 15, margin: 5 }}>
-              {requestSpace && requestSpace.Street + "," + requestSpace.City}
+              {requestSpace && requestSpace.Street + ", " + requestSpace.City}
             </Text>
             <Text style={{ fontSize: 15, margin: 5 }}>
-              {requestSpace && requestSpace.message}
+              {requestSpace && requestSpace.message + " "}
             </Text>
             <View style={{ fontSize: 15, margin: 5 }}></View>
             {loadingScreen ? (
@@ -527,10 +538,10 @@ export default function Maps(props) {
                   // onPress={() => {
                   // ////console.log(space);
                   if (props.route.params) {
-                    console.log("USerss");
+                    //console.log("USerss");
                     Book(props.route.params.historySpace);
                   } else {
-                    console.log("NO ONE SHOULD COME");
+                    // console.log("NO ONE SHOULD COME");
                     Book(requestSpace);
                   }
 
