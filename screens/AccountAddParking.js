@@ -295,6 +295,7 @@ export default function AccountAddParking({ route, navigation }) {
       style={{}}
       contentContainerStyle={{ flexGrow: 1 }}
       stickyFooterIndices={[1]}
+      keyboardShouldPersistTaps={"handled"}
     >
       <TabBottom navigate={navigation} />
 

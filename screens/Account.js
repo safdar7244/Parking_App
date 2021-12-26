@@ -177,6 +177,9 @@ export default function Account({ navigation }) {
       icon: "scribd",
     },
   ];
+  const isFirst = {
+    borderTopRightRadius: 15,
+  };
 
   //  async function clearFirestoreCollections(){
   //   db.collection("users").doc(auth.currentUser.uid).delete()
@@ -257,6 +260,7 @@ export default function Account({ navigation }) {
     <View>
       <ScrollView
         style={{}}
+        keyboardShouldPersistTaps={"handled"}
         contentContainerStyle={{ flexGrow: 1 }}
         stickyFooterIndices={[1]}
       >
@@ -383,25 +387,42 @@ export default function Account({ navigation }) {
         </Overlay>
 
         <View style={styles.ListStyle}>
-          {list.map((item, i) => (
-            <ListItem
-              button
-              onPress={() => {
-                {
-                  renderFunction(i + 1);
+          <View style={styles.innerListStyle}>
+            {list.map((item, i) => (
+              <ListItem
+                button
+                onPress={() => {
+                  {
+                    renderFunction(i + 1);
+                  }
+                }}
+                key={i + 1}
+                bottomDivider
+                containerStyle={
+                  // i == 0
+                  //   ? {
+                  //       width: "90%",
+                  //       borderTopRightRadius: 25,
+                  //       borderTopLeftRadius: 25,
+                  //     }
+                  //   : i == list.length - 1
+                  //   ? {
+                  //       width: "90%",
+                  //       borderBottomRightRadius: 25,
+                  //       borderBottomLeftRadius: 25,
+                  //     }
+                  //     :
+                  { width: "90%" }
                 }
-              }}
-              key={i + 1}
-              bottomDivider
-              containerStyle={{ width: "80%" }}
-            >
-              <Icon name={item.icon} size={20} />
-              <ListItem.Content>
-                <ListItem.Title>{item.title}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-          ))}
+              >
+                <Icon name={item.icon} size={20} />
+                <ListItem.Content>
+                  <ListItem.Title>{item.title}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+            ))}
+          </View>
         </View>
         <View style={styles.ListStyle1}>
           <ListItem
@@ -412,7 +433,7 @@ export default function Account({ navigation }) {
               }
             }}
             key={100}
-            containerStyle={{ width: "80%" }}
+            containerStyle={{ width: "80%", borderRadius: 15 }}
           >
             <Icon name="smile-o" size={20} />
             <ListItem.Content>
@@ -452,6 +473,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    //  backgroundColor: "red",
+    borderRadius: 15,
+  },
+  innerListStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "80%",
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 25,
   },
   ListStyle1: {
     marginTop: 40,
@@ -459,6 +490,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginBottom: "30%",
+    borderRadius: 15,
   },
   innerContainer: {
     // justifyContent:"center",

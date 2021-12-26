@@ -320,11 +320,15 @@ const styles = StyleSheet.create({
     marginTop: 30,
     justifyContent: "center",
     alignItems: "center",
+    // borderRadius: 25,
+    // backgroundColor: "red",
   },
   innercontainer2: {
     backgroundColor: "white",
     width: "80%",
     padding: 40,
+    borderRadius: 25,
+    // backgroundColor: "red",
   },
   inputWrap: {
     flex: 1,

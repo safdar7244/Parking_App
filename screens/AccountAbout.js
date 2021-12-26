@@ -8,12 +8,13 @@ import {
   Text,
   Alert,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Switch, Divider, Overlay } from "react-native-elements";
 import ButtonMain from "./common/button";
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { TabView, ListItem, Tab, Button } from "react-native-elements";
 import Maps from "./Maps";
 import AccountEdit from "./AccountEdit";
@@ -24,11 +25,16 @@ import { data } from "../src/Transaltion/translation";
 import SettingsContext from "../src/context/Setting";
 import AvatarCustom from "./common/AvatarCustom";
 import { ScrollView } from "react-native-gesture-handler";
-
+import axios from "axios";
 export default function AccountAbout({ navigation }) {
   const [profileUrl, setProfileUrl] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const scrollView = useRef();
+  // console.log("->", scrollView);
 
   const { settings, saveSettings } = useContext(SettingsContext);
+  const [message, setMessage] = useState("");
+
   // setTimeout(() => {
   //   saveSettings(1)
   // }, 0);
@@ -52,12 +58,59 @@ export default function AccountAbout({ navigation }) {
       }
     });
   }
+  const onPressAbout = () => {
+    console.log("{RESS");
+    scrollViewCheck.current.scrollToEnd();
+  };
 
+  async function handleSubmit(e) {
+    if (message.length > 4) {
+      console.log("IF");
+      setLoading(true);
+      const data = {
+        username: username,
+        email: auth.currentUser.providerData[0]["email"],
+        message: message,
+      };
+      try {
+        const response = await axios.post(
+          "https://ancient-woodland-88729.herokuapp.com/sendmail",
+          data
+        );
+        console.log("Subnmited: ", message);
+        setLoading(false);
+        navigation.navigate("Account");
+      } catch {
+        console.log("ERRPR");
+      }
+    } else {
+      console.log("Else");
+
+      Alert.alert(
+        "Alert !",
+        "Message length can not be less than 5 characters long",
+        [
+          {
+            text: "Ok",
+            onPress: () => {
+              // console.log("OKKK");
+            },
+          },
+        ]
+      );
+    }
+  }
   // data.b = "new value";
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        keyboardShouldPersistTaps={"always"}
+        // ref={(ref) => {
+        //   scrollView = ref;
+        // }}
+        ref={scrollView}
+      >
         <ImageBackground
           source={require("../pictures/bkg-user.jpeg")}
           resizeMode="cover"
@@ -69,7 +122,7 @@ export default function AccountAbout({ navigation }) {
 
           <Text style={styles.UserName}>{username}</Text>
 
-          <View style={styles.innerContainer2}>
+          <View style={styles.innerContainer1}>
             <Text onPress={handleClick} style={styles.innerText}>
               {data["Privacy_Policy"][settings]}
             </Text>
@@ -88,6 +141,21 @@ export default function AccountAbout({ navigation }) {
               editable={true}
               multiline={true}
               numberOfLines={5}
+              // onFocus={() => {
+              //   console.log("->", scrollView.current);
+              //   setTimeout(() => {
+              //     scrollView.current.scrollToEnd({ Animated: true });
+              //   }, 1000);
+              // }}
+              onTouchStart={() => {
+                console.log("Pressed...");
+                setTimeout(() => {
+                  scrollView.current.scrollToEnd({
+                    // animated: true,
+                    // duration: 500,
+                  });
+                }, 500);
+              }}
               style={{
                 width: "100%",
                 fontSize: 12,
@@ -95,12 +163,22 @@ export default function AccountAbout({ navigation }) {
                 borderWidth: 0.5,
                 padding: 5,
                 marginBottom: 20,
+                marginTop: 10,
                 backgroundColor: "#eeeeee",
-                marginLeft: 20,
+                // marginLeft: 5,
               }}
-              // onChangeText={(message) => setmessage(message)}
+              onChangeText={(message) => setMessage(message)}
             />
-            <Button title={data["Send"][settings]}></Button>
+            <Button
+              disabled={loading}
+              onPress={(e) => handleSubmit(e)}
+              title={data["Submit"][settings]}
+            ></Button>
+            {loading && (
+              <View style={{ padding: 20 }}>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -136,8 +214,22 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   innerContainer2: {
+    marginBottom: "30%",
+    // borderRadius:15,
+    borderRadius: 25,
+    // backgroundColor: "red",
+    backgroundColor: "white",
+    width: "80%",
+    marginTop: "10%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  innerContainer1: {
     // marginBottom:"20%",
     // borderRadius:15,
+    borderRadius: 25,
+    // backgroundColor: "red",
     backgroundColor: "white",
     width: "80%",
     marginTop: "10%",
