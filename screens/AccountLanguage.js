@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Text,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -30,6 +31,7 @@ export default function AccountLanguage({ navigation }) {
   const [username, setUsername] = useState("User");
   const { settings, saveSettings } = useContext(SettingsContext);
   const [profileUrl, setProfileUrl] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     if (settings == 0) {
@@ -52,13 +54,12 @@ export default function AccountLanguage({ navigation }) {
       db.collection("users")
         .doc(auth.currentUser.uid)
         .update({
-          language: {
-            status: 0,
-          },
+          language: "English",
         })
         .then(function () {
           console.log("English set");
           setTimeout(() => {
+            setLoading(false);
             saveSettings(0);
           }, 0);
         });
@@ -68,13 +69,13 @@ export default function AccountLanguage({ navigation }) {
       db.collection("users")
         .doc(auth.currentUser.uid)
         .update({
-          language: {
-            status: 1,
-          },
+          language: "Hungary",
         })
         .then(function () {
           console.log("Hungary set");
           setTimeout(() => {
+            setLoading(false);
+
             saveSettings(1);
           }, 0);
         });
@@ -110,6 +111,8 @@ export default function AccountLanguage({ navigation }) {
                 fontSize: 12,
               }}
               onValueChange={(itemValue, itemIndex) => {
+                setLoading(true);
+
                 // console.log("balue to cehck  L ", itemValue)
                 setSelectedValue(itemValue);
               }}
@@ -117,6 +120,11 @@ export default function AccountLanguage({ navigation }) {
               <Picker.Item label="English" value="eng" />
               <Picker.Item label="Hungary" value="hang" />
             </Picker>
+            {loading && (
+              <View style={{ paddingTop: 15, paddingLeft: 15 }}>
+                <ActivityIndicator size="small" color="#0000ff" />
+              </View>
+            )}
 
             <View>{/* <Button title="Submit"/>  */}</View>
           </View>

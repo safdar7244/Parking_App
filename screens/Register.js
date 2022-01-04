@@ -109,6 +109,8 @@ export default function Register({ navigation, route }) {
           obj.id = authUser.uid;
           obj.stripeId = 0;
           obj.PushNotification = false;
+          obj.latePayment = false;
+
           db.collection("users")
             .doc(obj.id)
             .set(obj)

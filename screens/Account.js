@@ -425,24 +425,26 @@ export default function Account({ navigation }) {
           </View>
         </View>
         <View style={styles.ListStyle1}>
-          <ListItem
-            button
-            onPress={() => {
-              {
-                deleteAccount(100);
-              }
-            }}
-            key={100}
-            containerStyle={{ width: "80%", borderRadius: 15 }}
-          >
-            <Icon name="smile-o" size={20} />
-            <ListItem.Content>
-              <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
-                {data["Delete_Account"][settings]}
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
+          <View style={styles.innerListStyle}>
+            <ListItem
+              button
+              onPress={() => {
+                {
+                  deleteAccount(100);
+                }
+              }}
+              key={100}
+              containerStyle={{ width: "80%" }}
+            >
+              <Icon name="smile-o" size={20} />
+              <ListItem.Content>
+                <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
+                  {data["Delete_Account"][settings]}
+                </ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+          </View>
         </View>
       </ScrollView>
       <TabBottom navigate={navigation} />
@@ -486,6 +488,8 @@ const styles = StyleSheet.create({
   },
   ListStyle1: {
     marginTop: 40,
+    // backgroundColor: "red",
+    // width: "80%",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",

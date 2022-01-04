@@ -216,6 +216,39 @@ export default function Maps(props) {
       });
   }
 
+  async function getDbValues() {
+    console.log("\n\n\n\n\n\n\n\n\n Meo");
+    const userInfo = db.collection("users").doc(auth.currentUser.uid);
+    const doc = await userInfo.get();
+    if (!doc.exists) {
+      console.log("No such document!");
+    } else {
+      if (doc.data().language) {
+        // history = doc.data().history;
+        let lang = doc.data().language;
+        console.log("LANG p: ", lang);
+
+        console.log("pp", typeof lang);
+        lang == "Hungary" ? saveSettings(1) : saveSettings(0);
+
+        // if (lang == "Hungary") {
+        //   settings = 1;
+        //   console.log("nside1");
+        //   saveSettings(1);
+        // } else {
+        //   settings = 0;
+        //   console.log("nside2");
+
+        //   saveSettings(0);
+        // }
+        // setLatePayment(doc.data().latePayment);
+      }
+    }
+  }
+  useEffect(() => {
+    console.log("THIS MAP");
+    getDbValues();
+  }, []);
   useEffect(() => {
     //console.log("\n\n\nEFFF :", props.route.params);
     if (props.route.params) {
