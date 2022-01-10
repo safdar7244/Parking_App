@@ -30,15 +30,12 @@ import { Overlay } from "react-native-elements/dist/overlay/Overlay";
 export default function Account({ navigation }) {
   const { settings, saveSettings } = useContext(SettingsContext);
 
-  // console.log("setthings :  ",settings)
-  // const [usr,setUsr]=useState(auth.currentUser.uid)
-
   const [username, setUsername] = useState("User");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [deleteUser, setDeleteUser] = useState(false);
   const [nowDelete, setNowDelete] = useState(true);
-  const [profileUrl, setProfileUrl] = useState(false);
+  const [profileUrl, setProfileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [flag, setFlag] = useState(false);
 
@@ -46,28 +43,16 @@ export default function Account({ navigation }) {
     const user = auth.currentUser.providerData[0]["displayName"];
     setUsername(user);
     setEmail(auth.currentUser.providerData[0]["email"]);
-    // console.log("auth.",auth.currentUser.uid)
-    // const aUser = db.collection('users').doc(auth.currentUser.uid);
-    // console.log("AUSEE L ",aUser)
-    // const docData = await aUser.get()
-    // if(docData){
-    // console.log("docs: ",docData.data().profileImage)
-    // setProfileUrl(docData.data().profileImage)
-    // }
+
     setProfileUrl(auth.currentUser.providerData[0]["photoURL"]);
   }, []);
 
   React.useEffect(() => {
     if (deleteUser) {
-      console.log("INDIDE OUT", auth.currentUser.uid);
-      // const usr=auth.currentUser.uid
       db.collection("users")
         .doc(auth.currentUser.uid)
         .delete()
         .then(() => {
-          console.log("user washhhhhh deleted");
-          // setNowDelete(true)
-
           db.collection("spaces")
             .where("owner", "==", auth.currentUser.uid)
             .get()
@@ -75,45 +60,21 @@ export default function Account({ navigation }) {
               snapshot.docs.forEach((doc) => {
                 doc.ref.delete();
               });
-              // return batch.commit();
-              // setNowDelete(true)
-              // setDeleteUser(false)
-
               const usr_ = auth.currentUser;
-
-              // auth.currentUser.delete().then(async()=>{
-              //   // console.log("user id  : ",user.uid)
-
-              //   navigation.reset({
-              //     index: 0,
-              //     routes: [
-              //       {
-              //         name: "Register",
-              //         params: { someParam: "Param1" },
-              //       },
-              //     ],
-              //   });
-              // })
-
               auth.signOut().then(
                 function () {
                   console.log("Signed Out");
-                  // setFlag(true)
                   usr_.delete().then(async () => {
-                    // console.log("user id  : ",user.uid)
                     setLoading(false);
                     navigation.reset({
                       index: 0,
                       routes: [
                         {
                           name: "Register",
-                          // params: { someParam: "Param1" },
                         },
                       ],
                     });
                   });
-
-                  // navigation.replace("ReLogin")
                 },
                 function (error) {
                   setLoading(false);
@@ -125,25 +86,8 @@ export default function Account({ navigation }) {
         })
         .catch((e) => {
           setLoading(false);
-          console.log("error : ", e);
         });
     }
-
-    //  let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
-    //   // let batch = db.batch();
-
-    //   doc_spaces
-    //     .get()
-    //     .then(snapshot => {
-    //       snapshot.docs.forEach(doc => {
-    //         doc.ref.delete();
-    //       });
-    //       // return batch.commit();
-    //       setNowDelete(true)
-    //       setDeleteUser(false)
-
-    //     })
-    console.log("NOW SETTIGN VALUES");
   }, [deleteUser]);
 
   const list = [
@@ -177,64 +121,21 @@ export default function Account({ navigation }) {
       icon: "scribd",
     },
   ];
-  const isFirst = {
-    borderTopRightRadius: 15,
-  };
 
-  //  async function clearFirestoreCollections(){
-  //   db.collection("users").doc(auth.currentUser.uid).delete()
-
-  //   var doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
-  //   let batch = db.batch();
-
-  //   doc_spaces
-  //     .get()
-  //     .then(snapshot => {
-  //       snapshot.docs.forEach(doc => {
-  //         batch.delete(doc.ref);
-  //       });
-  //       return batch.commit();
-  //     })
-  //     }
   const deleteAccount = (ley) => {
     const user = auth.currentUser;
-    // console.log("usr :",user)
-    // user.delete().then(function() {
-    //   // User deleted.
-    //   // navigation.navigate()
-    //   // console.log("DELETEDDD")
-    //   Alert.alert(
-    //     "Account Deleted ! ",
-    //     "Press OK to continue",
-    //     [
 
-    //       { text: "OK", onPress: () => {
-
-    //         navigation.reset({
-    //           index: 0,
-    //           routes: [{ name: 'Register' }]
-    //      })
-    //       //  navigation.navigate("Register")
-
-    //       } }
-    //     ]
-    //   );
-    // }).catch(function(error) {
-    // An error happened.
-    Alert.alert("Alert !", "Are you sure you want to delete your Account?", [
+    Alert.alert("Alert !", data["Alert1"][settings], [
       {
-        text: "Cancel",
+        text: data["Cancel"][settings],
         onPress: () => {},
       },
       {
-        text: "Proceed",
+        text: data["Proceed"][settings],
         onPress: () => {
           auth.signOut().then(
             function () {
-              console.log("Signed Out");
               setFlag(true);
-
-              // navigation.replace("ReLogin")
             },
             function (error) {
               console.error("Sign Out Error", error);
@@ -243,11 +144,9 @@ export default function Account({ navigation }) {
         },
       },
     ]);
-    // });
   };
 
   const renderFunction = (key) => {
-    console.log("yaya");
     key == 1 && navigation.navigate("AccountEdit");
     key == 2 && navigation.navigate("AccountNotifications");
     key == 3 && navigation.navigate("AccountLanguage");
@@ -287,7 +186,6 @@ export default function Account({ navigation }) {
               routes: [
                 {
                   name: "Login",
-                  // params: { someParam: "Param1" },
                 },
               ],
             });
@@ -303,7 +201,7 @@ export default function Account({ navigation }) {
               <Text
                 style={{ fontWeight: "bold", fontSize: 20, marginBottom: 20 }}
               >
-                Confirm Credentials
+                {data["Confirm_Credentials"][settings]}
               </Text>
               <Divider />
               <Input
@@ -314,62 +212,14 @@ export default function Account({ navigation }) {
                 secureTextEntry={true}
               />
               <Button
-                // containerStyle={{color:"red"}}
                 buttonStyle={{ backgroundColor: "red" }}
-                // style={{width:"100%"}}
-                title="Submit"
+                title={data["Submit"][settings]}
                 onPress={() => {
-                  console.log("ACCOUNT DELETED");
                   setLoading(true);
                   auth
                     .signInWithEmailAndPassword(email, password)
                     .then(async () => {
-                      console.log(
-                        "dasdsdasd",
-                        email,
-                        password,
-                        auth.currentUser.uid
-                      );
-
-                      const user = auth.currentUser;
-
-                      // firebase users and spaces deletion
-
-                      console.log("before ");
                       setDeleteUser(true);
-                      // await db.collection("users").doc(user.uid).delete().then(()=>{console.log("user washhhhhh deleted")})
-
-                      // let doc_spaces = db.collection('spaces').where('owner','==',auth.currentUser.uid);
-                      // // let batch = db.batch();
-
-                      // doc_spaces
-                      //   .get()
-                      //   .then(snapshot => {
-                      //     snapshot.docs.forEach(doc => {
-                      //       doc.ref.delete();
-                      //     });
-                      //     // return batch.commit();
-                      //   })
-                      console.log("after ");
-                      // console.log("COMMMM :",db.collection("users").doc(auth.currentUser.uid))
-                      //
-                      //
-
-                      // console.log("usr :",user)
-                      console.log("before deleting user");
-                      //  user.delete().then(async()=>{
-                      //     // console.log("user id  : ",user.uid)
-
-                      //     navigation.reset({
-                      //       index: 0,
-                      //       routes: [
-                      //         {
-                      //           name: "Register",
-                      //           params: { someParam: "Param1" },
-                      //         },
-                      //       ],
-                      //     });
-                      //   })
                     })
                     .catch((err) => {
                       alert(err);
@@ -398,22 +248,7 @@ export default function Account({ navigation }) {
                 }}
                 key={i + 1}
                 bottomDivider
-                containerStyle={
-                  // i == 0
-                  //   ? {
-                  //       width: "90%",
-                  //       borderTopRightRadius: 25,
-                  //       borderTopLeftRadius: 25,
-                  //     }
-                  //   : i == list.length - 1
-                  //   ? {
-                  //       width: "90%",
-                  //       borderBottomRightRadius: 25,
-                  //       borderBottomLeftRadius: 25,
-                  //     }
-                  //     :
-                  { width: "90%" }
-                }
+                containerStyle={{ width: "100%" }}
               >
                 <Icon name={item.icon} size={20} />
                 <ListItem.Content>
@@ -457,8 +292,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tab: {
-    //   position:"absolute",
-    //   bottom:0,
     display: "flex",
     width: "80%",
     backgroundColor: "white",
@@ -475,7 +308,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    //  backgroundColor: "red",
     borderRadius: 15,
   },
   innerListStyle: {
@@ -488,8 +320,6 @@ const styles = StyleSheet.create({
   },
   ListStyle1: {
     marginTop: 40,
-    // backgroundColor: "red",
-    // width: "80%",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -497,9 +327,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   innerContainer: {
-    // justifyContent:"center",
     alignItems: "center",
-    //    backgroundColor:"blue",
     marginTop: "-15%",
   },
   image: {
@@ -510,8 +338,6 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif",
     fontSize: 20,
     fontWeight: "bold",
-    //   marginBottom:40,
-    // marginTop:40
   },
   tileCont: {
     backgroundColor: "white",

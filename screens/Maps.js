@@ -543,10 +543,11 @@ export default function Maps(props) {
             ></Avatar>
 
             <Text style={{ fontSize: 20, margin: 5 }}>
-              Price: {requestSpace && requestSpace.Price}{" "}
+              {data["Price"][settings] + ":"}{" "}
+              {requestSpace && requestSpace.Price}{" "}
             </Text>
             <Text style={{ fontSize: 15, margin: 5 }}>
-              Adress:{" "}
+              {data["Address"][settings] + ":"}{" "}
               {requestSpace &&
                 requestSpace.Flatno +
                   " " +
@@ -605,7 +606,9 @@ export default function Maps(props) {
               ></Button>
             )}
 
-            {requestRejected && <Text>Your Request was Rejected</Text>}
+            {requestRejected && (
+              <Text>{data["Request_Rejected"][settings]}</Text>
+            )}
           </View>
         </View>
       </Overlay>

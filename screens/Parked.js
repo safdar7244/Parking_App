@@ -20,13 +20,16 @@ import {
   Switch,
   Divider,
 } from "react-native-elements";
+import { useContext } from "react";
 import { auth, db } from "../firebase";
 import ButtonMain from "./common/button";
-
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
 function Parked(props, navigation) {
   const [hours, setHours] = useState(0);
   const [stripeId, setStripeId] = useState(null);
   const [price, setPrice] = useState(null);
+  const { settings, saveSettings } = useContext(SettingsContext);
 
   async function checkout() {
     let date;
@@ -137,7 +140,7 @@ function Parked(props, navigation) {
     <Overlay isVisible={props.visible}>
       <View>
         <Text style={{ textAlign: "center", padding: 30, fontSize: 20 }}>
-          Car Has Been Parked!
+          {data["Car_Parked"][settings]}+{"!"}
         </Text>
 
         <View

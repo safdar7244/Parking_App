@@ -3,21 +3,13 @@ import {
   ImageBackground,
   StyleSheet,
   View,
-  SafeAreaView,
   Text,
-  Alert,
   ActivityIndicator,
 } from "react-native";
-import { Avatar } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Input, Switch, Divider, Overlay } from "react-native-elements";
-import ButtonMain from "./common/button";
+
+import { Switch } from "react-native-elements";
 import { useState, useContext } from "react";
-import { TabView, ListItem, Tab, Button } from "react-native-elements";
-import Maps from "./Maps";
-import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
-import Options from "./common/Options";
 import { auth, db } from "../firebase";
 import SettingsContext from "../src/context/Setting";
 import { data } from "../src/Transaltion/translation";
@@ -26,8 +18,6 @@ export default function AccountNotifications({ navigation }) {
   const { settings, saveSettings } = useContext(SettingsContext);
   const [profileUrl, setProfileUrl] = useState(false);
   const [Notification, setNotification] = useState(null);
-  const [Payment, setPayment] = useState("");
-  const [newParking, setNewParking] = useState("");
   const [username, setUsername] = useState("User");
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +28,6 @@ export default function AccountNotifications({ navigation }) {
       console.log("No such document!");
     } else {
       if (doc.data().PushNotification) {
-        // history = doc.data().history;
         setNotification(doc.data().PushNotification);
       }
     }
@@ -47,7 +36,6 @@ export default function AccountNotifications({ navigation }) {
     const user = auth.currentUser.providerData[0]["displayName"];
     setUsername(user);
     setProfileUrl(auth.currentUser.providerData[0]["photoURL"]);
-    // congetDbValuessole.log("CURRENT : ",user)
     getDbValues();
   }, []);
   React.useEffect(() => {
@@ -77,25 +65,6 @@ export default function AccountNotifications({ navigation }) {
         <AvatarCustom url={profileUrl} />
 
         <Text style={styles.UserName}>{username}</Text>
-        {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
-
-        {/* <Options
-              
-              option1={data["Push_Notification"][settings]}
-              option2={data["Late_Payment"][settings]}
-              option3={data["Add_Slot"][settings]}
-              
-              param1={Notification}
-              param2={Payment}
-              param3={newParking}
-            
-              function1={setNotification}
-              function2={setPayment}
-              function3={setNewParking}
-            
-            
-               
-               /> */}
         <View
           style={{
             flexDirection: "row",
@@ -103,7 +72,6 @@ export default function AccountNotifications({ navigation }) {
             backgroundColor: "white",
             marginTop: 40,
             borderRadius: 25,
-            // backgroundColor: "red",
           }}
         >
           <Text style={{ paddingTop: 15 }}>
@@ -117,10 +85,6 @@ export default function AccountNotifications({ navigation }) {
             disabled={loading}
             onChange={() => {
               setLoading(true);
-              // if (Notification) {
-
-              // }
-
               setNotification(!Notification);
             }}
           />
@@ -130,7 +94,6 @@ export default function AccountNotifications({ navigation }) {
             </View>
           )}
         </View>
-        {/* </Overlay> */}
       </View>
 
       <TabBottom navigate={navigation} />
@@ -143,8 +106,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tab: {
-    //   position:"absolute",
-    //   bottom:0,
     display: "flex",
     width: "80%",
     backgroundColor: "white",
@@ -168,9 +129,7 @@ const styles = StyleSheet.create({
     marginTop: "10%",
   },
   innerContainer: {
-    // justifyContent:"center",
     alignItems: "center",
-    //    backgroundColor:"blue",
     marginTop: "-15%",
   },
 
@@ -181,8 +140,6 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif",
     fontSize: 20,
     fontWeight: "bold",
-    //   marginBottom:40,
-    // marginTop:40
   },
   tileCont: {
     backgroundColor: "white",

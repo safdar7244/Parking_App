@@ -1,10 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
+import { useContext } from "react";
 
 function Banned() {
+  const { settings, saveSettings } = useContext(SettingsContext);
+
   return (
     <View style={styles.container}>
-      <Text>Congratulations! You have been banned.</Text>
+      <Text>{data["Banned"][settings]}</Text>
     </View>
   );
 }

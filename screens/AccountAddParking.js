@@ -60,12 +60,12 @@ export default function AccountAddParking({ route, navigation }) {
 
     // }
     // else{
-    console.log("YES LENGTH > 0", photoUrl);
+    // console.log("YES LENGTH > 0", photoUrl);
 
     if (photoUrl) {
-      console.log("000-> ", photoUrl);
+      // console.log("000-> ", photoUrl);
       if (photoUrl == "2") {
-        console.log("000pp-> ", photoUrl);
+        // console.log("000pp-> ", photoUrl);
         setFlag(true);
       }
 
@@ -77,7 +77,7 @@ export default function AccountAddParking({ route, navigation }) {
 
   React.useEffect(() => {
     if (route.params) {
-      console.log("props ener", route.params);
+      // console.log("props ener", route.params);
       // setFlag(true)
       setStreet(route.params.item.Street);
       setFlatNo(route.params.item.Flatno);
@@ -132,18 +132,7 @@ export default function AccountAddParking({ route, navigation }) {
 
   const handleSubmit = async () => {
     setLoading(true);
-    console.log(
-      // Flatno,
-      // Building,
-      // Street,
-      userLocation,
-      // Area,
-      guard,
-      covered,
-      camera,
-      Price
-      // City
-    );
+
     const coordinates = {
       latitude: userLocation.latitude,
       longitude: userLocation.longitude,
@@ -216,13 +205,13 @@ export default function AccountAddParking({ route, navigation }) {
       "state_changed",
       (snapshot) => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
+        // console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
           case firebase.storage.TaskState.PAUSED: // or 'paused'
-            console.log("Upload is paused");
+            // console.log("Upload is/ paused");
             break;
           case firebase.storage.TaskState.RUNNING: // or 'running'
-            console.log("Upload is running");
+            // console.log("Upload is running");
             break;
         }
       },
@@ -231,7 +220,7 @@ export default function AccountAddParking({ route, navigation }) {
       },
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log("File available at", downloadURL);
+          // console.log("File available at", downloadURL);
           auth.onAuthStateChanged((authUser) => {
             if (authUser) {
               // <<<<<<< HEAD
@@ -265,7 +254,7 @@ export default function AccountAddParking({ route, navigation }) {
                     console.error("Error writing document: ", error);
                   });
               } else {
-                console.log("EDIT", authUser);
+                // console.log("EDIT", authUser);
                 obj.owner = authUser.uid;
                 obj.ghash = ghash;
                 obj.imageUrl = downloadURL;
@@ -275,11 +264,11 @@ export default function AccountAddParking({ route, navigation }) {
 
                   .update(obj)
                   .then(() => {
-                    console.log("Document successfully written!");
+                    // console.log("Document successfully written!");
                     navigation.replace("Maps");
                   })
                   .catch((error) => {
-                    console.error("Error writing document: ", error);
+                    // console.error("Error writing document: ", error);
                   });
               }
               // >>>>>>> newPopBranch

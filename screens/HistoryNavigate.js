@@ -150,7 +150,7 @@ export default function HistoryNavigate({ route, navigation }) {
                 marginBottom: 5,
               }}
             >
-              Payment Details:
+              {data["Payment_Details"][settings] + ":"}
             </Text>
 
             <Text>
@@ -160,7 +160,7 @@ export default function HistoryNavigate({ route, navigation }) {
                   fontWeight: "bold",
                 }}
               >
-                Time:
+                {data["Time"][settings] + ":"}
               </Text>
               {"  "}
               {route.params.item.time ? route.params.item.time : " 0"}
@@ -172,7 +172,7 @@ export default function HistoryNavigate({ route, navigation }) {
                   fontWeight: "bold",
                 }}
               >
-                Payment Status:
+                {data["Payment_Status"][settings] + ":"}
               </Text>
               {"  "}
               {route.params.item.isPayed ? "payed" : "un-payed"}
@@ -184,7 +184,7 @@ export default function HistoryNavigate({ route, navigation }) {
                   fontWeight: "bold",
                 }}
               >
-                Payable:
+                {data["Payable"][settings] + ":"}
               </Text>{" "}
               <Icon name={"dollar"} size={13} />
               {Price}
@@ -223,7 +223,7 @@ export default function HistoryNavigate({ route, navigation }) {
                 marginBottom: 5,
               }}
             >
-              Parking Slots Specifics
+              {data["Parking_Slots_Specifics"][settings]}
             </Text>
             <Text>
               <Text
@@ -232,7 +232,7 @@ export default function HistoryNavigate({ route, navigation }) {
                   fontWeight: "bold",
                 }}
               >
-                Address:
+                {data["Address"][settings] + ":"}
               </Text>
               {"  "}
               {Flatno} {Area} {Street} {Building}
@@ -246,7 +246,7 @@ export default function HistoryNavigate({ route, navigation }) {
                   fontWeight: "bold",
                 }}
               >
-                Price:
+                {data["Price"][settings] + ":"}
               </Text>{" "}
               <Icon name={"dollar"} size={13} />
               {Price}
@@ -272,7 +272,7 @@ export default function HistoryNavigate({ route, navigation }) {
                 marginBottom: 5,
               }}
             >
-              Parking Slots Basic Derails
+              {data["Parking_Slots_Basic_Details"][settings]}
             </Text>
 
             {slot_Filters.map((item, i) => (
@@ -308,7 +308,7 @@ export default function HistoryNavigate({ route, navigation }) {
                 marginBottom: 5,
               }}
             >
-              Message
+              {data["Message"][settings]}
             </Text>
             <Text> {message}</Text>
           </View>

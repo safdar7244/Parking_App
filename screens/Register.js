@@ -6,7 +6,9 @@ import {
   SafeAreaView,
   Text,
   Alert,
+  ActivityIndicator,
 } from "react-native";
+
 import { Button, Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
@@ -21,6 +23,7 @@ export default function Register({ navigation, route }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //sconst [status, requestPermission] = Facebook.usePermissions();
 
@@ -86,6 +89,7 @@ export default function Register({ navigation, route }) {
   /////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const signUp = async () => {
+    setLoading(true);
     try {
       //console.log(email, password);
       const authUser = await auth.createUserWithEmailAndPassword(
@@ -116,8 +120,10 @@ export default function Register({ navigation, route }) {
             .set(obj)
             .then(() => {
               //console.log("Document successfully written!");
+              setLoading(false);
             })
             .catch((error) => {
+              setLoading(false);
               console.error("Error writing document: ", error);
             });
         }
@@ -206,11 +212,16 @@ export default function Register({ navigation, route }) {
 
           <ButtonMain
             title="Regisztráció"
+            loading={loading}
             function={() => {
               signUp();
             }}
           />
-
+          {loading && (
+            <View style={{ padding: 5 }}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          )}
           <Text style={styles.vagayStyle}>Vagy</Text>
           <Text
             onPress={() => {

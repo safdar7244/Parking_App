@@ -9,25 +9,14 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import { Avatar } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Input, Switch, Divider, Overlay } from "react-native-elements";
-import ButtonMain from "./common/button";
 import { useState, useContext } from "react";
-import { TabView, ListItem, Tab, Button } from "react-native-elements";
-import Maps from "./Maps";
-import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
-// import { data } from './FormsData/formData';
 import { auth, db } from "../firebase";
 import SettingsContext from "../src/context/Setting";
 import { data } from "../src/Transaltion/translation";
 
 import AvatarCustom from "./common/AvatarCustom";
 export default function AccountLanguage({ navigation }) {
-  // console.log("hhh",data)
-
-  // data["b"]="ddddd"
   const [username, setUsername] = useState("User");
   const { settings, saveSettings } = useContext(SettingsContext);
   const [profileUrl, setProfileUrl] = useState(false);
@@ -45,8 +34,6 @@ export default function AccountLanguage({ navigation }) {
     const user = auth.currentUser.providerData[0]["displayName"];
     setUsername(user);
     setProfileUrl(auth.currentUser.providerData[0]["photoURL"]);
-
-    // console.log("CURRENT : ",user)
   }, []);
 
   React.useEffect(() => {
@@ -83,8 +70,6 @@ export default function AccountLanguage({ navigation }) {
   }, selectedValue);
   const [selectedValue, setSelectedValue] = useState("");
 
-  // data.b = "new value";
-
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -97,7 +82,6 @@ export default function AccountLanguage({ navigation }) {
         <AvatarCustom url={profileUrl} />
 
         <Text style={styles.UserName}>{username}</Text>
-        {/* <Overlay overlayStyle={{padding:20,width:"80%"}} isVisible={visible} onBackdropPress={()=>{setVisible(!visible)}}> */}
         <View style={styles.innerContainer2}>
           <View style={styles.row}>
             <Text style={styles.labelText}>{data["Language"][settings]}</Text>
@@ -113,7 +97,6 @@ export default function AccountLanguage({ navigation }) {
               onValueChange={(itemValue, itemIndex) => {
                 setLoading(true);
 
-                // console.log("balue to cehck  L ", itemValue)
                 setSelectedValue(itemValue);
               }}
             >
@@ -125,11 +108,8 @@ export default function AccountLanguage({ navigation }) {
                 <ActivityIndicator size="small" color="#0000ff" />
               </View>
             )}
-
-            <View>{/* <Button title="Submit"/>  */}</View>
           </View>
         </View>
-        {/* </Overlay> */}
       </View>
 
       <TabBottom navigate={navigation} />
@@ -140,7 +120,6 @@ export default function AccountLanguage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor:"red"
   },
   row: {
     flexDirection: "row",

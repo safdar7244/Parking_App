@@ -47,26 +47,15 @@ export default function AccountParkings({ navigation }) {
     db.collection("spaces")
       .where("owner", "==", auth.currentUser.uid)
       .onSnapshot((snapshot) => {
-        // Your own custom logic here
         snapshot.forEach((doc) => {
-          // ////console.log(doc.id, doc.data());
-          // console.log("PARKING SLOT YAAAY",doc.data())
           let dd = doc.data();
-          // <<<<<<< HEAD
-          //           dd["title"] = "Slot " + (list_spaces.length + 1);
-          // =======
 
           dd["title"] = "Slot " + (list_spaces.length + 1);
           dd["id"] = doc.id;
-          // >>>>>>> newPopBranch
-          // const dta={
-          //   title:2
-          // }
-          // dd.append(dta)
+
           list_spaces.push(dd);
         });
-        // console.log(list_spaces)
-        // console.log(list_spaces.length)
+
         setSpaces(list_spaces);
       });
   }, []);
@@ -75,19 +64,6 @@ export default function AccountParkings({ navigation }) {
     console.log("key : ", key);
     navigation.replace("AccountAddParking", { item });
   };
-  // data.b = "new value";
-  // const list = [
-
-  //     {
-  //       title: 'Slot 1',
-  //     },
-  //     {
-  //         title: 'Slot 2',
-  //       },
-
-  //   ]
-
-  /////////////////////////////////////////////////////////////////
 
   async function Check() {
     const cityRef = db.collection("users").doc(auth.currentUser.uid);
@@ -219,7 +195,7 @@ export default function AccountParkings({ navigation }) {
             <Text style={{ fontSize: 10 }}>
               {" "}
               {/* <<<<<<< HEAD */}
-              {loading ? "Make Stripe Account First" : ""}
+              {loading ? data["Make_Stripe"][settings] : ""}
               {/* // ======= */}
               {/* // {loading ? "Proecessing Request.." : ""} */}
               {/* >>>>>>> newPopBranch */}
@@ -256,13 +232,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     // marginTop:40
   },
-  labelText: {
-    // fontSize: 14,
-    // // marginBottom: 10,
-    // paddingLeft: 10,
-    // // marginLeft:-20,
-    // paddingTop: 15,
-  },
+
   innerContainer2: {
     // marginBottom:"20%",
     marginTop: 20,

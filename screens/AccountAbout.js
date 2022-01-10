@@ -10,16 +10,9 @@ import {
   TextInput,
   ActivityIndicator,
 } from "react-native";
-import { Avatar } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Input, Switch, Divider, Overlay } from "react-native-elements";
-import ButtonMain from "./common/button";
 import { useState, useContext, useRef } from "react";
 import { TabView, ListItem, Tab, Button } from "react-native-elements";
-import Maps from "./Maps";
-import AccountEdit from "./AccountEdit";
 import TabBottom from "./TabBottom";
-// import { data } from './FormsData/formData';
 import { auth, db } from "../firebase";
 import { data } from "../src/Transaltion/translation";
 import SettingsContext from "../src/context/Setting";
@@ -30,38 +23,25 @@ export default function AccountAbout({ navigation }) {
   const [profileUrl, setProfileUrl] = useState(false);
   const [loading, setLoading] = useState(false);
   const scrollView = useRef();
-  // console.log("->", scrollView);
-
   const { settings, saveSettings } = useContext(SettingsContext);
   const [message, setMessage] = useState("");
-
-  // setTimeout(() => {
-  //   saveSettings(1)
-  // }, 0);
-
-  // console.log("ssss",settings)
-  const [link, setLink] = useState("");
+  const link = "https://homeparking.hu";
   const [username, setUsername] = useState("User");
   React.useEffect(() => {
     const user = auth.currentUser.providerData[0]["displayName"];
     setUsername(user);
-    // console.log("CURRENT : ",user)
     setProfileUrl(auth.currentUser.providerData[0]["photoURL"]);
   }, []);
 
   function handleClick() {
-    Linking.canOpenURL("https://homeparking.hu").then((supported) => {
+    Linking.canOpenURL(link).then((supported) => {
       if (supported) {
-        Linking.openURL("https://homeparking.hu");
+        Linking.openURL(link);
       } else {
-        console.log("Don't know how to open URI: " + this.props.url);
+        // console.log("Don't know how to open URI: " + this.props.url);
       }
     });
   }
-  const onPressAbout = () => {
-    console.log("{RESS");
-    scrollViewCheck.current.scrollToEnd();
-  };
 
   async function handleSubmit(e) {
     if (message.length > 4) {
@@ -86,37 +66,23 @@ export default function AccountAbout({ navigation }) {
     } else {
       console.log("Else");
 
-      Alert.alert(
-        "Alert !",
-        "Message length can not be less than 5 characters long",
-        [
-          {
-            text: "Ok",
-            onPress: () => {
-              // console.log("OKKK");
-            },
-          },
-        ]
-      );
+      Alert.alert("Alert !", data["Alert2"][settings], [
+        {
+          text: data["OK"][settings],
+          onPress: () => {},
+        },
+      ]);
     }
   }
-  // data.b = "new value";
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        keyboardShouldPersistTaps={"always"}
-        // ref={(ref) => {
-        //   scrollView = ref;
-        // }}
-        ref={scrollView}
-      >
+      <ScrollView keyboardShouldPersistTaps={"always"} ref={scrollView}>
         <ImageBackground
           source={require("../pictures/bkg-user.jpeg")}
           resizeMode="cover"
           style={styles.image}
         />
-
         <View style={styles.innerContainer}>
           <AvatarCustom url={profileUrl} />
 
@@ -141,19 +107,10 @@ export default function AccountAbout({ navigation }) {
               editable={true}
               multiline={true}
               numberOfLines={5}
-              // onFocus={() => {
-              //   console.log("->", scrollView.current);
-              //   setTimeout(() => {
-              //     scrollView.current.scrollToEnd({ Animated: true });
-              //   }, 1000);
-              // }}
               onTouchStart={() => {
                 console.log("Pressed...");
                 setTimeout(() => {
-                  scrollView.current.scrollToEnd({
-                    // animated: true,
-                    // duration: 500,
-                  });
+                  scrollView.current.scrollToEnd({});
                 }, 500);
               }}
               style={{
@@ -165,7 +122,6 @@ export default function AccountAbout({ navigation }) {
                 marginBottom: 20,
                 marginTop: 10,
                 backgroundColor: "#eeeeee",
-                // marginLeft: 5,
               }}
               onChangeText={(message) => setMessage(message)}
             />

@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Text,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Button, Avatar, Overlay, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -19,6 +20,7 @@ export default function Login({ navigation, route }) {
   const [password, setPassword] = useState("");
   const [flag, setFlag] = useState(false);
   const [newEmail, setNewEmail] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const forgotPassword = (Email) => {
     console.log("reset email sent to " + Email);
@@ -51,11 +53,12 @@ export default function Login({ navigation, route }) {
 
   const logIn = () => {
     // navigation.replace('Temp');
-
+    setLoading(true);
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        console.log("dasdsdasd");
+        setLoading(false);
+        // console.log("dasdsdasd");
         navigation.reset({
           index: 0,
           routes: [
@@ -67,6 +70,7 @@ export default function Login({ navigation, route }) {
         });
       })
       .catch((err) => {
+        setLoading(false);
         alert(err);
       });
   };
@@ -145,10 +149,16 @@ export default function Login({ navigation, route }) {
 
           <ButtonMain
             title="Bejelentkezés"
+            loading={loading}
             function={() => {
               logIn();
             }}
           />
+          {loading && (
+            <View style={{ padding: 20 }}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          )}
 
           <Text
             onPress={() => {
