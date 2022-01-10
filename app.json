@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "MapsProject",
+    "name": "Home Parking",
     "slug": "MapsProject",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.parkingApp.app"
@@ -27,14 +25,11 @@
       },
       "googleServicesFile": "./google-services.json",
       "package": "com.parkingApp.app",
-      "config":
-      {
-        "googleMaps":
-        {
-          "apiKey":"AIzaSyBmrrLcxsX5OTm2qqtP5w2m4u4R3jFv-Ss"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBmrrLcxsX5OTm2qqtP5w2m4u4R3jFv-Ss"
         }
       }
-      
     },
     "web": {
       "favicon": "./assets/favicon.png"

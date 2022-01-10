@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Input } from "react-native-elements";
+import { Input, Overlay, Divider } from "react-native-elements";
 import ButtonMain from "./common/button";
 import { useState, useContext } from "react";
 import { TabView, ListItem, Tab, Button } from "react-native-elements";
@@ -36,6 +36,10 @@ export default function AccountEdit({ navigation }) {
   const [email, setEmail] = useState("User");
   const [photoUrl, setPhotoUrl] = useState(null);
   const [flag, setFlag] = useState(false);
+  const [forgetPassowrdflag, setForgetPassowrdflag] = useState(false);
+  const [password, setPassword] = useState(false);
+  // const [password, setPassword_] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
@@ -176,56 +180,6 @@ export default function AccountEdit({ navigation }) {
   return (
     // <View style={styles.container}>
 
-    //   <ImageBackground source={require('../pictures/bkg-user.jpeg')} resizeMode="cover" style={styles.image}>
-
-    //   <View style={styles.innerContainer}>
-    //   <Avatar
-    //     size={80}
-
-    //     source={{
-    //         uri:
-    //           'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    //          }}
-    //     containerStyle={{ backgroundColor: 'grey' }}
-    //   >
-    //     <Avatar.Accessory size={23}
-    //     onPress={() => console.log("Works!")}
-
-    //     />
-    //   </Avatar>
-
-    //        <Text style={styles.UserName}>User</Text>
-
-    //   <View style={styles.innerContainer2}>
-    //   <FormField
-    //   label='Username'
-    //     formKey='username'
-    //     placeholder='Your username'
-
-    //     handleFormValueChange={handleFormValueChange}
-    //   />
-    //   <FormField
-    //     label='Email'
-    //     formKey='email'
-    //     placeholder='Your email id'
-    //     textInputProps={{
-    //       autoCapitalize: "none"
-    //     }}
-    //     handleFormValueChange={handleFormValueChange}
-    //   />
-
-    //   {/* <Text style={styles.header}>Values in Hook: </Text>
-    //   <View>
-    //     <Text style={styles.formText}>Username is : {formValues.username}</Text>
-    //     <Text style={styles.formText}>Email is: {formValues.email}</Text>
-    //   </View> */}
-    //   </View>
-    //   </View>
-    //   </ImageBackground>
-    //   <TabBottom navigate={navigation}/>
-    // </View>
-
-    ////
     <View style={styles.container}>
       <ImageBackground
         source={require("../pictures/bkg-user.jpeg")}

@@ -27,7 +27,7 @@ import Stripe from "./screens/Stripe";
 import Banned from "./screens/Banned";
 
 const Stack = createNativeStackNavigator();
-const settings = 0;
+const settings = 1;
 const globalScreenOptions = {
   headerStyle: {
     backgroundColor: "#5EA0EE",

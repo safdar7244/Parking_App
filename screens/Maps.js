@@ -50,9 +50,7 @@ export default function Maps(props) {
   const [camera, setCamera] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [spaces, setSpaces] = useState(null);
-  const [currentLocation, setCurrentlocation] = useState(
-    data["Search"][settings]
-  );
+  const [currentLocation, setCurrentlocation] = useState(null);
   const DirectionsTimer = useRef(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);
@@ -230,6 +228,9 @@ export default function Maps(props) {
 
         console.log("pp", typeof lang);
         lang == "Hungary" ? saveSettings(1) : saveSettings(0);
+        // lang == "Hungary"
+        //   ? setCurrentlocation(data["Search"][1])
+        //   : setCurrentlocation(data["Search"][0]);
 
         // if (lang == "Hungary") {
         //   settings = 1;
@@ -611,7 +612,7 @@ export default function Maps(props) {
       {/* THIS OVERLAY REPLACES MARKER CALLBACK */}
 
       <Overlay
-        overlayStyle={{ width: "90%" }}
+        overlayStyle={{ width: "85%" }}
         isVisible={visibleSearch}
         onBackdropPress={() => {
           setVisiblesearch(!visibleSearch);
@@ -672,7 +673,7 @@ export default function Maps(props) {
           titleStyle={{ color: "black" }}
           buttonStyle={{ backgroundColor: "white", paddingTop: 12 }}
           containerStyle={styles.searchBar}
-          title={currentLocation}
+          title={data["Search"][settings]}
         ></Button>
 
         <Button

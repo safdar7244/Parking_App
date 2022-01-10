@@ -7,7 +7,7 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { Button, Avatar } from "react-native-elements";
+import { Button, Avatar, Overlay, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
@@ -17,8 +17,37 @@ import { auth } from "../firebase";
 export default function Login({ navigation, route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [flag, setFlag] = useState(false);
+  const [newEmail, setNewEmail] = useState(null);
 
-  
+  const forgotPassword = (Email) => {
+    console.log("reset email sent to " + Email);
+
+    auth
+      .sendPasswordResetEmail(Email)
+      .then(() => {
+        alert("reset email sent to " + Email);
+
+        Alert.alert("Email Sent to " + Email, "Press OK to continue", [
+          {
+            text: "OK",
+            onPress: () => {
+              setFlag(false);
+              setNewEmail(null);
+            },
+          },
+        ]);
+      })
+      .catch(function (e) {
+        console.log(e);
+        alert(
+          "ERROR While sending the email, Please check your connection and try again"
+        );
+
+        setFlag(false);
+        setNewEmail(null);
+      });
+  };
 
   const logIn = () => {
     // navigation.replace('Temp');
@@ -58,7 +87,44 @@ export default function Login({ navigation, route }) {
             size="large"
             containerStyle={{ marginTop: 20, marginBottom: 20 }}
           />
-
+          <Overlay
+            overlayStyle={{ padding: 20, width: "80%" }}
+            isVisible={flag}
+            onBackdropPress={() => {
+              setFlag(!flag);
+            }}
+          >
+            <View style={{ width: "100%" }}>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 20, marginBottom: 20 }}
+                >
+                  E-mail visszaállítása
+                </Text>
+                <Divider />
+                <Input
+                  containerStyle={styles.buttonContainer}
+                  placeholder="Email"
+                  onChangeText={(text) => setNewEmail(text)}
+                  value={newEmail}
+                  secureTextEntry={false}
+                />
+                <Button
+                  buttonStyle={{ backgroundColor: "red" }}
+                  // style={{width:"100%"}}
+                  title="Küldés"
+                  onPress={() => {
+                    forgotPassword(newEmail);
+                  }}
+                ></Button>
+              </View>
+            </View>
+          </Overlay>
           <Input
             containerStyle={styles.buttonContainer}
             leftIcon={{
@@ -73,7 +139,7 @@ export default function Login({ navigation, route }) {
             containerStyle={styles.buttonContainer}
             leftIcon={{ type: "font-awesome-5", name: "key", color: "grey" }}
             placeholder="Jelszó"
-            secureTextEntry={true} 
+            secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
           />
 
@@ -91,6 +157,14 @@ export default function Login({ navigation, route }) {
             style={styles.vagayStyle}
           >
             Nincs még fiókod? Regisztrálj!
+          </Text>
+          <Text
+            onPress={() => {
+              setFlag(true);
+            }}
+            style={styles.vagayStyle}
+          >
+            elfelejtett jelszó?
           </Text>
 
           {/* <Button

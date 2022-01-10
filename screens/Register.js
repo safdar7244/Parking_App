@@ -212,7 +212,14 @@ export default function Register({ navigation, route }) {
           />
 
           <Text style={styles.vagayStyle}>Vagy</Text>
-
+          <Text
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+            style={styles.vagayStyle}
+          >
+            Már van fiókja? Belépés!
+          </Text>
           <Button
             icon={
               <Icon
