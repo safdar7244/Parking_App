@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Text,
   Alert,
+  ScrollView,
   ActivityIndicator,
 } from "react-native";
 
@@ -161,7 +162,7 @@ export default function Register({ navigation, route }) {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ImageBackground
         source={require("../pictures/bkg.png")}
         resizeMode="cover"
@@ -324,7 +325,7 @@ export default function Register({ navigation, route }) {
           <View style={{ height: 50 }}></View>
         </View>
       </ImageBackground>
-    </View>
+    </ScrollView>
   );
 }
 
