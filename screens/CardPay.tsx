@@ -108,7 +108,7 @@ export default function Card({ navigation, route }) {
           })
           .then((res) => {
             setLoading(false);
-            route.params.pay(price);
+            route.params.pay(price, route.params.time);
             Alert.alert("Payment Successful");
             navigation.navigate("Maps");
           })

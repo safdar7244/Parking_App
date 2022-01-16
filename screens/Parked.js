@@ -34,8 +34,6 @@ function Parked(props, navigation) {
 
   async function checkout() {
     let date;
-    console.log("Asdasdas");
-
     const cityRef = db.collection("users").doc(auth.currentUser.uid);
     const doc = await cityRef.get();
     if (!doc.exists) {
@@ -48,7 +46,6 @@ function Parked(props, navigation) {
       const hours = diffTime / 3600000;
       setHours(hours);
       setPrice(hours * props.bookedSpace.Price);
-      console.log("HIURSSs", price);
       props.navigation.navigate("Card", {
         pay: pay,
         ownerid: props.bookedSpace.owner,
@@ -106,28 +103,32 @@ function Parked(props, navigation) {
       });
   }
 
-  async function pay(price) {
+  async function pay(price, time) {
     var history = [];
     const cityRef = db.collection("users").doc(auth.currentUser.uid);
     const doc = await cityRef.get();
     if (!doc.exists) {
       console.log("No such document!");
-
+    } else {
       try {
-        const data = await axios.post("", {
-          name: doc.data().name,
-          email: doc.data().email,
-          address: doc.data().address,
-          city: doc.data().city,
-          zipCode: doc.data().zipCode,
-          slotPrice: props.bookedSpace.Price,
-          hours: hours,
-          price,
-        });
+        const data = await axios.post(
+          "https://salty-citadel-46447.herokuapp.com/generate_invoice",
+          {
+            name: doc.data().name,
+            email: doc.data().email,
+            address: doc.data().address,
+            city: doc.data().city,
+            zipCode: doc.data().zipCode,
+            slotPrice: props.bookedSpace.Price,
+            hours: time,
+            price,
+            date: new Date().toISOString().slice(0, 10),
+          }
+        );
       } catch (err) {
         console.log("err", err);
       }
-    } else {
+
       if (doc.data().history) {
         history = doc.data().history;
       }
