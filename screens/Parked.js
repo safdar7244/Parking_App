@@ -25,6 +25,7 @@ import { auth, db } from "../firebase";
 import ButtonMain from "./common/button";
 import { data } from "../src/Transaltion/translation";
 import SettingsContext from "../src/context/Setting";
+import axios from "axios";
 function Parked(props, navigation) {
   const [hours, setHours] = useState(0);
   const [stripeId, setStripeId] = useState(null);
@@ -105,12 +106,27 @@ function Parked(props, navigation) {
       });
   }
 
-  async function pay() {
+  async function pay(price) {
     var history = [];
     const cityRef = db.collection("users").doc(auth.currentUser.uid);
     const doc = await cityRef.get();
     if (!doc.exists) {
       console.log("No such document!");
+
+      try {
+        const data = await axios.post("", {
+          name: doc.data().name,
+          email: doc.data().email,
+          address: doc.data().address,
+          city: doc.data().city,
+          zipCode: doc.data().zipCode,
+          slotPrice: props.bookedSpace.Price,
+          hours: hours,
+          price,
+        });
+      } catch (err) {
+        console.log("err", err);
+      }
     } else {
       if (doc.data().history) {
         history = doc.data().history;
