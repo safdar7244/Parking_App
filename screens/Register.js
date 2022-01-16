@@ -21,6 +21,9 @@ import * as Google from "expo-google-app-auth";
 export default function Register({ navigation, route }) {
   const [userData, setUserData] = useState({});
   const [name, setName] = useState("");
+  const [zipCode, setZip] = useState("");
+  const [address, setAdress] = useState("");
+  const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -105,6 +108,9 @@ export default function Register({ navigation, route }) {
       const obj = {
         email,
         name,
+        city,
+        zipCode,
+        address,
       };
 
       auth.onAuthStateChanged((authUser) => {
@@ -197,6 +203,46 @@ export default function Register({ navigation, route }) {
             onChangeText={(text) => setEmail(text)}
             value={email}
           />
+
+          <Input
+            containerStyle={styles.buttonContainer}
+            leftIcon={{
+              type: "font-awesome-5",
+              name: "envelope",
+              color: "grey",
+              padding: 5,
+            }}
+            placeholder="zipCode"
+            onChangeText={(text) => setZip(text)}
+            value={zipCode}
+          />
+
+          <Input
+            containerStyle={styles.buttonContainer}
+            leftIcon={{
+              type: "font-awesome-5",
+              name: "envelope",
+              color: "grey",
+              padding: 5,
+            }}
+            placeholder="city"
+            onChangeText={(text) => setCity(text)}
+            value={city}
+          />
+
+          <Input
+            containerStyle={styles.buttonContainer}
+            leftIcon={{
+              type: "font-awesome-5",
+              name: "envelope",
+              color: "grey",
+              padding: 5,
+            }}
+            placeholder="address"
+            onChangeText={(text) => setAdress(text)}
+            value={address}
+          />
+
           <Input
             containerStyle={styles.buttonContainer}
             leftIcon={{

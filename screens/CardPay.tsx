@@ -104,7 +104,7 @@ export default function Card({ navigation, route }) {
         const resp = await axios
           .post("https://nameless-wildwood-00103.herokuapp.com/transfer", {
             account: stripeID,
-            amount: price,
+            amount: price * 0.9,
           })
           .then((res) => {
             setLoading(false);
