@@ -74,4 +74,5 @@ export const data = {
   Request_Rejected: ["Your Request was Rejected", "Kérésedet elutasították"],
   Filters: ["Filters", "Szűrők"],
   Car_Parked: ["Car Has Been Parked", "Az autó leparkolt"],
+  Payable: ["Payable", "kifizetendő"],
 };
