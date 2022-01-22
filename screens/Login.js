@@ -12,7 +12,6 @@ import { Button, Avatar, Overlay, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
 import ButtonMain from "./common/button";
-// import { data } from "./FormsData/formData";
 import { auth } from "../firebase";
 
 export default function Login({ navigation, route }) {

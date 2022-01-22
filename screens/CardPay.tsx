@@ -202,7 +202,7 @@ export default function Card({ navigation, route }) {
               Time:
             </Text>
             {"  "}
-            {route.params.time}
+            {route.params.time} hrs
           </Text>
           <Text>
             <Text
@@ -219,11 +219,7 @@ export default function Card({ navigation, route }) {
               date.getMonth() +
               1 +
               "/" +
-              date.getFullYear() +
-              "-" +
-              date.getHours() +
-              "/" +
-              date.getMinutes()}
+              date.getFullYear()}
           </Text>
           <Text>
             <Text
@@ -234,7 +230,19 @@ export default function Card({ navigation, route }) {
             >
               Price:
             </Text>{" "}
-            {route.params.price ? route.params.price : "0"}
+            {route.params.price ? route.params.price : "0"} ft/hr
+          </Text>
+          <Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Payable:
+            </Text>{" "}
+            {route.params.price ? route.params.price * route.params.time : "0"}{" "}
+            ft
           </Text>
         </View>
       </View>

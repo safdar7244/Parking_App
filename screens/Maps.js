@@ -22,22 +22,20 @@ import TabBottom from "./TabBottom";
 import * as Location from "expo-location";
 import geohash from "ngeohash";
 import { auth, db } from "../firebase";
-import Account from "./Account";
 import { Avatar } from "react-native-elements/dist/avatar/Avatar";
-import AvatarCustom from "./common/AvatarCustom";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
-import ParkingRequest from "./ParkingRequest";
 import PushNotification from "./PushNotification";
 import { schedulePushNotification } from "./PushNotification";
 import { data } from "../src/Transaltion/translation";
+import ButtonMain from "./common/button";
 import SettingsContext from "../src/context/Setting";
 import Parked from "./Parked";
 ///////////////////////////////////////////////////////////////////////
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 export default function Maps(props) {
   const { settings, saveSettings } = useContext(SettingsContext);
 
@@ -46,7 +44,6 @@ export default function Maps(props) {
   const [Showmarkerdetails, setShowmarkerdetails] = useState(false);
   const [guard, setGuard] = useState(false);
   const [covered, setCovered] = useState(false);
-
   const [camera, setCamera] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [spaces, setSpaces] = useState(null);
@@ -54,21 +51,16 @@ export default function Maps(props) {
   const DirectionsTimer = useRef(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);
-  const [requestAccepted, setRequestAccepted] = useState(0);
-
   const [customer, setCustomer] = useState(null);
   const [bookedSpace, setBookedSpace] = useState(null);
   const [requestSpace, setrequestSpace] = useState(null);
   const [startGps, setStartGps] = useState(false);
   const [parked, setParked] = useState(false);
-  const [requestRejected, setRequestRejected] = useState(false);
+  const [pay, setPay] = useState(false);
   const [loadingScreen, setLoadingScreen] = useState(false);
   const [filter, setFilter] = useState(false);
 
-  const toggleOverlayRequest = () => {
-    setVisibleRequest(!visibleRequest);
-  };
-
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const checkBan = async () => {
     const time = new Date().getTime() / 1000;
     db.collection("users")
@@ -116,62 +108,35 @@ export default function Maps(props) {
         //console.log("Error getting document:", error);
       });
   };
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   if (user) {
     db.collection("users")
       .where("id", "==", user.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          ////console.log("hehrehrhehrehrhehrer");
-
           if (change.type === "modified") {
             console.log("Modified city: ", change.doc.data());
             if (change.doc.data().activeRequest) {
               if (change.doc.data().activeRequest.status == 1) {
-                if (!visibleRequest) {
-                  schedulePushNotification();
-                  setVisibleRequest(true);
-                  setBookedSpace(change.doc.data().activeRequest.space);
-                }
-
-                ////console.log("SET CUSTOMER  : ",change.doc.data().activeRequest.id)
-                ////console.log("SET BOOKED SPACES  : ",change.doc.data().activeRequest.slot_id)
-
-                setCustomer(change.doc.data().activeRequest.id);
-                // setBookedSpace(change.doc.data().activeRequest.slot_id)
-              }
-            }
-            if (change.doc.data().acceptedSession) {
-              if (change.doc.data().acceptedSession.status === 1) {
-                setVisibleRequest(false);
-
-                // setCustomer(change.doc.data().activeRequest.id);
-
-                // setBookedSpace(change.doc.data().activeRequest.slot_id)
+                schedulePushNotification();
               }
             }
           }
           if (change.type === "removed") {
-            // //console.log("Removed city: ", change.doc.data());
           }
         });
       });
   }
 
-  const [reigon, setRegion] = useState({
-    latitude: 31.476,
-    longitude: 74.3045,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-  const [x, setx] = useState({ latitude: 31.466, longitude: 74.3045 });
+  ////////////////////////////////////////////////////////////
   function hello(params) {
     setVisiblesearch(true);
   }
+  ////////////////////////////////////////////////////////////
 
   //////////////////////////////// to start interval
   function startDirections() {
-    // if (!DirectionsTimer) {
     if (startGps) {
       DirectionsTimer.current = setInterval(() => {
         getLocationCurrent();
@@ -179,7 +144,6 @@ export default function Maps(props) {
     } else {
       clearInterval(DirectionsTimer.current);
     }
-    // }
   }
 
   //////////////////////////////// to stop interval
@@ -188,33 +152,19 @@ export default function Maps(props) {
     DirectionsTimer.current = null;
   }
 
+  ////////////////////////////////////////////////////////
   useEffect(() => {
-    checkBan();
-    startDirections();
+    if (startGps) {
+      checkBan();
+      startDirections();
+      setShowmarkerdetails(false);
+      setLoadingScreen(false);
+    }
   }, [startGps]);
+  ////////////////////////////////////////////////////////
 
-  function Book(space) {
-    setBookedSpace(space);
-
-    ////console.log("BOOK NOW",space)
-    const b = null;
-    db.collection("users")
-      .doc(space.owner)
-      .update({
-        activeRequest: {
-          status: 1,
-          id: auth.currentUser.uid,
-          slot_id: space.id,
-          space: space,
-        },
-      })
-      .then(function () {
-        setBookedSpace(space);
-        console.log(bookedSpace);
-      });
-  }
-
-  async function getDbValues() {
+  //////////////////////////////////////////////////////////
+  async function getLanguage() {
     console.log("\n\n\n\n\n\n\n\n\n Meo");
     const userInfo = db.collection("users").doc(auth.currentUser.uid);
     const doc = await userInfo.get();
@@ -222,95 +172,56 @@ export default function Maps(props) {
       console.log("No such document!");
     } else {
       if (doc.data().language) {
-        // history = doc.data().history;
         let lang = doc.data().language;
         console.log("LANG p: ", lang);
 
         console.log("pp", typeof lang);
         lang == "Hungary" ? saveSettings(1) : saveSettings(0);
-        // lang == "Hungary"
-        //   ? setCurrentlocation(data["Search"][1])
-        //   : setCurrentlocation(data["Search"][0]);
-
-        // if (lang == "Hungary") {
-        //   settings = 1;
-        //   console.log("nside1");
-        //   saveSettings(1);
-        // } else {
-        //   settings = 0;
-        //   console.log("nside2");
-
-        //   saveSettings(0);
-        // }
-        // setLatePayment(doc.data().latePayment);
+      }
+      if (doc.data().parked) {
+        setParked(doc.data().parked);
       }
     }
   }
   useEffect(() => {
     console.log("THIS MAP");
-    getDbValues();
+    getLanguage();
   }, []);
+  ////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////
   useEffect(() => {
-    //console.log("\n\n\nEFFF :", props.route.params);
     if (props.route.params) {
       setrequestSpace(props.route.params.historySpace);
       setShowmarkerdetails(props.route.params.historyCheck);
     }
   }, []);
-  useEffect(() => {
-    db.collection("users")
-      .where("id", "==", auth.currentUser.uid)
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-          }
-          if (change.type === "modified") {
-            if (change.doc.data().acceptedSession) {
-              if (change.doc.data().acceptedSession.status === 1) {
-                setBookedSpace(change.doc.data().acceptedSession.space);
-                //console.log("MULTIPLE TIMES");
-                setLoadingScreen(false);
-                setShowmarkerdetails(false);
-                setStartGps(true);
-                startDirections();
-              } else if (change.doc.data().acceptedSession.status === -1) {
-                //console.log("\n\n\n\nRejected",visibleRequest,bookedSpace,requestSpace)
-                resetBackend(change.doc.data().acceptedSession.id);
-                setLoadingScreen(false);
-                setRequestRejected(true);
-                setStartGps(false);
-                stopDirections();
-              }
-            }
-          }
-          if (change.type === "removed") {
-            // ////console.log("Removed city: ", change.doc.data());
-          }
-        });
-      });
-  }, []);
+  ////////////////////////////////////////////////////////////
 
+  ////////////////////////////////////////////////////////////
   function AcceptRequest(customer, bookedSpace) {
+    setBookedSpace(bookedSpace);
+    setLoadingScreen(true);
+    console.log("customer:", customer, "\nbookedspace:", bookedSpace.id);
     if (customer) {
-      db.collection("users")
-        .doc(customer)
+      db.collection("spaces")
+        .doc(bookedSpace.id)
         .update({
           acceptedSession: {
             status: 1,
-            space: bookedSpace,
           },
         })
         .then(function () {
-          // console.log("accepte and updatedd");
-          setVisibleRequest(false);
+          setStartGps(true);
         })
         .catch((err) => {
           console.log(err);
         });
     }
   }
+  ////////////////////////////////////////////////////////////
 
-  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
   function resetBackend(slotId) {
     if (bookedSpace) {
       db.collection("users")
@@ -349,13 +260,16 @@ export default function Maps(props) {
         //////console.log("updating backend1 done")
       });
   }
-  //////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
 
+  ////////////////////////////////////////////////////////////
   function stopNavigation() {
     setStartGps(false);
     stopDirections();
   }
+  ////////////////////////////////////////////////////////////
 
+  ////////////////////////////////////////////////////////////
   function ParkCar() {
     setParked(true);
 
@@ -363,31 +277,15 @@ export default function Maps(props) {
       .doc(auth.currentUser.uid)
       .update({
         checkIntime: new Date(),
+        parked: true,
       })
       .then(function () {});
   }
+  ////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
 
-  function RejectRequest(bookedSpace) {
-    //console.log("HOLO", bookedSpace);
-    db.collection("users")
-      .doc(customer)
-      .update({
-        acceptedSession: {
-          status: -1,
-          id: auth.currentUser.uid,
-        },
-      })
-      .then(function () {
-        //////console.log("rejected and updatedd");
-        setVisibleRequest(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
+  ////////////////////////////////////////////////////////////
   const getGeohashRange = (
     latitude,
     longitude,
@@ -410,7 +308,9 @@ export default function Maps(props) {
       return resolve({ lower, upper });
     });
   };
+  ////////////////////////////////////////////////////////////
 
+  ////////////////////////////////////////////////////////////
   async function getLocationCurrent() {
     //////console.log("shdaudasdk");
     const verifyPersmission = async () => {
@@ -470,6 +370,12 @@ export default function Maps(props) {
     };
     getLocation();
   }
+  ////////////////////////////////////////////////////////////
+
+  useEffect(() => {
+    getLocationCurrent();
+  }, []);
+  ////////////////////////////////////////////////////////////
 
   return (
     <View style={{ flex: 1 }}>
@@ -477,23 +383,35 @@ export default function Maps(props) {
         ////console.log("GPS  ????? : ",startGps)
       }
 
-      <ParkingRequest
-        visible={visibleRequest}
-        toggleOverlay={toggleOverlayRequest}
-        accept={AcceptRequest}
-        reject={RejectRequest}
-        customer={customer}
-        bookedSpace={bookedSpace}
-      />
+      <Overlay
+        overlayStyle={{
+          padding: 20,
+          width: "90%",
+          flex: 0.5,
+          justifyContent: "center",
+        }}
+        isVisible={parked}
+      >
+        <Text style={{ textAlign: "center", fontSize: 30 }}>Car Parked!</Text>
+        <View style={{ flex: 0.2 }}></View>
+        <ButtonMain
+          title="Unpark"
+          function={() => {
+            setPay(true);
+          }}
+        ></ButtonMain>
 
-      <Parked
-        stopNavigation={stopNavigation}
-        navigation={props.navigation}
-        visible={parked}
-        reset={resetBackend}
-        setParked={setParked}
-        bookedSpace={bookedSpace}
-      />
+        {pay && (
+          <Parked
+            stopNavigation={stopNavigation}
+            navigation={props.navigation}
+            visible={pay}
+            reset={resetBackend}
+            setParked={setPay}
+            bookedSpace={bookedSpace}
+          />
+        )}
+      </Overlay>
 
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}
@@ -569,16 +487,17 @@ export default function Maps(props) {
             ) : (
               <Button
                 onPress={() => {
-                  setLoadingScreen(true);
+                  AcceptRequest(auth.currentUser.uid, requestSpace);
+
                   // onPress={() => {
                   // ////console.log(space);
-                  if (props.route.params) {
-                    //console.log("USerss");
-                    Book(props.route.params.historySpace);
-                  } else {
-                    // console.log("NO ONE SHOULD COME");
-                    Book(requestSpace);
-                  }
+                  // if (props.route.params) {
+                  //   //console.log("USerss");
+                  //   Book(props.route.params.historySpace);
+                  // } else {
+                  //   console.log("NO ONE SHOULD COME");
+                  //   AcceptRequest(auth.currentUser, requestSpace);
+                  // }
 
                   // ////console.log(a);
                 }}
@@ -589,25 +508,6 @@ export default function Maps(props) {
                 containerStyle={{}}
                 title="Book"
               ></Button>
-            )}
-
-            {loadingScreen && (
-              <Button
-                onPress={() => {
-                  setLoadingScreen(false);
-                  resetBackend();
-                }}
-                titleStyle={{ color: "white" }}
-                buttonStyle={{
-                  backgroundColor: "red",
-                }}
-                containerStyle={{}}
-                title="Cancel"
-              ></Button>
-            )}
-
-            {requestRejected && (
-              <Text>{data["Request_Rejected"][settings]}</Text>
             )}
           </View>
         </View>
@@ -730,7 +630,6 @@ export default function Maps(props) {
               //               )
               // =======
               if (user && filter) {
-                console.log("NON BB");
                 if (
                   user &&
                   user.uid !== space.owner &&
@@ -755,7 +654,7 @@ export default function Maps(props) {
                   return null;
                 }
               } else {
-                console.log("NON BB2");
+                // console.log("NON BB2");
 
                 if (user && user.uid !== space.owner)
                   return (

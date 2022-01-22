@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   ImageBackground,
@@ -31,8 +31,9 @@ function Parked(props, navigation) {
   const [stripeId, setStripeId] = useState(null);
   const [price, setPrice] = useState(null);
   const { settings, saveSettings } = useContext(SettingsContext);
+  const date = new Date();
 
-  async function checkout() {
+  useEffect(async () => {
     let date;
     const cityRef = db.collection("users").doc(auth.currentUser.uid);
     const doc = await cityRef.get();
@@ -46,18 +47,22 @@ function Parked(props, navigation) {
       const hours = diffTime / 3600000;
       setHours(hours);
       setPrice(hours * props.bookedSpace.Price);
-      props.navigation.navigate("Card", {
-        pay: pay,
-        ownerid: props.bookedSpace.owner,
-        price: price,
-        time: hours,
-        checkoutFunc: checkoutLater,
-      });
     }
+  }, []);
+
+  async function checkout() {
+    props.navigation.navigate("Card", {
+      pay: pay,
+      ownerid: props.bookedSpace.owner,
+      price: price,
+      time: hours,
+      checkoutFunc: checkoutLater,
+    });
   }
 
   async function checkoutLater() {
     let date;
+    let hours;
     const city = db.collection("users").doc(auth.currentUser.uid);
     const docc = await city.get();
     if (!docc.exists) {
@@ -67,7 +72,7 @@ function Parked(props, navigation) {
       const date1 = new Date();
       console.log(date1, date);
       const diffTime = Math.abs(date1 - date);
-      const hours = diffTime / 3600000;
+      hours = diffTime / 3600000;
       setHours(hours);
       setPrice(hours * props.bookedSpace.Price);
       console.log("HIURSSs", props.bookedSpace.Price);
@@ -88,7 +93,7 @@ function Parked(props, navigation) {
       bookedSpace: props.bookedSpace,
       date: new Date(),
       isPayed: false,
-      payable: price,
+      payable: hours * props.bookedSpace.Price,
       time: hours,
     });
 
@@ -154,11 +159,88 @@ function Parked(props, navigation) {
   }
 
   return (
-    <Overlay isVisible={props.visible}>
+    <Overlay
+      isVisible={props.visible}
+      onBackdropPress={() => {
+        props.setParked(false);
+      }}
+    >
       <View>
         <Text style={{ textAlign: "center", padding: 30, fontSize: 20 }}>
           {data["Car_Parked"][settings]}+{"!"}
         </Text>
+
+        <View
+          style={{
+            borderRadius: 15,
+            backgroundColor: "#EEEDE7",
+            width: "80%",
+            padding: 20,
+            marginTop: 40,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "bold",
+              marginBottom: 5,
+            }}
+          >
+            Invoice:
+          </Text>
+
+          <Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Time:
+            </Text>
+            {"  "}
+            {hours} hrs
+          </Text>
+          <Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Date:
+            </Text>
+            {"  "}
+            {date.getDate() +
+              "/" +
+              date.getMonth() +
+              1 +
+              "/" +
+              date.getFullYear()}
+          </Text>
+          <Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Price:
+            </Text>{" "}
+            {props.bookedSpace.Price} ft/hr
+          </Text>
+          <Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Payable:
+            </Text>{" "}
+            {price} ft
+          </Text>
+        </View>
 
         <View
           style={{

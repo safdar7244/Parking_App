@@ -135,7 +135,7 @@ export default function Tickets({ navigation }) {
                       {"Ticket\t\t"}
                       {i + 1}
                       <Text style={{ color: "red", fontSize: 12 }}>
-                        {item.isPayed ? "" : "        unpayed"}
+                        {item.isPayed ? "" : "          unpayed"}
                       </Text>
                     </ListItem.Title>
                   </ListItem.Content>

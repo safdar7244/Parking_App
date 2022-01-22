@@ -88,8 +88,8 @@ export default function HistoryNavigate({ route, navigation }) {
 
   async function pay() {
     var history = [];
-    const cityRef = db.collection("users").doc(auth.currentUser.uid);
-    const doc = await cityRef.get();
+    const data_user = db.collection("users").doc(auth.currentUser.uid);
+    const doc = await data_user.get();
     if (!doc.exists) {
       console.log("No such document!");
     } else {
@@ -163,7 +163,7 @@ export default function HistoryNavigate({ route, navigation }) {
                 {data["Time"][settings] + ":"}
               </Text>
               {"  "}
-              {route.params.item.time ? route.params.item.time : " 0"}
+              {route.params.item.time} hrs
             </Text>
             <Text>
               <Text
@@ -186,8 +186,7 @@ export default function HistoryNavigate({ route, navigation }) {
               >
                 {data["Payable"][settings] + ":"}
               </Text>{" "}
-              <Icon name={"dollar"} size={13} />
-              {Price}
+              {Price * route.params.item.time}-ft
             </Text>
             {!route.params.item.isPayed && (
               <ButtonMain
@@ -248,7 +247,7 @@ export default function HistoryNavigate({ route, navigation }) {
               >
                 {data["Price"][settings] + ":"}
               </Text>{" "}
-              <Icon name={"dollar"} size={13} />
+              ft
               {Price}
             </Text>
           </View>
