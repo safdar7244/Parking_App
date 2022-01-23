@@ -27,15 +27,6 @@ export default function Card({ navigation, route }) {
   const [card, setCard] = useState(null);
   const [cvc, setCvc] = useState(null);
   const date = new Date();
-  //////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => true
-    );
-    return () => backHandler.remove();
-  }, []);
-  //////////////////////////////////////////////////////////////////
 
   async function Check() {
     const cityRef = db.collection("users").doc(route.params.ownerid);
@@ -54,11 +45,14 @@ export default function Card({ navigation, route }) {
     const response = await axios
       .post(
         "https://ancient-woodland-88729.herokuapp.com/create-payment-intent",
-        { amount: price }
+        { amount: parseInt(price) }
       )
       .then((res) => {
-        obj = res.data.paymentIntent;
-        clientSecret = res.data.paymentIntent.id;
+        console.log(res);
+        if (res.data.paymentIntent) {
+          obj = res.data.paymentIntent;
+          clientSecret = res.data.paymentIntent.id;
+        }
       });
 
     return obj;
@@ -87,37 +81,56 @@ export default function Card({ navigation, route }) {
     if (cvc) {
       try {
         setLoading(true);
-
         const card = await fetchCard();
-
         // 1. fetch Intent Client Secret from backend
         const obj = await fetchPaymentIntentClientSecret();
 
-        // 2. Gather customer billing information (ex. email)
-        const response = await axios.post(
-          "https://ancient-woodland-88729.herokuapp.com/confirm-payment",
-          { key: obj.id, card: card.id }
-        );
+        if (obj) {
+          // 2. Gather customer billing information (ex. email)
+          const response = await axios.post(
+            "https://ancient-woodland-88729.herokuapp.com/confirm-payment",
+            { key: obj.id, card: card.id }
+          );
 
-        const stripeID = await Check();
-
-        const resp = await axios
-          .post("https://nameless-wildwood-00103.herokuapp.com/transfer", {
-            account: stripeID,
-            amount: price * 0.9,
-          })
-          .then((res) => {
+          if (response.data.success) {
+            const stripeID = await Check();
+            const resp = await axios
+              .post("https://nameless-wildwood-00103.herokuapp.com/transfer", {
+                account: stripeID,
+                amount: price * 0.9,
+              })
+              .then((res) => {
+                console.log(res);
+                setLoading(false);
+                route.params.pay(price, route.params.time);
+                navigation.navigate("Maps");
+              })
+              .catch((err) => {
+                console.log(err);
+                setLoading(false);
+                navigation.replace("Maps", {
+                  error: "Error Occurred In Last Payment",
+                });
+              });
+          } else {
             setLoading(false);
-            route.params.pay(price, route.params.time);
-            Alert.alert("Payment Successful");
-            navigation.navigate("Maps");
-          })
-          .catch(() => {
-            Alert.alert("ERROR OCCURRED");
-            setLoading(false);
+            navigation.replace("Maps", {
+              error: "Error Occurred In Last Payment",
+            });
+          }
+        } else {
+          setLoading(false);
+          navigation.replace("Maps", {
+            error: "Error Occurred In Last Payment",
           });
+        }
       } catch (err) {
-        console.log("Error Occurred");
+        console.log(err);
+        Alert.alert("ERROR OCCURRED");
+        setLoading(false);
+        navigation.replace("Maps", {
+          error: "Error Occurred In Last Payment",
+        });
       }
     }
   };
@@ -158,93 +171,17 @@ export default function Card({ navigation, route }) {
           onChange={(value) => setCvc(value.nativeEvent.text)}
           style={styles.input}
         />
-        <Button onPress={handlePayPress} title="Pay Now" disabled={loading} />
+        {/* <Button onPress={handlePayPress} title="Pay Now" disabled={loading} /> */}
+        <ButtonMain
+          title="Pay"
+          function={handlePayPress}
+          loading={loading}
+        ></ButtonMain>
         {loading && (
           <View style={{ flex: 1, padding: 20 }}>
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         )}
-        <Text>or</Text>
-        <Button
-          onPress={() => {
-            route.params.checkoutFunc();
-            navigation.navigate("Maps");
-          }}
-          title="Pay Later"
-          disabled={loading}
-        />
-        <View
-          style={{
-            borderRadius: 15,
-            backgroundColor: "#EEEDE7",
-            width: "80%",
-            padding: 20,
-            marginTop: 40,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "bold",
-              marginBottom: 5,
-            }}
-          >
-            Invoice:
-          </Text>
-
-          <Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "bold",
-              }}
-            >
-              Time:
-            </Text>
-            {"  "}
-            {route.params.time} hrs
-          </Text>
-          <Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "bold",
-              }}
-            >
-              Date:
-            </Text>
-            {"  "}
-            {date.getDate() +
-              "/" +
-              date.getMonth() +
-              1 +
-              "/" +
-              date.getFullYear()}
-          </Text>
-          <Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "bold",
-              }}
-            >
-              Price:
-            </Text>{" "}
-            {route.params.price ? route.params.price : "0"} ft/hr
-          </Text>
-          <Text>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "bold",
-              }}
-            >
-              Payable:
-            </Text>{" "}
-            {route.params.price ? route.params.price * route.params.time : "0"}{" "}
-            ft
-          </Text>
-        </View>
       </View>
     </ScrollView>
   );

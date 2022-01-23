@@ -148,6 +148,9 @@ export default function Maps(props) {
 
   //////////////////////////////// to stop interval
   function stopDirections() {
+    for (var i = 0; i < 100; i++) {
+      clearInterval(i);
+    }
     clearInterval(DirectionsTimer.current);
     DirectionsTimer.current = null;
   }
@@ -178,8 +181,10 @@ export default function Maps(props) {
         console.log("pp", typeof lang);
         lang == "Hungary" ? saveSettings(1) : saveSettings(0);
       }
-      if (doc.data().parked) {
-        setParked(doc.data().parked);
+      if (doc.data().Session) {
+        console.log("PARK FROM FIREBASE", doc.data().Session);
+        setParked(doc.data().Session.parked);
+        setBookedSpace(doc.data().Session.bookedSpace);
       }
     }
   }
@@ -207,9 +212,7 @@ export default function Maps(props) {
       db.collection("spaces")
         .doc(bookedSpace.id)
         .update({
-          acceptedSession: {
-            status: 1,
-          },
+          status: 1,
         })
         .then(function () {
           setStartGps(true);
@@ -231,8 +234,24 @@ export default function Maps(props) {
             status: 0,
           },
         })
+        .then(function () {});
+
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          Session: null,
+        })
+        .then(function () {});
+
+      db.collection("spaces")
+        .doc(bookedSpace.id)
+        .update({
+          status: 0,
+        })
         .then(function () {
           stopNavigation();
+          setParked(false);
+          setShowmarkerdetails(false);
         });
     }
 
@@ -272,12 +291,15 @@ export default function Maps(props) {
   ////////////////////////////////////////////////////////////
   function ParkCar() {
     setParked(true);
-
+    stopNavigation();
     db.collection("users")
       .doc(auth.currentUser.uid)
       .update({
         checkIntime: new Date(),
-        parked: true,
+        Session: {
+          parked: true,
+          bookedSpace: bookedSpace,
+        },
       })
       .then(function () {});
   }
@@ -374,7 +396,7 @@ export default function Maps(props) {
 
   useEffect(() => {
     getLocationCurrent();
-  }, []);
+  }, [parked]);
   ////////////////////////////////////////////////////////////
 
   return (
@@ -383,35 +405,45 @@ export default function Maps(props) {
         ////console.log("GPS  ????? : ",startGps)
       }
 
-      <Overlay
-        overlayStyle={{
-          padding: 20,
-          width: "90%",
-          flex: 0.5,
-          justifyContent: "center",
-        }}
-        isVisible={parked}
-      >
-        <Text style={{ textAlign: "center", fontSize: 30 }}>Car Parked!</Text>
-        <View style={{ flex: 0.2 }}></View>
-        <ButtonMain
-          title="Unpark"
-          function={() => {
-            setPay(true);
+      {parked && (
+        <Overlay
+          overlayStyle={{
+            padding: 20,
+            width: "90%",
+            flex: 0.7,
+            justifyContent: "center",
           }}
-        ></ButtonMain>
+          isVisible={parked}
+        >
+          <Text style={{ textAlign: "center", fontSize: 30 }}>Car Parked!</Text>
 
-        {pay && (
-          <Parked
-            stopNavigation={stopNavigation}
-            navigation={props.navigation}
-            visible={pay}
-            reset={resetBackend}
-            setParked={setPay}
-            bookedSpace={bookedSpace}
-          />
-        )}
-      </Overlay>
+          <Text style={{ textAlign: "center", color: "red", fontSize: 10 }}>
+            {props.route.params
+              ? props.route.params.error
+                ? props.route.params.error
+                : null
+              : null}
+          </Text>
+          <View style={{ flex: 0.2 }}></View>
+          <ButtonMain
+            title="Unpark"
+            function={() => {
+              setPay(true);
+            }}
+          ></ButtonMain>
+        </Overlay>
+      )}
+
+      {pay && (
+        <Parked
+          stopNavigation={stopNavigation}
+          navigation={props.navigation}
+          visible={true}
+          reset={resetBackend}
+          setParked={setPay}
+          bookedSpace={bookedSpace}
+        />
+      )}
 
       <Overlay
         overlayStyle={{ padding: 20, width: "80%" }}

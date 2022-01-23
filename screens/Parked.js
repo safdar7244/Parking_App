@@ -31,23 +31,27 @@ function Parked(props, navigation) {
   const [stripeId, setStripeId] = useState(null);
   const [price, setPrice] = useState(null);
   const { settings, saveSettings } = useContext(SettingsContext);
+  const [loadingScreen, SetLoading] = useState(false);
   const date = new Date();
 
-  useEffect(async () => {
-    let date;
-    const cityRef = db.collection("users").doc(auth.currentUser.uid);
-    const doc = await cityRef.get();
-    if (!doc.exists) {
-      console.log("No such document!");
-    } else {
-      date = new Date(doc.data().checkIntime.seconds * 1000);
-      const date1 = new Date();
-      console.log(date1, date);
-      const diffTime = Math.abs(date1 - date);
-      const hours = diffTime / 3600000;
-      setHours(hours);
-      setPrice(hours * props.bookedSpace.Price);
-    }
+  useEffect(() => {
+    const getResult = async () => {
+      let date;
+      const cityRef = db.collection("users").doc(auth.currentUser.uid);
+      const doc = await cityRef.get();
+      if (!doc.exists) {
+        console.log("No such document!");
+      } else {
+        date = new Date(doc.data().checkIntime.seconds * 1000);
+        const date1 = new Date();
+        console.log(date1, date);
+        const diffTime = Math.abs(date1 - date);
+        const hours = diffTime / 3600000;
+        setHours(hours);
+        setPrice(hours * props.bookedSpace.Price);
+      }
+    };
+    getResult();
   }, []);
 
   async function checkout() {
@@ -61,21 +65,19 @@ function Parked(props, navigation) {
   }
 
   async function checkoutLater() {
+    SetLoading(true);
     let date;
     let hours;
     const city = db.collection("users").doc(auth.currentUser.uid);
     const docc = await city.get();
     if (!docc.exists) {
-      console.log("No such document!");
     } else {
       date = new Date(docc.data().checkIntime.seconds * 1000);
       const date1 = new Date();
-      console.log(date1, date);
       const diffTime = Math.abs(date1 - date);
       hours = diffTime / 3600000;
       setHours(hours);
       setPrice(hours * props.bookedSpace.Price);
-      console.log("HIURSSs", props.bookedSpace.Price);
     }
 
     var history = [];
@@ -105,6 +107,7 @@ function Parked(props, navigation) {
       .then(function () {
         props.setParked(false);
         props.reset();
+        SetLoading(false);
       });
   }
 
@@ -164,17 +167,20 @@ function Parked(props, navigation) {
       onBackdropPress={() => {
         props.setParked(false);
       }}
+      style={{ padding: 20 }}
     >
-      <View>
-        <Text style={{ textAlign: "center", padding: 30, fontSize: 20 }}>
-          {data["Car_Parked"][settings]}+{"!"}
-        </Text>
-
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
         <View
           style={{
             borderRadius: 15,
             backgroundColor: "#EEEDE7",
-            width: "80%",
+            width: "100%",
             padding: 20,
             marginTop: 40,
           }}
@@ -199,7 +205,7 @@ function Parked(props, navigation) {
               Time:
             </Text>
             {"  "}
-            {hours} hrs
+            {hours ? hours.toFixed(1) : "0"} hrs
           </Text>
           <Text>
             <Text
@@ -238,21 +244,18 @@ function Parked(props, navigation) {
             >
               Payable:
             </Text>{" "}
-            {price} ft
+            {price ? price.toFixed(1) : "0"} ft
           </Text>
         </View>
-
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <ButtonMain title="Checkout and Pay Now" function={checkout} />
-          <ButtonMain title="Checkout and Pay Later" function={checkoutLater} />
-        </View>
-        <View style={{ padding: 20 }}></View>
+        <ButtonMain title="Checkout and Pay Now" function={checkout} />
+        <ButtonMain title="Checkout and Pay Later" function={checkoutLater} />
+        {loadingScreen && (
+          <View style={{ flex: 1, padding: 20 }}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
       </View>
+      <View style={{ padding: 20 }}></View>
     </Overlay>
   );
 }

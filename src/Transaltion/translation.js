@@ -24,7 +24,7 @@ export const data = {
   User: ["User", "Fiók"],
   Ticket: ["Ticket", "Jegyek"],
   Map: ["Map", "Térkép"],
-  Search: ["Search1", "Keresés"],
+  Search: ["Search", "Keresés"],
   Location_Image: ["Location Image", "Helykép"],
   Location_And_Details: ["Location and Details", "Helyszín és részletek"],
   Querries: ["Querries", "Lekérdezések"],
