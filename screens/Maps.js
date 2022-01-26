@@ -602,8 +602,15 @@ export default function Maps(props) {
           initialRegion={userLocation}
           style={styles.map}
           region={userLocation}
+          // pinColor="green"
         >
-          {userLocation && <Marker coordinate={userLocation} />}
+          {userLocation && (
+            <Marker
+              coordinate={userLocation}
+              key={new Date()}
+              pinColor={"green"}
+            />
+          )}
 
           {startGps && (
             <MapViewDirections
@@ -617,8 +624,9 @@ export default function Maps(props) {
           )}
 
           {spaces &&
-            spaces.map((space) => {
+            spaces.map((space, i) => {
               const a = space;
+
               // ////console.log("user", user);
               // <<<<<<< HEAD
               //               if (
@@ -629,47 +637,158 @@ export default function Maps(props) {
               //                 space.covered === covered
               //               )
               // =======
+
               if (user && filter) {
-                if (
-                  user &&
-                  user.uid !== space.owner &&
-                  space.camera === camera &&
-                  space.guard === guard &&
-                  space.covered === covered
-                )
-                  // >>>>>>> newPopBranch
-                  return (
-                    <Marker
-                      coordinate={{
-                        latitude: space.coordinates.latitude,
-                        longitude: space.coordinates.longitude,
-                      }}
-                      onPress={() => {
-                        setrequestSpace(space);
-                        setShowmarkerdetails(true);
-                      }}
-                    ></Marker>
+                const dateNow = new Date();
+                let dayName = "monday";
+                const day = dateNow.getDay();
+                day == 1
+                  ? (dayName = "monday")
+                  : day == 2
+                  ? (dayName = "tuesday")
+                  : day == 3
+                  ? (dayName = "wednesday")
+                  : day == 4
+                  ? (dayName = "thursday")
+                  : day == 5
+                  ? (dayName = "friday")
+                  : day == 6
+                  ? (dayName = "saturday")
+                  : day == 7
+                  ? (dayName = "sunday")
+                  : (dayName = "monday");
+                const hr = dateNow.getHours();
+                const mins = dateNow.getMinutes();
+                // console.log("Before Applying Filter ", dayName, hr, mins);
+                let current_time = parseFloat(hr + "." + mins);
+                // console.log(
+                //   "curr time:",
+                //   current_time,
+                //   " p ",
+                //   slot_start_time,
+                //   " P ",
+                //   slot_end_time
+                // );
+                // if (myArrayStart > hr) {
+                // console.log("\n\n\n HAHAHAHA working");
+                // }
+                if (space.schedule[dayName].flag) {
+                  let start_time = space.schedule[dayName].start;
+                  let end_time = space.schedule[dayName].end;
+
+                  let slot_start_time = parseFloat(
+                    start_time.replace(":", ".")
                   );
-                else {
-                  return null;
+                  let slot_end_time = parseFloat(end_time.replace(":", "."));
+                  if (
+                    user &&
+                    user.uid !== space.owner &&
+                    current_time >= slot_start_time &&
+                    current_time <= slot_end_time &&
+                    (space.camera === camera ||
+                      space.guard === guard ||
+                      space.covered === covered)
+                  )
+                    // >>>>>>> newPopBranch
+                    return (
+                      <Marker
+                        coordinate={{
+                          latitude: space.coordinates.latitude,
+                          longitude: space.coordinates.longitude,
+                        }}
+                        key={i}
+                        onPress={() => {
+                          setrequestSpace(space);
+                          setShowmarkerdetails(true);
+                        }}
+                      ></Marker>
+                    );
+                  else {
+                    return null;
+                  }
                 }
               } else {
                 // console.log("NON BB2");
+                const dateNow = new Date();
+                let dayName = "monday";
+                const day = dateNow.getDay();
+                day == 1
+                  ? (dayName = "monday")
+                  : day == 2
+                  ? (dayName = "tuesday")
+                  : day == 3
+                  ? (dayName = "wednesday")
+                  : day == 4
+                  ? (dayName = "thursday")
+                  : day == 5
+                  ? (dayName = "friday")
+                  : day == 6
+                  ? (dayName = "saturday")
+                  : day == 7
+                  ? (dayName = "sunday")
+                  : (dayName = "monday");
+                const hr = dateNow.getHours();
+                const mins = dateNow.getMinutes();
+                let current_time = parseFloat(hr + "." + mins);
 
-                if (user && user.uid !== space.owner)
-                  return (
-                    <Marker
-                      coordinate={{
-                        latitude: space.coordinates.latitude,
-                        longitude: space.coordinates.longitude,
-                      }}
-                      onPress={() => {
-                        setrequestSpace(space);
-                        setShowmarkerdetails(true);
-                      }}
-                    ></Marker>
+                // if (myArrayStart > hr) {
+                // console.log("\n\n\n HAHAHAHA working");
+                // }
+                let start_time = space.schedule[dayName].start;
+                let end_time = space.schedule[dayName].end;
+                console.log("Start TIme : ", start_time);
+
+                if (space.schedule[dayName].flag) {
+                  let slot_start_time = parseFloat(
+                    start_time.replace(":", ".")
                   );
-                else {
+                  let slot_end_time = parseFloat(end_time.replace(":", "."));
+                  console.log(
+                    "curr time:",
+                    current_time,
+                    " p ",
+                    slot_start_time,
+                    " P ",
+                    slot_end_time
+                  );
+
+                  // let slot_end_time = 1;
+                  // console.log(
+                  //   "dd",
+                  //   current_time,
+                  //   "P",
+                  //   slot_start_time,
+                  //   "P",
+                  //   slot_end_time
+                  // );
+                  // if (
+                  //   current_time >= slot_start_time &&
+                  //   current_time <= slot_end_time
+                  // ) {
+                  //   console.log("NO");
+                  // }
+                  if (
+                    user &&
+                    user.uid !== space.owner &&
+                    current_time >= slot_start_time &&
+                    current_time <= slot_end_time
+                  ) {
+                    // console.log("Before Applying Filter ", dayName, hr, mins);
+                    return (
+                      <Marker
+                        coordinate={{
+                          latitude: space.coordinates.latitude,
+                          longitude: space.coordinates.longitude,
+                        }}
+                        key={i}
+                        onPress={() => {
+                          setrequestSpace(space);
+                          setShowmarkerdetails(true);
+                        }}
+                      ></Marker>
+                    );
+                  }
+                } else {
                   return null;
                 }
               }
