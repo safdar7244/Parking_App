@@ -155,6 +155,19 @@ export default function Account({ navigation }) {
     key == 6 && navigation.navigate("AccountLatePayment");
     key == 7 && navigation.navigate("Stripe");
   };
+  const LogoutAccount = (x) => {
+    auth.signOut().then(
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "Login",
+          },
+        ],
+      })
+    );
+  };
+
   return (
     <View>
       <ScrollView
@@ -261,6 +274,24 @@ export default function Account({ navigation }) {
         </View>
         <View style={styles.ListStyle1}>
           <View style={styles.innerListStyle}>
+            <ListItem
+              button
+              onPress={() => {
+                {
+                  LogoutAccount(new Date());
+                }
+              }}
+              key={new Date()}
+              containerStyle={{ width: "80%" }}
+            >
+              <Icon name="smile-o" size={20} />
+              <ListItem.Content>
+                <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
+                  {data["Logout"][settings]}
+                </ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
             <ListItem
               button
               onPress={() => {

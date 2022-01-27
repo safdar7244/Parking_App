@@ -27,6 +27,7 @@ import {
   View,
   Linking,
   ActivityIndicator,
+  Text,
 } from "react-native";
 import MapView from "react-native-maps";
 import {
@@ -39,13 +40,17 @@ import {
   SearchBar,
 } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import axios from "axios";
 import { auth, db } from "../firebase";
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
 
 export default function Stripe(props) {
   const [loading, setLoading] = useState(false);
+  const { settings, saveSettings } = useContext(SettingsContext);
+
   /////////////////////////////////////////////////////////////////
   const AccountLink = async () => {
     try {
@@ -80,29 +85,52 @@ export default function Stripe(props) {
   /////////////////////////////////////////////////////////////////
 
   return (
-    <View style={styles.container}>
-      <ButtonMain
-        title="Set Stripe"
-        function={() => {
-          AccountLink();
-        }}
-      ></ButtonMain>
-      {loading && (
-        <View style={{ padding: 20 }}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )}
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+      }}
+    >
+      <View style={styles.innerContainer1}>
+        <Text>{data["Stripe_Message"][settings]}</Text>
+      </View>
+
+      <View style={styles.container}>
+        <ButtonMain
+          title="Set Stripe"
+          function={() => {
+            AccountLink();
+          }}
+        ></ButtonMain>
+        {loading && (
+          <View style={{ padding: 20 }}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
   },
   SearchBar: {
+    padding: 20,
+  },
+  innerContainer1: {
+    // marginBottom:"20%",
+    // borderRadius:15,
+    borderRadius: 25,
+    // backgroundColor: "red",
+    backgroundColor: "white",
+    width: "90%",
+    marginTop: "10%",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
 });

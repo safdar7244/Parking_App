@@ -75,4 +75,10 @@ export const data = {
   Filters: ["Filters", "Szűrők"],
   Car_Parked: ["Car Has Been Parked", "Az autó leparkolt"],
   Payable: ["Payable", "kifizetendő"],
+  Logout: ["Logout", "Kijelentkezés"],
+  Stripe_Message: [
+    `Clicking the button below will redirect you to link or create your Stripe account. Once you have successfully completed the Stripe page, after the “Submit” button, the Stripe will redirect you to a new page. Then go back to the app and you can already register your parking space. You cannot check the successful Stripe connection in the application, only on the Stripe page. For more help, visit https://homeparking.hu"`,
+    `A lenti gombra nyomva átirányítunk a Stripe fiókod összekötéséhez vagy létrehozásához. Amint a Stripe oldalán sikeresen végeztél, a “Küldés” gomb után, a Stripe átirányít egy újoldalra. Ezt követően lépj vissza az alkalmazásba és mártöltheted is fel a parkolóhelyed. A sikeres Stripe összekötést az applikációban nem, csak a Stripe oldalán ellenőrizheted. További segítségét látogass el a https://homeparking.hu oldalra`,
+  ],
+  Navigate: ["Navigate", "Hajózik"],
 };

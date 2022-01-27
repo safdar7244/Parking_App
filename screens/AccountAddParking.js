@@ -24,6 +24,8 @@ import TabBottom from "./TabBottom";
 import UploadImage from "./common/UploadImage";
 import { Formik } from "formik";
 import Options from "./common/Options";
+// import SingleOptions from "./common/SingleOption";
+import ScheduleCalls from "./common/ScheduleCalls";
 import MapsView from "./MapsView";
 import { auth, db } from "../firebase";
 import geohash from "ngeohash";
@@ -32,6 +34,61 @@ import SettingsContext from "../src/context/Setting";
 import * as firebase from "firebase";
 
 export default function AccountAddParking({ route, navigation }) {
+  const weekDays = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+  const [monday, setMonday] = useState(false);
+  const [tuesday, setTuesday] = useState(false);
+  const [wednesday, setWednesday] = useState(false);
+  const [thursday, setThursday] = useState(false);
+  const [friday, setFriday] = useState(false);
+  const [saturday, setSaturday] = useState(false);
+  const [sunday, setSunday] = useState(false);
+
+  const [schedule, setSchedule] = useState({
+    monday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+    tuesday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+    wednesday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+    thursday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+    friday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+    saturday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+    sunday: {
+      flag: false,
+      start: 0,
+      end: 0,
+    },
+  });
+
   const [Flatno, setFlatNo] = useState("");
   const [Building, setBuilding] = useState("");
   const [Street, setStreet] = useState("");
@@ -149,6 +206,7 @@ export default function AccountAddParking({ route, navigation }) {
       Price,
       City,
       message,
+      schedule,
     };
 
     const ghash = geohash.encode(
@@ -164,14 +222,12 @@ export default function AccountAddParking({ route, navigation }) {
 
     console.log(obj);
 
-    if (imageUri) {
-      console.log("ImageUri: ", imageUri);
-      uploadImageAsync(imageUri, obj, ghash);
-    }
-    if (!imageSetFlag) {
+    if (!imageSetFlag && route.params) {
       console.log("EDIT without image", auth.currentUser.uid);
       obj.owner = auth.currentUser.uid;
       obj.ghash = ghash;
+      console.log("schedule now : ", schedule);
+      // obj.scheduleCalls = schedule;
       // obj.imageUrl = downloadURL;
 
       db.collection("spaces")
@@ -185,6 +241,18 @@ export default function AccountAddParking({ route, navigation }) {
         .catch((error) => {
           console.error("Error writing document: ", error);
         });
+    } else if (imageUri) {
+      console.log("ImageUri: ", imageUri);
+      uploadImageAsync(imageUri, obj, ghash);
+    } else {
+      Alert.alert("Alert !", "Please fill the required fields", [
+        {
+          text: "OK",
+          onPress: () => {
+            setLoading(false);
+          },
+        },
+      ]);
     }
   };
 
@@ -377,6 +445,45 @@ export default function AccountAddParking({ route, navigation }) {
           />
         </View>
 
+        <Text style={styles.UserName}>{"Schedule Set"}</Text>
+
+        <View
+          style={{
+            // marginBottom:"20%",
+            borderRadius: 15,
+            backgroundColor: "white",
+            width: "80%",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <ScheduleCalls
+            option1={weekDays[0]}
+            option2={weekDays[1]}
+            option3={weekDays[2]}
+            option4={weekDays[3]}
+            option5={weekDays[4]}
+            option6={weekDays[5]}
+            option7={weekDays[6]}
+            param1={monday}
+            param2={tuesday}
+            param3={wednesday}
+            param4={thursday}
+            param5={friday}
+            param6={saturday}
+            param7={sunday}
+            schedule={schedule}
+            function1={setMonday}
+            function2={setTuesday}
+            function3={setWednesday}
+            function4={setThursday}
+            function5={setFriday}
+            function6={setSaturday}
+            function7={setSunday}
+            setSchedule={setSchedule}
+          />
+        </View>
         <Text style={styles.UserName}>{data["Querries"][settings]}</Text>
 
         <View style={styles.innerContainer3}>
