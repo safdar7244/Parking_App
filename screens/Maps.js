@@ -510,6 +510,46 @@ export default function Maps(props) {
               {requestSpace && requestSpace.Street + " " + requestSpace.City}
             </Text>
             <Text style={{ fontSize: 12, margin: 5 }}>
+              {data["Time"][settings] + ":"}{" "}
+              {requestSpace &&
+                requestSpace.schedule[
+                  new Date().getDay() == 1
+                    ? "monday"
+                    : new Date().getDay() == 2
+                    ? "tuesday"
+                    : new Date().getDay() == 3
+                    ? "wednesday"
+                    : new Date().getDay() == 4
+                    ? "thursday"
+                    : new Date().getDay() == 5
+                    ? "friday"
+                    : new Date().getDay() == 6
+                    ? "saturday"
+                    : new Date().getDay() == 7
+                    ? "sunday"
+                    : "monday"
+                ]["start"]}
+              {" -- "}
+              {requestSpace &&
+                requestSpace.schedule[
+                  new Date().getDay() == 1
+                    ? "monday"
+                    : new Date().getDay() == 2
+                    ? "tuesday"
+                    : new Date().getDay() == 3
+                    ? "wednesday"
+                    : new Date().getDay() == 4
+                    ? "thursday"
+                    : new Date().getDay() == 5
+                    ? "friday"
+                    : new Date().getDay() == 6
+                    ? "saturday"
+                    : new Date().getDay() == 7
+                    ? "sunday"
+                    : "monday"
+                ]["end"]}
+            </Text>
+            <Text style={{ fontSize: 12, margin: 5 }}>
               {requestSpace && requestSpace.message + " "}
             </Text>
             <View style={{ fontSize: 12, margin: 5 }}></View>

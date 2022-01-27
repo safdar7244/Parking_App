@@ -81,4 +81,5 @@ export const data = {
     `A lenti gombra nyomva átirányítunk a Stripe fiókod összekötéséhez vagy létrehozásához. Amint a Stripe oldalán sikeresen végeztél, a “Küldés” gomb után, a Stripe átirányít egy újoldalra. Ezt követően lépj vissza az alkalmazásba és mártöltheted is fel a parkolóhelyed. A sikeres Stripe összekötést az applikációban nem, csak a Stripe oldalán ellenőrizheted. További segítségét látogass el a https://homeparking.hu oldalra`,
   ],
   Navigate: ["Navigate", "Hajózik"],
+  Time: ["Time", "Idő"],
 };
