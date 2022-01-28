@@ -137,6 +137,52 @@ export default function AccountAddParking({ route, navigation }) {
     if (route.params) {
       // console.log("props ener", route.params);
       // setFlag(true)
+      setMonday(route.params.item.schedule["monday"].flag);
+      setTuesday(route.params.item.schedule["tuesday"].flag);
+      setWednesday(route.params.item.schedule["wednesday"].flag);
+      setThursday(route.params.item.schedule["thursday"].flag);
+      setFriday(route.params.item.schedule["friday"].flag);
+      setSaturday(route.params.item.schedule["saturday"].flag);
+      setSunday(route.params.item.schedule["sunday"].flag);
+
+      setSchedule({
+        monday: {
+          flag: route.params.item.schedule["monday"].flag,
+          start: route.params.item.schedule["monday"].start,
+          end: route.params.item.schedule["monday"].end,
+        },
+        tuesday: {
+          flag: route.params.item.schedule["tuesday"].flag,
+          start: route.params.item.schedule["tuesday"].start,
+          end: route.params.item.schedule["tuesday"].end,
+        },
+        wednesday: {
+          flag: route.params.item.schedule["wednesday"].flag,
+          start: route.params.item.schedule["wednesday"].start,
+          end: route.params.item.schedule["wednesday"].end,
+        },
+        thursday: {
+          flag: route.params.item.schedule["thursday"].flag,
+          start: route.params.item.schedule["thursday"].start,
+          end: route.params.item.schedule["thursday"].end,
+        },
+        friday: {
+          flag: route.params.item.schedule["friday"].flag,
+          start: route.params.item.schedule["friday"].start,
+          end: route.params.item.schedule["friday"].end,
+        },
+        saturday: {
+          flag: route.params.item.schedule["saturday"].flag,
+          start: route.params.item.schedule["saturday"].start,
+          end: route.params.item.schedule["saturday"].end,
+        },
+        sunday: {
+          flag: route.params.item.schedule["sunday"].flag,
+          start: route.params.item.schedule["sunday"].start,
+          end: route.params.item.schedule["sunday"].end,
+        },
+      });
+
       setStreet(route.params.item.Street);
       setFlatNo(route.params.item.Flatno);
       setCity(route.params.item.City);
