@@ -86,6 +86,37 @@ export default function HistoryNavigate({ route, navigation }) {
     // setFlag(true);
   }, []);
 
+  function convertNumToTime(number) {
+    // Check sign of given number
+    var sign = number >= 0 ? 1 : -1;
+
+    // Set positive value of number of sign negative
+    number = number * sign;
+
+    // Separate the int from the decimal part
+    var hour = Math.floor(number);
+    var decpart = number - hour;
+
+    var min = 1 / 60;
+    // Round to nearest minute
+    decpart = min * Math.round(decpart / min);
+
+    var minute = Math.floor(decpart * 60) + "";
+
+    // Add padding if need
+    if (minute.length < 2) {
+      minute = "0" + minute;
+    }
+
+    // Add Sign in final result
+    sign = sign == 1 ? "" : "-";
+
+    // Concate hours and minutes
+    time = sign + hour + " hrs " + minute + " min";
+
+    return time;
+  }
+
   async function pay() {
     var history = [];
     const data_user = db.collection("users").doc(auth.currentUser.uid);
@@ -163,7 +194,7 @@ export default function HistoryNavigate({ route, navigation }) {
                 {data["Time"][settings] + ":"}
               </Text>
               {"  "}
-              {route.params.item.time} hrs
+              {convertNumToTime(route.params.item.time)}
             </Text>
             <Text>
               <Text
@@ -186,7 +217,7 @@ export default function HistoryNavigate({ route, navigation }) {
               >
                 {data["Payable"][settings] + ":"}
               </Text>{" "}
-              {Price * route.params.item.time}-ft
+              {(Price * route.params.item.time).toFixed(1)}-ft
             </Text>
             {!route.params.item.isPayed && (
               <ButtonMain
