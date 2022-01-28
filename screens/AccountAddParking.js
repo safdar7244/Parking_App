@@ -34,14 +34,15 @@ import SettingsContext from "../src/context/Setting";
 import * as firebase from "firebase";
 
 export default function AccountAddParking({ route, navigation }) {
+  const { settings, saveSettings } = useContext(SettingsContext);
   const weekDays = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
+    data["monday"][settings],
+    data["tuesday"][settings],
+    data["wednesday"][settings],
+    data["thursday"][settings],
+    data["friday"][settings],
+    data["saturday"][settings],
+    data["sunday"][settings],
   ];
   const [monday, setMonday] = useState(false);
   const [tuesday, setTuesday] = useState(false);
@@ -93,7 +94,7 @@ export default function AccountAddParking({ route, navigation }) {
   const [Building, setBuilding] = useState("");
   const [Street, setStreet] = useState("");
   const [Area, setArea] = useState("");
-  const { settings, saveSettings } = useContext(SettingsContext);
+
   const [photoUrl, setPhotoUrl] = useState(null);
   // <<<<<<< HEAD
   const [loading, setLoading] = useState(false);

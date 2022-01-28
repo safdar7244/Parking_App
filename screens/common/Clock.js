@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Button,
@@ -8,8 +8,11 @@ import {
   TextInput,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { data } from "./../../src/Transaltion/translation";
+import SettingsContext from "./../../src/context/Setting";
 
 export const Clock = (props) => {
+  const { settings, saveSettings } = useContext(SettingsContext);
   // console.log("Clock PropsL: ", props);
   const [date, setDate] = useState(new Date(1598051730000));
   const [startDate, setStartDate] = useState(new Date(1598051730000));
@@ -151,7 +154,7 @@ export const Clock = (props) => {
           <Button
             // containerStyle={{ paddi }}
             onPress={showTimepickerStart}
-            title="Start"
+            title={data["start"][settings]}
           />
         </View>
         <View style={styles.ButtonEnd}>
@@ -160,7 +163,7 @@ export const Clock = (props) => {
             //   containerStyle={styles.buttonContainer}
 
             onPress={showTimepickerEnd}
-            title="End"
+            title={data["end"][settings]}
           />
         </View>
       </View>

@@ -303,9 +303,12 @@ function Parked(props, navigation) {
           </Text>
         </View>
         {}
-        <ButtonMain title="Checkout and Pay Now" function={checkout} />
+        <ButtonMain title={data["payNow"][settings]} function={checkout} />
         {LatePayment && (
-          <ButtonMain title="Checkout and Pay Later" function={checkoutLater} />
+          <ButtonMain
+            title={data["payLater"][settings]}
+            function={checkoutLater}
+          />
         )}
         {loadingScreen && (
           <View style={{ flex: 1, padding: 20 }}>

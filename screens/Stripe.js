@@ -97,7 +97,7 @@ export default function Stripe(props) {
 
       <View style={styles.container}>
         <ButtonMain
-          title="Set Stripe"
+          title={data["setStripe"][settings]}
           function={() => {
             AccountLink();
           }}
