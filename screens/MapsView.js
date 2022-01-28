@@ -12,16 +12,18 @@ import {
   TextInput,
 } from "react-native";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import TabBottom from "./TabBottom";
-
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
 import * as Location from "expo-location";
 import MapView, { Marker, Callout } from "react-native-maps";
 
 // import TabBottom from "./TabBottom";
 export default function MapsView(props, { navigation }) {
   // //console.log("mapsview props", props);
+  const { settings, saveSettings } = useContext(SettingsContext);
 
   const markerHandler = (event) => {
     //console.log(event.nativeEvent.coordinate.latitude);
@@ -61,15 +63,12 @@ export default function MapsView(props, { navigation }) {
       } catch (err) {}
     };
 
-    console.log("USER LOCATION : ",props.userLocation)
-    if(!props.userLocation){
-
-    console.log(" NULL")
-    getLocation();
-  }
-    else
-    {
-      console.log("NotNull ")
+    console.log("USER LOCATION : ", props.userLocation);
+    if (!props.userLocation) {
+      console.log(" NULL");
+      getLocation();
+    } else {
+      console.log("NotNull ");
     }
   }, []);
   ////
@@ -101,7 +100,6 @@ export default function MapsView(props, { navigation }) {
 
       {/* <Text style={styles.UserName}>User</Text> */}
 
-
       <View style={styles.innercontainer2}>
         <View style={styles.row}>
           {/* <Text style={styles.labelText}>Address</Text> */}
@@ -115,7 +113,7 @@ export default function MapsView(props, { navigation }) {
             style={styles.formFieldTextRight}
             onChangeText={(Building) => props.setBuilding(Building)}
             defaultValue={props.Building}
-            placeholder="Building/Villa"
+            placeholder={data["building"][settings]}
           />
         </View>
         <View style={styles.row}>
@@ -124,7 +122,7 @@ export default function MapsView(props, { navigation }) {
             style={styles.formFieldText}
             onChangeText={(Street) => props.setStreet(Street)}
             defaultValue={props.Street}
-            placeholder="Street"
+            placeholder={data["street"][settings]}
           />
           <TextInput
             style={styles.formFieldTextRight}
@@ -138,18 +136,17 @@ export default function MapsView(props, { navigation }) {
             style={styles.formFieldText}
             onChangeText={(Price) => props.setPrice(Price)}
             defaultValue={props.Price}
-            placeholder="Ft/Hr"
+            placeholder={data["ft"][settings]}
           />
           <TextInput
             style={styles.formFieldTextRight}
             onChangeText={(City) => props.setCity(City)}
             defaultValue={props.City}
-            placeholder="City"
+            placeholder={data["city"][settings]}
           />
         </View>
       </View>
     </View>
-
   );
 }
 
@@ -171,7 +168,7 @@ const styles = StyleSheet.create({
     width: "50%",
     fontSize: 12,
     borderRadius: 7,
-    borderWidth: .5,
+    borderWidth: 0.5,
     padding: 5,
     marginBottom: 20,
     backgroundColor: "#f2f2f2",
@@ -181,7 +178,7 @@ const styles = StyleSheet.create({
     width: "110%",
     fontSize: 12,
     borderRadius: 7,
-    borderWidth: .5,
+    borderWidth: 0.5,
     padding: 5,
     marginBottom: 20,
     backgroundColor: "#f2f2f2",
@@ -191,7 +188,7 @@ const styles = StyleSheet.create({
     width: "50%",
     fontSize: 12,
     borderRadius: 7,
-    borderWidth: .5,
+    borderWidth: 0.5,
     padding: 5,
     marginBottom: 20,
     backgroundColor: "#eeeeee",
@@ -202,7 +199,7 @@ const styles = StyleSheet.create({
     width: "75%",
     padding: 40,
     marginBottom: 100,
-    borderRadius:15
+    borderRadius: 15,
   },
   Scrollcontainer: {
     // marginVertical:50,

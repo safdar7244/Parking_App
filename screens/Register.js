@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -17,6 +17,9 @@ import ButtonMain from "./common/button";
 import { auth, db } from "../firebase";
 import * as Facebook from "expo-facebook";
 import * as Google from "expo-google-app-auth";
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
+
 // import { StackActions, NavigationActions } from "react-navigation";
 
 export default function Register({ navigation, route }) {
@@ -29,6 +32,7 @@ export default function Register({ navigation, route }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { settings, saveSettings } = useContext(SettingsContext);
   //sconst [status, requestPermission] = Facebook.usePermissions();
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +217,7 @@ export default function Register({ navigation, route }) {
               color: "grey",
               padding: 5,
             }}
-            placeholder="zipCode"
+            placeholder={data["zipCode"][settings]}
             onChangeText={(text) => setZip(text)}
             value={zipCode}
           />
@@ -226,7 +230,7 @@ export default function Register({ navigation, route }) {
               color: "grey",
               padding: 5,
             }}
-            placeholder="city"
+            placeholder={data["city"][settings]}
             onChangeText={(text) => setCity(text)}
             value={city}
           />
@@ -239,7 +243,7 @@ export default function Register({ navigation, route }) {
               color: "grey",
               padding: 5,
             }}
-            placeholder="address"
+            placeholder={data["address"][settings]}
             onChangeText={(text) => setAdress(text)}
             value={address}
           />

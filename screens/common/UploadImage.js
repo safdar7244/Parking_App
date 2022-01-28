@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Image,
   View,
@@ -14,8 +14,11 @@ import * as firebase from "firebase";
 
 import axios from "axios";
 import { Avatar } from "react-native-elements";
+import { data } from "./../../src/Transaltion/translation";
+import SettingsContext from "./../../src/context/Setting";
 
 export default function UploadImage(props) {
+  const { settings, saveSettings } = useContext(SettingsContext);
   console.log("\n\n\n\n\n\n\n\nurl now , ", props);
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -106,7 +109,7 @@ export default function UploadImage(props) {
           onPress={addImage}
           style={imageUploaderStyles.uploadBtn}
         >
-          <Text>{image ? "Edit" : "Upload"} Image</Text>
+          <Text>{image ? "Edit" : data["uploadImage"][settings]} Image</Text>
           <AntDesign name="camera" size={20} color="black" />
         </TouchableOpacity>
       </View>
