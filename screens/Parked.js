@@ -247,7 +247,7 @@ function Parked(props, navigation) {
               marginBottom: 5,
             }}
           >
-            Invoice:
+            {data["invoice"][settings]}:
           </Text>
 
           <Text>
@@ -257,7 +257,7 @@ function Parked(props, navigation) {
                 fontWeight: "bold",
               }}
             >
-              Time:
+              {data["Time"][settings]}:
             </Text>
             {"  "}
             {hours ? convertNumToTime(hours) : "0"}
@@ -269,7 +269,7 @@ function Parked(props, navigation) {
                 fontWeight: "bold",
               }}
             >
-              Date:
+              {data["date"][settings]}:
             </Text>
             {"  "}
             {date.getDate() +
@@ -286,7 +286,7 @@ function Parked(props, navigation) {
                 fontWeight: "bold",
               }}
             >
-              Price:
+              {data["Price"][settings]}:
             </Text>{" "}
             {props.bookedSpace.Price} ft/hr
           </Text>
@@ -297,7 +297,7 @@ function Parked(props, navigation) {
                 fontWeight: "bold",
               }}
             >
-              Payable:
+              {data["Payable"][settings]}:
             </Text>{" "}
             {price ? price.toFixed(1) : "0"} ft
           </Text>
