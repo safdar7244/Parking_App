@@ -133,16 +133,16 @@ export const Clock = (props) => {
           style={styles.formFieldText}
           value={startDate}
           //   onChangeText={(start) => setStartDate(start)}
-          defaultValue={"-"}
-          placeholder="-"
+          defaultValue={props.schedule[props.option].start.toString()}
+          placeholder={props.schedule[props.option].start.toString()}
           editable={false}
         />
         <TextInput
           style={styles.formFieldTextRight}
           //   onChangeText={(end) => setEndDate(end)}
           value={endDate}
-          defaultValue={"-"}
-          placeholder="-"
+          defaultValue={props.schedule[props.option].end.toString()}
+          placeholder={props.schedule[props.option].end.toString()}
           editable={false}
         />
       </View>
