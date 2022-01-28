@@ -809,21 +809,21 @@ export default function Maps(props) {
                 // }
                 let start_time = space.schedule[dayName].start;
                 let end_time = space.schedule[dayName].end;
-                console.log("Start TIme : ", start_time);
+                // console.log("Start TIme : ", start_time);
 
                 if (space.schedule[dayName].flag) {
                   let slot_start_time = parseFloat(
                     start_time.replace(":", ".")
                   );
                   let slot_end_time = parseFloat(end_time.replace(":", "."));
-                  console.log(
-                    "curr time:",
-                    current_time,
-                    " p ",
-                    slot_start_time,
-                    " P ",
-                    slot_end_time
-                  );
+                  // console.log(
+                  //   "curr time:",
+                  //   current_time,
+                  //   " p ",
+                  //   slot_start_time,
+                  //   " P ",
+                  //   slot_end_time
+                  // );
 
                   // let slot_end_time = 1;
                   // console.log(

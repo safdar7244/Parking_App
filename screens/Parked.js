@@ -30,10 +30,29 @@ function Parked(props, navigation) {
   const [hours, setHours] = useState(0);
   const [stripeId, setStripeId] = useState(null);
   const [price, setPrice] = useState(null);
+  const [LatePayment, setlatePayment] = useState(null);
+
   const { settings, saveSettings } = useContext(SettingsContext);
   const [loadingScreen, SetLoading] = useState(false);
   const date = new Date();
-
+  const getLatePayment = async () => {
+    const userInfo = db.collection("users").doc(auth.currentUser.uid);
+    const doc = await userInfo.get();
+    if (!doc.exists) {
+      console.log("No such document!");
+    } else {
+      try {
+        console.log("Muhaha", doc.data().latePayment);
+        setlatePayment(doc.data().latePayment);
+      } catch (e) {
+        console.log("err: ", e);
+      }
+    }
+  };
+  useEffect(() => {
+    getLatePayment();
+    // console.log("\n\n\n\n\n\n\n\n\n Meo");
+  }, []);
   useEffect(() => {
     const getResult = async () => {
       let date;
@@ -65,6 +84,7 @@ function Parked(props, navigation) {
   }
 
   async function checkoutLater() {
+    console.log("\n\nWERTY");
     SetLoading(true);
     let date;
     let hours;
@@ -108,7 +128,11 @@ function Parked(props, navigation) {
         props.setParked(false);
         props.reset();
         SetLoading(false);
+      })
+      .catch((e) => {
+        console.log("ERROR LOVE", e);
       });
+    console.log("\n\nWERTY2");
   }
 
   async function pay(price, time) {
@@ -247,8 +271,11 @@ function Parked(props, navigation) {
             {price ? price.toFixed(1) : "0"} ft
           </Text>
         </View>
+        {}
         <ButtonMain title="Checkout and Pay Now" function={checkout} />
-        <ButtonMain title="Checkout and Pay Later" function={checkoutLater} />
+        {LatePayment && (
+          <ButtonMain title="Checkout and Pay Later" function={checkoutLater} />
+        )}
         {loadingScreen && (
           <View style={{ flex: 1, padding: 20 }}>
             <ActivityIndicator size="large" color="#0000ff" />
