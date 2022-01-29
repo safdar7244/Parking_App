@@ -102,4 +102,6 @@ export const data = {
   friday: ["Friday", "péntek"],
   saturday: ["Saturday", "szombat"],
   sunday: ["Sunday", "vasárnap"],
+  date: ["Date", "Dátum"],
+  invoice: ["Invoice", "Számla"],
 };
