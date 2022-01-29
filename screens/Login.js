@@ -57,6 +57,7 @@ export default function Login({ navigation, route }) {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         setLoading(false);
+
         // console.log("dasdsdasd");
         navigation.reset({
           index: 0,

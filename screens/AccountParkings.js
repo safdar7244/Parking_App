@@ -29,7 +29,6 @@ import axios from "axios";
 export default function AccountParkings({ navigation }) {
   const [profileUrl, setProfileUrl] = useState(false);
 
-  const list_spaces = [];
   const [username, setUsername] = useState("User");
   const { settings, saveSettings } = useContext(SettingsContext);
   const [stripe, SetStripe] = useState(0);
@@ -42,11 +41,11 @@ export default function AccountParkings({ navigation }) {
     setProfileUrl(auth.currentUser.providerData[0]["photoURL"]);
 
     // console.log("CURRENT : ",user)
-
     console.log("Entered");
     db.collection("spaces")
       .where("owner", "==", auth.currentUser.uid)
       .onSnapshot((snapshot) => {
+        const list_spaces = [];
         snapshot.forEach((doc) => {
           let dd = doc.data();
 
