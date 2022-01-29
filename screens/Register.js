@@ -294,7 +294,7 @@ export default function Register({ navigation, route }) {
             raised={true}
             containerStyle={styles.buttonContainer}
             buttonStyle={styles.button}
-            title="Continue with Facebook"
+            title={data["withFacebook"][settings]}
             onPress={() => {
               logIn();
               // navigation.replce("Login");
@@ -318,7 +318,7 @@ export default function Register({ navigation, route }) {
             titleStyle={{ color: "black" }}
             containerStyle={styles.buttonContainer}
             buttonStyle={styles.button2}
-            title="Continue with Google"
+            title={data["withGoogle"][settings]}
             onPress={() => {
               handleGoogleSignin();
             }}

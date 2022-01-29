@@ -221,7 +221,7 @@ export default function HistoryNavigate({ route, navigation }) {
             </Text>
             {!route.params.item.isPayed && (
               <ButtonMain
-                title="Pay Now"
+                title={data["payNow"][settings]}
                 function={() => {
                   navigation.navigate("Card", {
                     pay: pay,

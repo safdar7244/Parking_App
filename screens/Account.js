@@ -219,7 +219,7 @@ export default function Account({ navigation }) {
               <Divider />
               <Input
                 containerStyle={styles.buttonContainer}
-                placeholder="Password"
+                placeholder={data["password"][settings]}
                 onChangeText={(text) => setPassword(text)}
                 value={password}
                 secureTextEntry={true}

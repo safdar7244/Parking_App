@@ -415,7 +415,9 @@ export default function Maps(props) {
           }}
           isVisible={parked}
         >
-          <Text style={{ textAlign: "center", fontSize: 30 }}>Car Parked!</Text>
+          <Text style={{ textAlign: "center", fontSize: 30 }}>
+            {data["Car_Parked"][settings]}
+          </Text>
 
           <Text style={{ textAlign: "center", color: "red", fontSize: 10 }}>
             {props.route.params
@@ -426,7 +428,7 @@ export default function Maps(props) {
           </Text>
           <View style={{ flex: 0.2 }}></View>
           <ButtonMain
-            title="Unpark"
+            title={data["unPark"][settings]}
             function={() => {
               setPay(true);
             }}
@@ -620,7 +622,7 @@ export default function Maps(props) {
               backgroundColor: "red",
             }}
             containerStyle={{}}
-            title="stop navigation and park"
+            title={data["stopandPark"][settings]}
           ></Button>
         </View>
       )}
@@ -661,7 +663,7 @@ export default function Maps(props) {
 
       <View style={{ flex: 1, zIndex: 2 }}>
         <GooglePlacesAutocomplete
-          placeholder="Search"
+          placeholder={data["Search"][settings]}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
             // ////console.log(data, details);

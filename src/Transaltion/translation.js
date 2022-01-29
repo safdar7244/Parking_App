@@ -104,4 +104,12 @@ export const data = {
   sunday: ["Sunday", "vasárnap"],
   date: ["Date", "Dátum"],
   invoice: ["Invoice", "Számla"],
+  password: ["Password", "Jelszó"],
+  unPark: ["Un Park", "Parkoljon ki"],
+  stopandPark: [
+    "Stop Navigation and Park",
+    "Állítsa le a Navigációt és a Parkolást",
+  ],
+  withGoogle: ["Continue With Google", "Folytatás a Google-lal"],
+  withFacebook: ["Continue With Facebook", "Folytatás a Facebookkal"],
 };

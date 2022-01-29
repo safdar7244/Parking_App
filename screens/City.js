@@ -21,14 +21,17 @@ import {
   SearchBar,
 } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
 
 export default function City(props) {
+  const { settings, saveSettings } = useContext(SettingsContext);
   return (
     <View>
       <GooglePlacesAutocomplete
-        placeholder="Search"
+        placeholder={data["Search"][settings]}
         fetchDetails={true}
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
