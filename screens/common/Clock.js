@@ -12,6 +12,7 @@ import { data } from "./../../src/Transaltion/translation";
 import SettingsContext from "./../../src/context/Setting";
 
 export const Clock = (props) => {
+  console.log("CLoCL RPOSP L ", props);
   const { settings, saveSettings } = useContext(SettingsContext);
   // console.log("Clock PropsL: ", props);
   const [date, setDate] = useState(new Date(1598051730000));

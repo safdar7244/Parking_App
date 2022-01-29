@@ -506,13 +506,13 @@ export default function AccountAddParking({ route, navigation }) {
           }}
         >
           <ScheduleCalls
-            option1={weekDays[0]}
-            option2={weekDays[1]}
-            option3={weekDays[2]}
-            option4={weekDays[3]}
-            option5={weekDays[4]}
-            option6={weekDays[5]}
-            option7={weekDays[6]}
+            option1={weekDays[0].toLocaleLowerCase()}
+            option2={weekDays[1].toLocaleLowerCase()}
+            option3={weekDays[2].toLocaleLowerCase()}
+            option4={weekDays[3].toLocaleLowerCase()}
+            option5={weekDays[4].toLocaleLowerCase()}
+            option6={weekDays[5].toLocaleLowerCase()}
+            option7={weekDays[6].toLocaleLowerCase()}
             param1={monday}
             param2={tuesday}
             param3={wednesday}
@@ -551,7 +551,7 @@ export default function AccountAddParking({ route, navigation }) {
               backgroundColor: "#eeeeee",
               marginLeft: 20,
             }}
-            onChangeText={(message) => setMessage(message)}
+            onChange={(message) => setMessage(message)}
             defaultValue={message}
           />
 
