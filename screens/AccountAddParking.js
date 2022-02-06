@@ -279,6 +279,7 @@ export default function AccountAddParking({ route, navigation }) {
     );
 
     console.log(obj);
+    console.log("dds");
 
     if (!imageSetFlag && route.params) {
       console.log("EDIT without image", auth.currentUser.uid);
@@ -315,7 +316,7 @@ export default function AccountAddParking({ route, navigation }) {
   };
 
   async function uploadImageAsync(uri, obj, ghash) {
-    console.log("uploadAsFile", uri);
+    // console.log("uploadAsFile", uri);
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -370,6 +371,8 @@ export default function AccountAddParking({ route, navigation }) {
                 obj.owner = authUser.uid;
                 obj.ghash = ghash;
                 obj.imageUrl = downloadURL;
+
+                console.log("here the problem lies", obj);
                 db.collection("spaces")
                   .add(obj)
                   .then(() => {
@@ -569,7 +572,7 @@ export default function AccountAddParking({ route, navigation }) {
               backgroundColor: "#eeeeee",
               marginLeft: 20,
             }}
-            onChange={(message) => setMessage(message)}
+            onChangeText={(msg) => setMessage(msg)}
             defaultValue={message}
           />
 
