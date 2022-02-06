@@ -47,7 +47,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function4}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
-        translation={props.translation3}
+        translation={props.translation4}
       />
       <SingleOptions
         option={props.option5}
@@ -55,7 +55,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function5}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
-        translation={props.translation4}
+        translation={props.translation5}
       />
       <SingleOptions
         option={props.option6}
@@ -63,7 +63,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function6}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
-        translation={props.translation5}
+        translation={props.translation6}
       />
       <SingleOptions
         option={props.option7}
@@ -71,7 +71,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function7}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
-        translation={props.translation6}
+        translation={props.translation7}
       />
     </>
   );
