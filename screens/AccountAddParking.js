@@ -35,7 +35,18 @@ import * as firebase from "firebase";
 
 export default function AccountAddParking({ route, navigation }) {
   const { settings, saveSettings } = useContext(SettingsContext);
+
   const weekDays = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+
+  const Translated_weekDays = [
     data["monday"][settings],
     data["tuesday"][settings],
     data["wednesday"][settings],
@@ -506,6 +517,13 @@ export default function AccountAddParking({ route, navigation }) {
           }}
         >
           <ScheduleCalls
+            translation1={Translated_weekDays[0]}
+            translation2={Translated_weekDays[1]}
+            translation3={Translated_weekDays[2]}
+            translation4={Translated_weekDays[3]}
+            translation5={Translated_weekDays[4]}
+            translation6={Translated_weekDays[5]}
+            translation7={Translated_weekDays[6]}
             option1={weekDays[0].toLocaleLowerCase()}
             option2={weekDays[1].toLocaleLowerCase()}
             option3={weekDays[2].toLocaleLowerCase()}

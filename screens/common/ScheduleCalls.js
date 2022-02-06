@@ -14,7 +14,7 @@ import { useState } from "react";
 import SingleOptions from "./SingleOption";
 
 export default function ScheduleCalls(props, { navigation }) {
-  // console.log("Schefule calls: ", props);
+  console.log("Schefule calls: ", props);
   return (
     <>
       <SingleOptions
@@ -23,6 +23,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function1}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation1}
       />
       <SingleOptions
         option={props.option2}
@@ -30,6 +31,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function2}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation2}
       />
       <SingleOptions
         option={props.option3}
@@ -37,6 +39,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function3}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation3}
       />
       <SingleOptions
         option={props.option4}
@@ -44,6 +47,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function4}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation3}
       />
       <SingleOptions
         option={props.option5}
@@ -51,6 +55,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function5}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation4}
       />
       <SingleOptions
         option={props.option6}
@@ -58,6 +63,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function6}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation5}
       />
       <SingleOptions
         option={props.option7}
@@ -65,6 +71,7 @@ export default function ScheduleCalls(props, { navigation }) {
         function={props.function7}
         schedule={props.schedule}
         setSchedule={props.setSchedule}
+        translation={props.translation6}
       />
     </>
   );

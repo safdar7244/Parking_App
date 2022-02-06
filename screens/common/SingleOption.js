@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 import { Clock } from "./Clock";
 // import Clock from "react-clock";
 export default function SingleOptions(props, { navigation }) {
+  // console.log("Single Opts: ", props);
   //   const [selectedHours, setSelectedHours] = useState(0);
   //   const [selectedMinutes, setSelectedMinutes] = useState(0);
 
@@ -32,7 +33,7 @@ export default function SingleOptions(props, { navigation }) {
   return (
     <View style={styles.innerContainer2}>
       <View style={{ flexDirection: "row" }}>
-        <Text style={{ padding: 5 }}> {props.option} </Text>
+        <Text style={{ padding: 5 }}> {props.translation} </Text>
         <Switch
           value={props.param}
           style={{ marginLeft: "auto", marginTop: -10, paddingRight: 10 }}
