@@ -332,6 +332,20 @@ export default function Maps(props) {
   };
   ////////////////////////////////////////////////////////////
 
+  ///////////////////////////////////////////////////////////check true or false
+
+  function checkTrueAndFalse(a, b) {
+    if (a === true && b === true) {
+      return true;
+    } else if (a === true && b === false) {
+      return false;
+    } else if (a === false && b === true) {
+      return true;
+    } else if (a === false && b === false) {
+      return true;
+    }
+  }
+
   ////////////////////////////////////////////////////////////
   async function getLocationCurrent() {
     //////console.log("shdaudasdk");
@@ -759,9 +773,9 @@ export default function Maps(props) {
                     auth.currentUser.uid !== space.owner &&
                     current_time >= slot_start_time &&
                     current_time <= slot_end_time &&
-                    (space.camera === camera ||
-                      space.guard === guard ||
-                      space.covered === covered)
+                    checkTrueAndFalse(camera, space.camera) &&
+                    checkTrueAndFalse(guard, space.guard) &&
+                    checkTrueAndFalse(covered, space.covered)
                   )
                     // >>>>>>> newPopBranch
                     return (
