@@ -103,12 +103,12 @@ export default function MapsView(props, { navigation }) {
       <View style={styles.innercontainer2}>
         <View style={styles.row}>
           {/* <Text style={styles.labelText}>Address</Text> */}
-          <TextInput
+          {/* <TextInput
             style={styles.formFieldTextRight}
             onChangeText={(Building) => props.setBuilding(Building)}
             defaultValue={props.Building}
             placeholder={data["building"][settings]}
-          />
+          /> */}
         </View>
         <View style={styles.row}>
           {/* <Text style={styles.labelText}>Ft/hr        </Text> */}
@@ -118,6 +118,18 @@ export default function MapsView(props, { navigation }) {
             defaultValue={props.Street}
             placeholder={data["street"][settings]}
           />
+          <TextInput
+            style={styles.formFieldTextRight}
+            onChangeText={(Building) => props.setBuilding(Building)}
+            defaultValue={props.Building}
+            placeholder={data["building"][settings]}
+          />
+          {/* <TextInput
+            style={styles.formFieldTextRight}
+            onChangeText={(Area) => props.setArea(Area)}
+            defaultValue={props.Area}
+            placeholder="Area"
+          /> */}
         </View>
         <View style={styles.row}>
           <TextInput
