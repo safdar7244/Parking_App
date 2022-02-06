@@ -713,7 +713,7 @@ export default function Maps(props) {
               //               )
               // =======
 
-              if (user && filter) {
+              if (filter) {
                 const dateNow = new Date();
                 let dayName = "monday";
                 const day = dateNow.getDay();
@@ -756,8 +756,7 @@ export default function Maps(props) {
                   );
                   let slot_end_time = parseFloat(end_time.replace(":", "."));
                   if (
-                    user &&
-                    user.uid !== space.owner &&
+                    auth.currentUser.uid !== space.owner &&
                     current_time >= slot_start_time &&
                     current_time <= slot_end_time &&
                     (space.camera === camera ||
@@ -783,7 +782,6 @@ export default function Maps(props) {
                   }
                 }
               } else {
-                // console.log("NON BB2");
                 const dateNow = new Date();
                 let dayName = "monday";
                 const day = dateNow.getDay();
@@ -799,20 +797,22 @@ export default function Maps(props) {
                   ? (dayName = "friday")
                   : day == 6
                   ? (dayName = "saturday")
-                  : day == 7
+                  : day == 0
                   ? (dayName = "sunday")
                   : (dayName = "monday");
                 const hr = dateNow.getHours();
                 const mins = dateNow.getMinutes();
                 let current_time = parseFloat(hr + "." + mins);
+                console.log("THIS IS HERE", current_time);
 
                 // if (myArrayStart > hr) {
                 // console.log("\n\n\n HAHAHAHA working");
                 // }
                 let start_time = space.schedule[dayName].start;
+                console.log("THIS IS HERE", start_time, day, dayName);
                 let end_time = space.schedule[dayName].end;
                 // console.log("Start TIme : ", start_time);
-
+                console.log("THIS IS HERE", end_time);
                 if (space.schedule[dayName].flag) {
                   let slot_start_time = parseFloat(
                     start_time.replace(":", ".")
@@ -843,8 +843,7 @@ export default function Maps(props) {
                   //   console.log("NO");
                   // }
                   if (
-                    user &&
-                    user.uid !== space.owner &&
+                    auth.currentUser.uid !== space.owner &&
                     current_time >= slot_start_time &&
                     current_time <= slot_end_time
                   ) {
