@@ -253,6 +253,7 @@ export default function AccountAddParking({ route, navigation }) {
       longitude: userLocation.longitude,
     };
     const obj = {
+      timestamp: new Date().getTime(),
       Flatno,
       Building,
       Street,

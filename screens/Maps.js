@@ -769,30 +769,38 @@ export default function Maps(props) {
                     start_time.replace(":", ".")
                   );
                   let slot_end_time = parseFloat(end_time.replace(":", "."));
+
                   if (
-                    auth.currentUser.uid !== space.owner &&
-                    current_time >= slot_start_time &&
-                    current_time <= slot_end_time &&
-                    checkTrueAndFalse(camera, space.camera) &&
-                    checkTrueAndFalse(guard, space.guard) &&
-                    checkTrueAndFalse(covered, space.covered)
-                  )
-                    // >>>>>>> newPopBranch
-                    return (
-                      <Marker
-                        coordinate={{
-                          latitude: space.coordinates.latitude,
-                          longitude: space.coordinates.longitude,
-                        }}
-                        key={i}
-                        onPress={() => {
-                          setrequestSpace(space);
-                          setShowmarkerdetails(true);
-                        }}
-                      ></Marker>
-                    );
-                  else {
+                    ((camera === guard) === covered) === false &&
+                    (space.camera || space.guard || space.covered)
+                  ) {
                     return null;
+                  } else {
+                    if (
+                      auth.currentUser.uid !== space.owner &&
+                      current_time >= slot_start_time &&
+                      current_time <= slot_end_time &&
+                      checkTrueAndFalse(camera, space.camera) &&
+                      checkTrueAndFalse(guard, space.guard) &&
+                      checkTrueAndFalse(covered, space.covered)
+                    )
+                      // >>>>>>> newPopBranch
+                      return (
+                        <Marker
+                          coordinate={{
+                            latitude: space.coordinates.latitude,
+                            longitude: space.coordinates.longitude,
+                          }}
+                          key={i}
+                          onPress={() => {
+                            setrequestSpace(space);
+                            setShowmarkerdetails(true);
+                          }}
+                        ></Marker>
+                      );
+                    else {
+                      return null;
+                    }
                   }
                 }
               } else {
@@ -817,11 +825,6 @@ export default function Maps(props) {
                 const hr = dateNow.getHours();
                 const mins = dateNow.getMinutes();
                 let current_time = parseFloat(hr + "." + mins);
-                console.log("THIS IS HERE", current_time);
-
-                // if (myArrayStart > hr) {
-                // console.log("\n\n\n HAHAHAHA working");
-                // }
                 let start_time = space.schedule[dayName].start;
                 console.log("THIS IS HERE", start_time, day, dayName);
                 let end_time = space.schedule[dayName].end;
@@ -832,30 +835,6 @@ export default function Maps(props) {
                     start_time.replace(":", ".")
                   );
                   let slot_end_time = parseFloat(end_time.replace(":", "."));
-                  // console.log(
-                  //   "curr time:",
-                  //   current_time,
-                  //   " p ",
-                  //   slot_start_time,
-                  //   " P ",
-                  //   slot_end_time
-                  // );
-
-                  // let slot_end_time = 1;
-                  // console.log(
-                  //   "dd",
-                  //   current_time,
-                  //   "P",
-                  //   slot_start_time,
-                  //   "P",
-                  //   slot_end_time
-                  // );
-                  // if (
-                  //   current_time >= slot_start_time &&
-                  //   current_time <= slot_end_time
-                  // ) {
-                  //   console.log("NO");
-                  // }
                   if (
                     auth.currentUser.uid !== space.owner &&
                     current_time >= slot_start_time &&

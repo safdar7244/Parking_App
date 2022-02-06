@@ -49,10 +49,20 @@ export default function AccountParkings({ navigation }) {
         snapshot.forEach((doc) => {
           let dd = doc.data();
 
-          dd["title"] = "Slot " + (list_spaces.length + 1);
+          dd["title"] = "Slot ";
           dd["id"] = doc.id;
 
           list_spaces.push(dd);
+        });
+
+        list_spaces.sort((a, b) => {
+          if (a.timestamp < b.timestamp) {
+            return -1;
+          }
+          if (a.timestamp > b.timestamp) {
+            return 1;
+          }
+          return 0;
         });
 
         setSpaces(list_spaces);
@@ -154,7 +164,7 @@ export default function AccountParkings({ navigation }) {
                 containerStyle={{ width: "100%", fontSize: 12 }}
               >
                 <ListItem.Content>
-                  <ListItem.Title>{item.title}</ListItem.Title>
+                  <ListItem.Title>{item.title + " " + (i + 1)}</ListItem.Title>
                 </ListItem.Content>
                 <ListItem.Chevron />
               </ListItem>
