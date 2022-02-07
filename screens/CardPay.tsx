@@ -46,13 +46,17 @@ export default function Card({ navigation, route }) {
       .post(
         "https://ancient-woodland-88729.herokuapp.com/create-payment-intent",
         { amount: parseInt(price) }
+        // { amount: 200 }
       )
       .then((res) => {
-        console.log(res);
+        //console.log("Res create payment intent", res);
         if (res.data.paymentIntent) {
           obj = res.data.paymentIntent;
           clientSecret = res.data.paymentIntent.id;
         }
+      })
+      .catch((e) => {
+        console.log("Error : ", e);
       });
 
     return obj;
@@ -73,6 +77,7 @@ export default function Card({ navigation, route }) {
       })
       .then((res) => {
         obj = res.data.data;
+        console.log("Res", res);
       });
     return obj;
   };
@@ -84,23 +89,27 @@ export default function Card({ navigation, route }) {
         const card = await fetchCard();
         // 1. fetch Intent Client Secret from backend
         const obj = await fetchPaymentIntentClientSecret();
+        if (obj != null) {
+          console.log("OOBBJJ:", obj);
 
-        if (obj) {
           // 2. Gather customer billing information (ex. email)
           const response = await axios.post(
             "https://ancient-woodland-88729.herokuapp.com/confirm-payment",
             { key: obj.id, card: card.id }
           );
+          console.log("confirm payemnt :", response);
+          // .then((res) => { console.log("RES Confirm opayment:", res) });
 
-          if (response.data.success) {
+          if (response.data.data_success) {
             const stripeID = await Check();
             const resp = await axios
-              .post("https://nameless-wildwood-00103.herokuapp.com/transfer", {
+              .post("https://ancient-woodland-88729.herokuapp.com/transfer", {
                 account: stripeID,
-                amount: price * 0.9,
+                amount: price,
+                // amount: 200,
               })
               .then((res) => {
-                console.log(res);
+                console.log("Res transfer", res);
                 setLoading(false);
                 route.params.pay(price, route.params.time);
                 navigation.navigate("Maps");

@@ -68,19 +68,19 @@ export default function Maps(props) {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          // console.log("Document data:", doc.data());
+          // ////////console.log("Document data:", doc.data());
           let userData = doc.data();
           if (userData.history) {
-            //console.log(userData.history);
+            //////////console.log(userData.history);
             const check = time - history.date.seconds;
-            console.log("CHECK", check);
+            ////////console.log("CHECK", check);
             let unpaid = userData.history.filter((history) => {
               if (!history.isPayed && time - history.date.seconds > 172800) {
-                console.log("here", isPayed, time - history.date.seconds);
+                ////////console.log("here", isPayed, time - history.date.seconds);
                 return history;
               } else return null;
             });
-            console.log("Banned: ", new Date().getTime());
+            ////////console.log("Banned: ", new Date().getTime());
 
             if (unpaid) {
               db.collection("users")
@@ -101,11 +101,11 @@ export default function Maps(props) {
           }
         } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+          ////////console.log("No such document!");
         }
       })
       .catch((error) => {
-        //console.log("Error getting document:", error);
+        ////////console.log("Error getting document:", error);
       });
   };
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +116,7 @@ export default function Maps(props) {
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "modified") {
-            console.log("Modified city: ", change.doc.data());
+            //////console.log("Modified city: ", change.doc.data());
             if (change.doc.data().activeRequest) {
               if (change.doc.data().activeRequest.status == 1) {
                 schedulePushNotification();
@@ -168,28 +168,28 @@ export default function Maps(props) {
 
   //////////////////////////////////////////////////////////
   async function getLanguage() {
-    console.log("\n\n\n\n\n\n\n\n\n Meo");
+    //////console.log("\n\n\n\n\n\n\n\n\n Meo");
     const userInfo = db.collection("users").doc(auth.currentUser.uid);
     const doc = await userInfo.get();
     if (!doc.exists) {
-      console.log("No such document!");
+      //////console.log("No such document!");
     } else {
       if (doc.data().language) {
         let lang = doc.data().language;
-        console.log("LANG p: ", lang);
+        //////console.log("LANG p: ", lang);
 
-        console.log("pp", typeof lang);
+        //////console.log("pp", typeof lang);
         lang == "Hungary" ? saveSettings(1) : saveSettings(0);
       }
       if (doc.data().Session) {
-        console.log("PARK FROM FIREBASE", doc.data().Session);
+        //////console.log("PARK FROM FIREBASE", doc.data().Session);
         setParked(doc.data().Session.parked);
         setBookedSpace(doc.data().Session.bookedSpace);
       }
     }
   }
   useEffect(() => {
-    console.log("THIS MAP");
+    //////console.log("THIS MAP");
     getLanguage();
   }, []);
   ////////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ export default function Maps(props) {
   function AcceptRequest(customer, bookedSpace) {
     setBookedSpace(bookedSpace);
     setLoadingScreen(true);
-    console.log("customer:", customer, "\nbookedspace:", bookedSpace.id);
+    //////console.log("customer:", customer, "\nbookedspace:", bookedSpace.id);
     if (customer) {
       db.collection("spaces")
         .doc(bookedSpace.id)
@@ -218,7 +218,7 @@ export default function Maps(props) {
           setStartGps(true);
         })
         .catch((err) => {
-          console.log(err);
+          //////console.log(err);
         });
     }
   }
@@ -264,7 +264,7 @@ export default function Maps(props) {
           },
         })
         .then(function () {
-          //////console.log("updating backend2 done")
+          ////////////console.log("updating backend2 done")
         });
     }
 
@@ -276,7 +276,7 @@ export default function Maps(props) {
         },
       })
       .then(function () {
-        //////console.log("updating backend1 done")
+        ////////////console.log("updating backend1 done")
       });
   }
   /////////////////////////////////////////////////////////////
@@ -314,7 +314,7 @@ export default function Maps(props) {
     distance // miles
   ) => {
     return new Promise((resolve) => {
-      //////console.log("here");
+      ////////////console.log("here");
       const lat = 0.0144927536231884; // degrees latitude per mile
       const lon = 0.0181818181818182; // degrees longitude per mile
 
@@ -326,7 +326,7 @@ export default function Maps(props) {
 
       const lower = geohash.encode(lowerLat, lowerLon);
       const upper = geohash.encode(upperLat, upperLon);
-      //////console.log("done");
+      ////////////console.log("done");
       return resolve({ lower, upper });
     });
   };
@@ -348,7 +348,7 @@ export default function Maps(props) {
 
   ////////////////////////////////////////////////////////////
   async function getLocationCurrent() {
-    //////console.log("shdaudasdk");
+    ////////////console.log("shdaudasdk");
     const verifyPersmission = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -373,19 +373,19 @@ export default function Maps(props) {
           latitudeDelta: 0.0009,
           longitudeDelta: 0.002,
         });
-        // ////console.log("hererererer",location);
+        // //////////console.log("hererererer",location);
         const range = await getGeohashRange(
           location.coords.latitude,
           location.coords.longitude,
           12
         );
-        // ////console.log("rang", range);
+        // //////////console.log("rang", range);
 
         auth.onAuthStateChanged((authUser) => {
           if (authUser) {
-            ////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
+            //////////console.log("\n\n\n\n\n\n AUth:",authUser.uid,"->next : ",auth.currentUser)
             setUser(authUser);
-            // ////console.log("sdsadsadsadsadsadsad", user);
+            // //////////console.log("sdsadsadsadsadsadsad", user);
           }
         });
         const a = [];
@@ -395,7 +395,7 @@ export default function Maps(props) {
           .onSnapshot((snapshot) => {
             // Your own custom logic here
             snapshot.forEach((doc) => {
-              // ////console.log(doc.id, doc.data());
+              // //////////console.log(doc.id, doc.data());
               let b = doc.data();
               b.id = doc.id;
               a.push(b);
@@ -416,7 +416,7 @@ export default function Maps(props) {
   return (
     <View style={{ flex: 1 }}>
       {
-        ////console.log("GPS  ????? : ",startGps)
+        //////////console.log("GPS  ????? : ",startGps)
       }
 
       {parked && (
@@ -579,16 +579,16 @@ export default function Maps(props) {
                   AcceptRequest(auth.currentUser.uid, requestSpace);
 
                   // onPress={() => {
-                  // ////console.log(space);
+                  // //////////console.log(space);
                   // if (props.route.params) {
-                  //   //console.log("USerss");
+                  //   ////////console.log("USerss");
                   //   Book(props.route.params.historySpace);
                   // } else {
-                  //   console.log("NO ONE SHOULD COME");
+                  //   //////console.log("NO ONE SHOULD COME");
                   //   AcceptRequest(auth.currentUser, requestSpace);
                   // }
 
-                  // ////console.log(a);
+                  // //////////console.log(a);
                 }}
                 titleStyle={{ color: "white" }}
                 buttonStyle={{
@@ -680,7 +680,7 @@ export default function Maps(props) {
           placeholder={data["Search"][settings]}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
-            // ////console.log(data, details);
+            // //////////console.log(data, details);
           }}
           query={{
             key: "AIzaSyDSkRh8fA-d_EiajxpIwO8QYEPFA7fm2wA",
@@ -716,7 +716,7 @@ export default function Maps(props) {
             spaces.map((space, i) => {
               const a = space;
 
-              // ////console.log("user", user);
+              // //////////console.log("user", user);
               // <<<<<<< HEAD
               //               if (
               //                 user &&
@@ -748,9 +748,9 @@ export default function Maps(props) {
                   : (dayName = "monday");
                 const hr = dateNow.getHours();
                 const mins = dateNow.getMinutes();
-                // console.log("Before Applying Filter ", dayName, hr, mins);
+                // //////console.log("Before Applying Filter ", dayName, hr, mins);
                 let current_time = parseFloat(hr + "." + mins);
-                // console.log(
+                // //////console.log(
                 //   "curr time:",
                 //   current_time,
                 //   " p ",
@@ -759,7 +759,7 @@ export default function Maps(props) {
                 //   slot_end_time
                 // );
                 // if (myArrayStart > hr) {
-                // console.log("\n\n\n HAHAHAHA working");
+                // //////console.log("\n\n\n HAHAHAHA working");
                 // }
                 if (space.schedule[dayName].flag) {
                   let start_time = space.schedule[dayName].start;
@@ -826,10 +826,10 @@ export default function Maps(props) {
                 const mins = dateNow.getMinutes();
                 let current_time = parseFloat(hr + "." + mins);
                 let start_time = space.schedule[dayName].start;
-                console.log("THIS IS HERE", start_time, day, dayName);
+                //////console.log("THIS IS HERE", start_time, day, dayName);
                 let end_time = space.schedule[dayName].end;
-                // console.log("Start TIme : ", start_time);
-                console.log("THIS IS HERE", end_time);
+                // //////console.log("Start TIme : ", start_time);
+                //////console.log("THIS IS HERE", end_time);
                 if (space.schedule[dayName].flag) {
                   let slot_start_time = parseFloat(
                     start_time.replace(":", ".")
@@ -840,7 +840,7 @@ export default function Maps(props) {
                     current_time >= slot_start_time &&
                     current_time <= slot_end_time
                   ) {
-                    // console.log("Before Applying Filter ", dayName, hr, mins);
+                    // //////console.log("Before Applying Filter ", dayName, hr, mins);
                     return (
                       <Marker
                         coordinate={{
