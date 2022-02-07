@@ -89,7 +89,6 @@ export default function AccountParkings({ navigation }) {
   }
   // <<<<<<< HEAD
   // =======
-
   /////////////////////////////////////////////////////////////////
   const AccountLink = async () => {
     try {

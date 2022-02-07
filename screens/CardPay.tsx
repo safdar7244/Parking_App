@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   ActivityIndicator,
@@ -17,10 +17,13 @@ import type {
 } from "@stripe/stripe-react-native";
 import { auth, db } from "../firebase";
 import axios from "axios";
+import SettingsContext from "../src/context/Setting";
+import { data } from "../src/Transaltion/translation";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ButtonMain from "./common/button";
 
 export default function Card({ navigation, route }) {
+  const { settings, saveSettings } = useContext(SettingsContext);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const price = route.params.price;
@@ -156,7 +159,7 @@ export default function Card({ navigation, route }) {
         <View style={{ padding: 20 }}></View>
         <TextInput
           autoCapitalize="none"
-          placeholder="Enter Name"
+          placeholder={data["enterName"][settings]}
           keyboardType="name-phone-pad"
           onChange={(value) => setName(value.nativeEvent.text)}
           style={styles.input}
@@ -175,14 +178,14 @@ export default function Card({ navigation, route }) {
         />
         <TextInput
           autoCapitalize="none"
-          placeholder="Enter cvc"
+          placeholder={data["entercvc"][settings]}
           keyboardType="name-phone-pad"
           onChange={(value) => setCvc(value.nativeEvent.text)}
           style={styles.input}
         />
         {/* <Button onPress={handlePayPress} title="Pay Now" disabled={loading} /> */}
         <ButtonMain
-          title="Pay"
+          title={data["pay"][settings]}
           function={handlePayPress}
           loading={loading}
         ></ButtonMain>
