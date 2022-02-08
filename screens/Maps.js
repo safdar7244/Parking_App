@@ -17,7 +17,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useState, useContext } from "react";
 import OverlaySet from "./Overlay";
 import City from "./City";
-import { Marker } from "react-native-maps";
+import { Marker, MyCustomMarkerView } from "react-native-maps";
 import TabBottom from "./TabBottom";
 import * as Location from "expo-location";
 import geohash from "ngeohash";
@@ -31,6 +31,7 @@ import { data } from "../src/Transaltion/translation";
 import ButtonMain from "./common/button";
 import SettingsContext from "../src/context/Setting";
 import Parked from "./Parked";
+import { Divider } from "react-native-elements/dist/divider/Divider";
 ///////////////////////////////////////////////////////////////////////
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -796,7 +797,21 @@ export default function Maps(props) {
                             setrequestSpace(space);
                             setShowmarkerdetails(true);
                           }}
-                        ></Marker>
+                        >
+                          <View
+                            style={{
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <View style={styles.box}>
+                              <Text style={styles.textPin}>
+                                {space.Price + " Ft"}
+                              </Text>
+                            </View>
+                            <Icon name="place" size={50} color="black" />
+                          </View>
+                        </Marker>
                       );
                     else {
                       return null;
@@ -852,7 +867,21 @@ export default function Maps(props) {
                           setrequestSpace(space);
                           setShowmarkerdetails(true);
                         }}
-                      ></Marker>
+                      >
+                        <View
+                          style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <View style={styles.box}>
+                            <Text style={styles.textPin}>
+                              {space.Price + " Ft"}
+                            </Text>
+                          </View>
+                          <Icon name="place" size={50} color="black" />
+                        </View>
+                      </Marker>
                     );
                   }
                 } else {
@@ -888,5 +917,31 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
     backgroundColor: "white",
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 18,
+    borderRightWidth: 18,
+    borderBottomWidth: 15,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "black",
+    margin: 1,
+  },
+  box: {
+    backgroundColor: "#5EA0EE",
+    borderRadius: 100,
+    minWidth: 40,
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textPin: {
+    color: "white",
+    padding: 5,
+    fontSize: 10,
   },
 });
