@@ -132,10 +132,12 @@ export default function Tickets({ navigation }) {
                 >
                   <ListItem.Content>
                     <ListItem.Title>
-                      {"Ticket\t\t"}
+                      {data["Ticket"][settings] + "\t\t"}
                       {i + 1}
                       <Text style={{ color: "red", fontSize: 12 }}>
-                        {item.isPayed ? "" : "          unpayed"}
+                        {item.isPayed
+                          ? ""
+                          : "          " + data["unpayed"][settings]}
                       </Text>
                     </ListItem.Title>
                   </ListItem.Content>
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 15,
     backgroundColor: "white",
-    width: "80%",
+    width: "90%",
     justifyContent: "center",
     alignItems: "center",
     padding: 40,

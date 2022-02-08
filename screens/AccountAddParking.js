@@ -507,7 +507,7 @@ export default function AccountAddParking({ route, navigation }) {
           />
         </View>
 
-        <Text style={styles.UserName}>{"Schedule Set"}</Text>
+        <Text style={styles.UserName}>{data["scheduleSet"][settings]}</Text>
 
         <View
           style={{

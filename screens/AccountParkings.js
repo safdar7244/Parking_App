@@ -49,7 +49,7 @@ export default function AccountParkings({ navigation }) {
         snapshot.forEach((doc) => {
           let dd = doc.data();
 
-          dd["title"] = "Slot ";
+          dd["title"] = data["slot"][settings] + " ";
           dd["id"] = doc.id;
 
           list_spaces.push(dd);

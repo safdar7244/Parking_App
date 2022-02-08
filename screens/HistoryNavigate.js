@@ -47,7 +47,11 @@ export default function HistoryNavigate({ route, navigation }) {
   const [flag, setFlag] = useState(false);
   const [imageUri, setImageUri] = useState(null);
 
-  const slot_Filters = ["Guarded", "Covered", "Camera"];
+  const slot_Filters = [
+    data["Guard"][settings],
+    data["Covered"][settings],
+    data["Camera"][settings],
+  ];
   React.useEffect(() => {
     console.log("route: ", route.params.item.bookedSpace);
     if (route.params) {
@@ -371,7 +375,7 @@ export default function HistoryNavigate({ route, navigation }) {
               alignItems: "center",
               justifyContent: "center",
             }}
-            title="Navigate Me !"
+            title={data["Navigate"][settings]}
           ></Button>
         </View>
       </ScrollView>
