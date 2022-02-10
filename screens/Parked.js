@@ -118,17 +118,17 @@ function Parked(props, navigation) {
     console.log("\n\nWERTY");
     SetLoading(true);
     let date;
-    let hours;
+    // let hours;
     const city = db.collection("users").doc(auth.currentUser.uid);
     const docc = await city.get();
     if (!docc.exists) {
     } else {
-      date = new Date(docc.data().checkIntime.seconds * 1000);
-      const date1 = new Date();
-      const diffTime = Math.abs(date1 - date);
-      hours = diffTime / 3600000;
-      setHours(hours);
-      setPrice(hours * props.bookedSpace.Price);
+      // date = new Date(docc.data().checkIntime.seconds * 1000);
+      // const date1 = new Date();
+      // const diffTime = Math.abs(date1 - date);
+      // hours = diffTime / 3600000;
+      // setHours(hours);
+      // setPrice(hours * props.bookedSpace.Price);
     }
 
     var history = [];

@@ -125,7 +125,7 @@ export default function Card({ navigation, route }) {
                 console.log("Res transfer", res);
                 setLoading(false);
                 route.params.pay(price, route.params.time);
-                navigation.navigate("Maps");
+                navigation.replace("Maps");
               })
               .catch((err) => {
                 console.log(err);
