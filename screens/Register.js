@@ -182,7 +182,10 @@ export default function Register({ navigation, route }) {
             size="large"
             containerStyle={{ marginTop: 20, marginBottom: 20 }}
           />
-
+          <Text style={styles.vagayStyle2}>
+            Figyelem! Itt a pontos számlázási adataid add meg, erre az adatokra
+            fogunk számlát kiállítani, miután parkoltál
+          </Text>
           <Input
             containerStyle={styles.buttonContainer}
             leftIcon={{
@@ -213,7 +216,7 @@ export default function Register({ navigation, route }) {
             containerStyle={styles.buttonContainer}
             leftIcon={{
               type: "font-awesome-5",
-              name: "envelope",
+              name: "address-card",
               color: "grey",
               padding: 5,
             }}
@@ -226,7 +229,7 @@ export default function Register({ navigation, route }) {
             containerStyle={styles.buttonContainer}
             leftIcon={{
               type: "font-awesome-5",
-              name: "envelope",
+              name: "city",
               color: "grey",
               padding: 5,
             }}
@@ -239,7 +242,7 @@ export default function Register({ navigation, route }) {
             containerStyle={styles.buttonContainer}
             leftIcon={{
               type: "font-awesome-5",
-              name: "envelope",
+              name: "address-book",
               color: "grey",
               padding: 5,
             }}
@@ -325,7 +328,7 @@ export default function Register({ navigation, route }) {
           >
             {" "}
           </Button>
-
+          <Text style={styles.vagayStyle}>Vagy</Text>
           <View style={{ height: 50 }}></View>
         </View>
       </ImageBackground>
@@ -341,6 +344,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 15,
     fontSize: 15,
+  },
+  vagayStyle2: {
+    padding: 15,
+    fontSize: 12,
+    textAlign: "center",
   },
   innerContainer: {
     justifyContent: "center",
