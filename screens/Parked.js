@@ -175,7 +175,7 @@ function Parked(props, navigation) {
     } else {
       try {
         const data = await axios.post(
-          "https://salty-citadel-46447.herokuapp.com/generate_invoice",
+          "https://ancient-woodland-88729.herokuapp.com/generate_invoice",
           {
             name: doc.data().name,
             email: doc.data().email,
