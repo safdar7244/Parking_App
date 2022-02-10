@@ -15,6 +15,7 @@ import type {
   CardFieldInput,
   PaymentMethodCreateParams,
 } from "@stripe/stripe-react-native";
+
 import { auth, db } from "../firebase";
 import axios from "axios";
 import SettingsContext from "../src/context/Setting";
@@ -41,7 +42,16 @@ export default function Card({ navigation, route }) {
     }
     return doc.data().stripeId;
   }
+  function handleBackButtonClick() {
+    // this.props.navigation.goBack(null);
+    // console.log("MUAHAHAH");
+    navigation.replace("Maps");
 
+    return true;
+  }
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
+  });
   const fetchPaymentIntentClientSecret = async () => {
     var clientSecret = null;
     var obj = null;

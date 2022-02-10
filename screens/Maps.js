@@ -190,7 +190,7 @@ export default function Maps(props) {
     }
   }
   useEffect(() => {
-    //////console.log("THIS MAP");
+    console.log("THIS MAP is crzy");
     getLanguage();
   }, []);
   ////////////////////////////////////////////////////////////
