@@ -7,24 +7,24 @@ import "firebase/firestore";
 //import "firebase/functions";
 import "firebase/storage";
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAsp-zjL1XiddCr7HwEm33N5sPsDbRjvlo",
-//   authDomain: "new-parking-app-ecfa0.firebaseapp.com",
-//   projectId: "new-parking-app-ecfa0",
-//   storageBucket: "new-parking-app-ecfa0.appspot.com",
-//   messagingSenderId: "1049891039964",
-//   appId: "1:1049891039964:web:d06f1fd2024ca7023ca219",
-//   measurementId: "G-RDFXJ31JDY"
-// };
 const firebaseConfig = {
-  apiKey: "AIzaSyCsJHDxSNclghAWUEGPP_lBrUJgxt68EOk",
-  authDomain: "pkapp-7e6be.firebaseapp.com",
-  projectId: "pkapp-7e6be",
-  storageBucket: "pkapp-7e6be.appspot.com",
-  messagingSenderId: "380633747015",
-  appId: "1:380633747015:web:4a6ad7b6167e45f0872b62",
-  measurementId: "G-S1YPTJHC97",
+  apiKey: "AIzaSyAsp-zjL1XiddCr7HwEm33N5sPsDbRjvlo",
+  authDomain: "new-parking-app-ecfa0.firebaseapp.com",
+  projectId: "new-parking-app-ecfa0",
+  storageBucket: "new-parking-app-ecfa0.appspot.com",
+  messagingSenderId: "1049891039964",
+  appId: "1:1049891039964:web:d06f1fd2024ca7023ca219",
+  measurementId: "G-RDFXJ31JDY",
 };
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCsJHDxSNclghAWUEGPP_lBrUJgxt68EOk",
+//   authDomain: "pkapp-7e6be.firebaseapp.com",
+//   projectId: "pkapp-7e6be",
+//   storageBucket: "pkapp-7e6be.appspot.com",
+//   messagingSenderId: "380633747015",
+//   appId: "1:380633747015:web:4a6ad7b6167e45f0872b62",
+//   measurementId: "G-S1YPTJHC97",
+// };
 let app;
 if (firebase.apps.length === 0) {
   app = firebase.initializeApp(firebaseConfig);
