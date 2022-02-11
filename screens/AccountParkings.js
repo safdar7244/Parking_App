@@ -42,10 +42,11 @@ export default function AccountParkings({ navigation }) {
 
     // console.log("CURRENT : ",user)
     console.log("Entered");
+    const list_spaces = [];
+
     db.collection("spaces")
       .where("owner", "==", auth.currentUser.uid)
       .onSnapshot((snapshot) => {
-        const list_spaces = [];
         snapshot.forEach((doc) => {
           let dd = doc.data();
 
@@ -67,6 +68,12 @@ export default function AccountParkings({ navigation }) {
 
         setSpaces(list_spaces);
       });
+    return () => {
+      while (list_spaces.length > 0) {
+        list_spaces.pop();
+      }
+      setSpaces([]);
+    };
   }, []);
 
   const renderFunction = (item, key) => {

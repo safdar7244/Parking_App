@@ -246,6 +246,7 @@ export default function AccountAddParking({ route, navigation }) {
   };
 
   const handleSubmit = async () => {
+    console.log("EXpo");
     setLoading(true);
 
     const coordinates = {

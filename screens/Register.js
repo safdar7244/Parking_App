@@ -159,6 +159,8 @@ export default function Register({ navigation, route }) {
         ],
       });
     } catch (err) {
+      setLoading(false);
+
       alert(err.message);
     }
   };
