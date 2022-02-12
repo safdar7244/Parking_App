@@ -52,7 +52,7 @@ export default function Maps(props) {
   const DirectionsTimer = useRef(null);
   const [visibleRequest, setVisibleRequest] = useState(false);
   const [user, setUser] = useState(null);
-  const [customer, setCustomer] = useState(null);
+  const [destinationPoint, setDestinationPoint] = useState(null);
   const [bookedSpace, setBookedSpace] = useState(null);
   const [requestSpace, setrequestSpace] = useState(null);
   const [startGps, setStartGps] = useState(false);
@@ -163,6 +163,7 @@ export default function Maps(props) {
       startDirections();
       setShowmarkerdetails(false);
       setLoadingScreen(false);
+      setDestinationPoint(true);
     }
   }, [startGps]);
   ////////////////////////////////////////////////////////
@@ -713,6 +714,14 @@ export default function Maps(props) {
             />
           )}
 
+          {startGps && (
+            <Marker
+              coordinate={bookedSpace.coordinates}
+              // key={new Date()}
+              pinColor={"red"}
+            />
+          )}
+
           {spaces &&
             spaces.map((space, i) => {
               const a = space;
@@ -727,65 +736,135 @@ export default function Maps(props) {
               //                 space.covered === covered
               //               )
               // =======
+              if (!startGps) {
+                if (filter) {
+                  const dateNow = new Date();
+                  let dayName = "monday";
+                  const day = dateNow.getDay();
+                  day == 1
+                    ? (dayName = "monday")
+                    : day == 2
+                    ? (dayName = "tuesday")
+                    : day == 3
+                    ? (dayName = "wednesday")
+                    : day == 4
+                    ? (dayName = "thursday")
+                    : day == 5
+                    ? (dayName = "friday")
+                    : day == 6
+                    ? (dayName = "saturday")
+                    : day == 7
+                    ? (dayName = "sunday")
+                    : (dayName = "monday");
+                  const hr = dateNow.getHours();
+                  const mins = dateNow.getMinutes();
+                  // //////console.log("Before Applying Filter ", dayName, hr, mins);
+                  let current_time = parseFloat(hr + "." + mins);
+                  // //////console.log(
+                  //   "curr time:",
+                  //   current_time,
+                  //   " p ",
+                  //   slot_start_time,
+                  //   " P ",
+                  //   slot_end_time
+                  // );
+                  // if (myArrayStart > hr) {
+                  // //////console.log("\n\n\n HAHAHAHA working");
+                  // }
+                  if (space.schedule[dayName].flag) {
+                    let start_time = space.schedule[dayName].start;
+                    let end_time = space.schedule[dayName].end;
 
-              if (filter) {
-                const dateNow = new Date();
-                let dayName = "monday";
-                const day = dateNow.getDay();
-                day == 1
-                  ? (dayName = "monday")
-                  : day == 2
-                  ? (dayName = "tuesday")
-                  : day == 3
-                  ? (dayName = "wednesday")
-                  : day == 4
-                  ? (dayName = "thursday")
-                  : day == 5
-                  ? (dayName = "friday")
-                  : day == 6
-                  ? (dayName = "saturday")
-                  : day == 7
-                  ? (dayName = "sunday")
-                  : (dayName = "monday");
-                const hr = dateNow.getHours();
-                const mins = dateNow.getMinutes();
-                // //////console.log("Before Applying Filter ", dayName, hr, mins);
-                let current_time = parseFloat(hr + "." + mins);
-                // //////console.log(
-                //   "curr time:",
-                //   current_time,
-                //   " p ",
-                //   slot_start_time,
-                //   " P ",
-                //   slot_end_time
-                // );
-                // if (myArrayStart > hr) {
-                // //////console.log("\n\n\n HAHAHAHA working");
-                // }
-                if (space.schedule[dayName].flag) {
+                    let slot_start_time = parseFloat(
+                      start_time.replace(":", ".")
+                    );
+                    let slot_end_time = parseFloat(end_time.replace(":", "."));
+
+                    if (
+                      ((camera === guard) === covered) === false &&
+                      (space.camera || space.guard || space.covered)
+                    ) {
+                      return null;
+                    } else {
+                      if (
+                        auth.currentUser.uid !== space.owner &&
+                        current_time >= slot_start_time &&
+                        current_time <= slot_end_time &&
+                        checkTrueAndFalse(camera, space.camera) &&
+                        checkTrueAndFalse(guard, space.guard) &&
+                        checkTrueAndFalse(covered, space.covered)
+                      )
+                        // >>>>>>> newPopBranch
+                        return (
+                          <Marker
+                            coordinate={{
+                              latitude: space.coordinates.latitude,
+                              longitude: space.coordinates.longitude,
+                            }}
+                            key={i}
+                            onPress={() => {
+                              setrequestSpace(space);
+                              setShowmarkerdetails(true);
+                            }}
+                          >
+                            <View
+                              style={{
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <View style={styles.box}>
+                                <Text style={styles.textPin}>
+                                  {space.Price + " Ft"}
+                                </Text>
+                              </View>
+                              <Icon name="place" size={50} color="black" />
+                            </View>
+                          </Marker>
+                        );
+                      else {
+                        return null;
+                      }
+                    }
+                  }
+                } else {
+                  const dateNow = new Date();
+                  let dayName = "monday";
+                  const day = dateNow.getDay();
+                  day == 1
+                    ? (dayName = "monday")
+                    : day == 2
+                    ? (dayName = "tuesday")
+                    : day == 3
+                    ? (dayName = "wednesday")
+                    : day == 4
+                    ? (dayName = "thursday")
+                    : day == 5
+                    ? (dayName = "friday")
+                    : day == 6
+                    ? (dayName = "saturday")
+                    : day == 0
+                    ? (dayName = "sunday")
+                    : (dayName = "monday");
+                  const hr = dateNow.getHours();
+                  const mins = dateNow.getMinutes();
+                  let current_time = parseFloat(hr + "." + mins);
                   let start_time = space.schedule[dayName].start;
+                  //////console.log("THIS IS HERE", start_time, day, dayName);
                   let end_time = space.schedule[dayName].end;
-
-                  let slot_start_time = parseFloat(
-                    start_time.replace(":", ".")
-                  );
-                  let slot_end_time = parseFloat(end_time.replace(":", "."));
-
-                  if (
-                    ((camera === guard) === covered) === false &&
-                    (space.camera || space.guard || space.covered)
-                  ) {
-                    return null;
-                  } else {
+                  // //////console.log("Start TIme : ", start_time);
+                  //////console.log("THIS IS HERE", end_time);
+                  if (space.schedule[dayName].flag) {
+                    let slot_start_time = parseFloat(
+                      start_time.replace(":", ".")
+                    );
+                    let slot_end_time = parseFloat(end_time.replace(":", "."));
                     if (
                       auth.currentUser.uid !== space.owner &&
                       current_time >= slot_start_time &&
-                      current_time <= slot_end_time &&
-                      checkTrueAndFalse(camera, space.camera) &&
-                      checkTrueAndFalse(guard, space.guard) &&
-                      checkTrueAndFalse(covered, space.covered)
-                    )
-                      // >>>>>>> newPopBranch
+                      current_time <= slot_end_time
+                    ) {
+                      // //////console.log("Before Applying Filter ", dayName, hr, mins);
                       return (
                         <Marker
                           coordinate={{
@@ -813,79 +892,10 @@ export default function Maps(props) {
                           </View>
                         </Marker>
                       );
-                    else {
-                      return null;
                     }
+                  } else {
+                    return null;
                   }
-                }
-              } else {
-                const dateNow = new Date();
-                let dayName = "monday";
-                const day = dateNow.getDay();
-                day == 1
-                  ? (dayName = "monday")
-                  : day == 2
-                  ? (dayName = "tuesday")
-                  : day == 3
-                  ? (dayName = "wednesday")
-                  : day == 4
-                  ? (dayName = "thursday")
-                  : day == 5
-                  ? (dayName = "friday")
-                  : day == 6
-                  ? (dayName = "saturday")
-                  : day == 0
-                  ? (dayName = "sunday")
-                  : (dayName = "monday");
-                const hr = dateNow.getHours();
-                const mins = dateNow.getMinutes();
-                let current_time = parseFloat(hr + "." + mins);
-                let start_time = space.schedule[dayName].start;
-                //////console.log("THIS IS HERE", start_time, day, dayName);
-                let end_time = space.schedule[dayName].end;
-                // //////console.log("Start TIme : ", start_time);
-                //////console.log("THIS IS HERE", end_time);
-                if (space.schedule[dayName].flag) {
-                  let slot_start_time = parseFloat(
-                    start_time.replace(":", ".")
-                  );
-                  let slot_end_time = parseFloat(end_time.replace(":", "."));
-                  if (
-                    auth.currentUser.uid !== space.owner &&
-                    current_time >= slot_start_time &&
-                    current_time <= slot_end_time
-                  ) {
-                    // //////console.log("Before Applying Filter ", dayName, hr, mins);
-                    return (
-                      <Marker
-                        coordinate={{
-                          latitude: space.coordinates.latitude,
-                          longitude: space.coordinates.longitude,
-                        }}
-                        key={i}
-                        onPress={() => {
-                          setrequestSpace(space);
-                          setShowmarkerdetails(true);
-                        }}
-                      >
-                        <View
-                          style={{
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <View style={styles.box}>
-                            <Text style={styles.textPin}>
-                              {space.Price + " Ft"}
-                            </Text>
-                          </View>
-                          <Icon name="place" size={50} color="black" />
-                        </View>
-                      </Marker>
-                    );
-                  }
-                } else {
-                  return null;
                 }
               }
             })}
