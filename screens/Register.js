@@ -51,12 +51,12 @@ export default function Register({ navigation, route }) {
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}`
         );
-        Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+        Alert.alert("bejelentkezve!", `Szia ${(await response.json()).name}!`);
       } else {
         // type === 'cancel'
       }
     } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+      alert(`Facebook bejelentkezési hiba!`);
     }
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +135,7 @@ export default function Register({ navigation, route }) {
             })
             .catch((error) => {
               setLoading(false);
-              console.error("Error writing document: ", error);
+              console.error("Error : ", error);
             });
         }
       });

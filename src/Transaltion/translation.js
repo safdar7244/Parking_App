@@ -117,6 +117,7 @@ export const data = {
   entercvc: ["Enter cvc", "cvc"],
   pay: ["Pay", "Fizetés"],
   unpayed: ["un-payed", "Kifizetetlen"],
+  payed: ["payed", "fizetett"],
   Ticket: ["Ticket", "Parkolójegy"],
   scheduleSet: ["Schedule Set", "Rendelkezésre állás"],
   slot: ["Slot", "Parkolóhely"],

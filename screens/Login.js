@@ -22,27 +22,31 @@ export default function Login({ navigation, route }) {
   const [loading, setLoading] = useState(false);
 
   const forgotPassword = (Email) => {
-    console.log("reset email sent to " + Email);
+    // console.log("reset email sent to " + Email);
 
     auth
       .sendPasswordResetEmail(Email)
       .then(() => {
-        alert("reset email sent to " + Email);
+        alert("címre küldött e-mail visszaállítása " + Email);
 
-        Alert.alert("Email Sent to " + Email, "Press OK to continue", [
-          {
-            text: "OK",
-            onPress: () => {
-              setFlag(false);
-              setNewEmail(null);
+        Alert.alert(
+          "E-mail elküldve " + Email,
+          "Nyomja meg az OK gombot a folytatáshoz",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                setFlag(false);
+                setNewEmail(null);
+              },
             },
-          },
-        ]);
+          ]
+        );
       })
       .catch(function (e) {
         console.log(e);
         alert(
-          "ERROR While sending the email, Please check your connection and try again"
+          "HIBA Az e-mail küldése közben ellenőrizze a kapcsolatot, és próbálja újra"
         );
 
         setFlag(false);

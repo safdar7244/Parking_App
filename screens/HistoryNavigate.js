@@ -210,7 +210,9 @@ export default function HistoryNavigate({ route, navigation }) {
                 {data["Payment_Status"][settings] + ":"}
               </Text>
               {"  "}
-              {route.params.item.isPayed ? "payed" : "un-payed"}
+              {route.params.item.isPayed
+                ? data["payed"][settings]
+                : data["unpayed"][settings]}
             </Text>
             <Text>
               <Text
