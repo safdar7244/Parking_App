@@ -163,7 +163,7 @@ export default function Maps(props) {
       startDirections();
       setShowmarkerdetails(false);
       setLoadingScreen(false);
-      setDestinationPoint(true);
+      // setDestinationPoint(true);
     }
   }, [startGps]);
   ////////////////////////////////////////////////////////
