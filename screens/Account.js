@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
+  NativeModules,
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -26,6 +27,7 @@ import { auth, db } from "../firebase";
 import { data } from "../src/Transaltion/translation";
 import SettingsContext from "../src/context/Setting";
 import { Overlay } from "react-native-elements/dist/overlay/Overlay";
+import RNRestart from "react-native-restart"; // Import package from node modules
 
 export default function Account({ navigation }) {
   const { settings, saveSettings } = useContext(SettingsContext);
@@ -157,15 +159,22 @@ export default function Account({ navigation }) {
   };
   const LogoutAccount = (x) => {
     auth.signOut().then(
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: "Login",
-          },
-        ],
-      })
+      // navigation
+      //   .reset({
+      //     index: 0,
+      //     routes: [
+      //       {
+      //         name: "Login",
+      //       },
+      //     ],
+      //   })
+      //   .then(() => {
+      NativeModules.DevSettings.reload()
+      // })
     );
+    // db.clearPersistence().catch((error) => {
+    //   console.error("Could not enable persistence:", error.code);
+    // });
   };
 
   return (

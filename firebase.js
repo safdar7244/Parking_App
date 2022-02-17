@@ -32,6 +32,7 @@ if (firebase.apps.length === 0) {
   app = firebase.app();
 }
 app.firestore().settings({ persistence: false });
+
 const db = app.firestore();
 
 const auth = firebase.auth();
