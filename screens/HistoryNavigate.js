@@ -287,8 +287,7 @@ export default function HistoryNavigate({ route, navigation }) {
               >
                 {data["Price"][settings] + ":"}
               </Text>{" "}
-              ft
-              {Price}
+              {Price}-ft
             </Text>
           </View>
 

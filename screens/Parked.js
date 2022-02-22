@@ -288,8 +288,7 @@ function Parked(props, navigation) {
             >
               {data["Price"][settings]}:
             </Text>{" "}
-            {props.bookedSpace.Price <= 176 ? "176" : props.bookedSpace.Price}{" "}
-            ft/hr
+            {props.bookedSpace.Price} ft/hr
           </Text>
           <Text>
             <Text
@@ -300,7 +299,7 @@ function Parked(props, navigation) {
             >
               {data["Payable"][settings]}:
             </Text>{" "}
-            {price ? price.toFixed(1) : "0"} ft
+            {price.toFixed(1) <= 176 ? "176" : price.toFixed(1)} ft
           </Text>
         </View>
         {}

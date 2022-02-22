@@ -66,38 +66,38 @@ export default function AccountAddParking({ route, navigation }) {
   const [schedule, setSchedule] = useState({
     monday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
     tuesday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
     wednesday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
     thursday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
     friday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
     saturday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
     sunday: {
       flag: false,
-      start: 0,
-      end: 0,
+      start: "0:00",
+      end: "0:00",
     },
   });
 

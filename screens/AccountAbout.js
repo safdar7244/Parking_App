@@ -45,7 +45,7 @@ export default function AccountAbout({ navigation }) {
 
   async function handleSubmit(e) {
     if (message.length > 4) {
-      console.log("IF");
+      console.log("IF", data);
       setLoading(true);
       const data = {
         username: username,
@@ -60,18 +60,25 @@ export default function AccountAbout({ navigation }) {
         console.log("Subnmited: ", message);
         setLoading(false);
         navigation.navigate("Account");
-      } catch {
-        console.log("ERRPR");
+      } catch (e) {
+        console.log("ERRPR", e);
+        // setLoading(false);
+        // Alert.alert("Alert !", [
+        //   {
+        //     text: "okkk",
+        //     onPress: () => {},
+        //   },
+        // ]);
       }
     } else {
       console.log("Else");
 
-      Alert.alert("Alert !", data["Alert2"][settings], [
-        {
-          text: data["OK"][settings],
-          onPress: () => {},
-        },
-      ]);
+      // Alert.alert("Alert !", data["Alert2"][settings], [
+      //   {
+      //     text: data["OK"][settings],
+      //     onPress: () => {},
+      //   },
+      // ]);
     }
   }
 
