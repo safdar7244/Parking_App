@@ -62,6 +62,8 @@ export default function AccountAbout({ navigation }) {
         navigation.navigate("Account");
       } catch (e) {
         console.log("ERRPR", e);
+        setLoading(false);
+
         // setLoading(false);
         // Alert.alert("Alert !", [
         //   {
