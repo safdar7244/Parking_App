@@ -135,7 +135,7 @@ export default function Register({ navigation, route }) {
             })
             .catch((error) => {
               setLoading(false);
-              console.error("Error : ", error);
+              console.error("Hiba, próbáld újra! ", error);
             });
         }
       });
@@ -161,7 +161,7 @@ export default function Register({ navigation, route }) {
     } catch (err) {
       setLoading(false);
 
-      alert(err.message);
+      alert("Hiba, próbáld újra!");
     }
   };
 
@@ -196,7 +196,7 @@ export default function Register({ navigation, route }) {
               color: "grey",
               padding: 5,
             }}
-            placeholder="Felhasználónév"
+            placeholder="Számlázási név"
             onChangeText={(text) => setName(text)}
             value={name}
           />
