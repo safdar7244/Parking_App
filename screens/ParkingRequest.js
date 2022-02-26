@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, Overlay } from "react-native-elements";
-
+import { data } from "../src/Transaltion/translation";
+import SettingsContext from "../src/context/Setting";
 function ParkingRequest(props) {
   //console.log("props", props);
+  const { settings, saveSettings } = useContext(SettingsContext);
+
   return (
     <View style={styles.container}>
-      <Overlay
-        overlayStyle={{ padding: 40 }}
-        isVisible={props.visible}
-      >
+      <Overlay overlayStyle={{ padding: 40 }} isVisible={props.visible}>
         <Text style={{ textAlign: "center", padding: 10 }}>
-          You Have A New Parking Request {"\n"}
+          {data["parkingRequest"][settings]} {"\n"}
           {props.userName ? "From" + props.userName : ""}
         </Text>
         <View
@@ -25,15 +25,14 @@ function ParkingRequest(props) {
             buttonStyle={styles.button1}
             onPress={() => {
               //console.log("customer: ",props.customer,"bookedspace: ",props.bookedspace)
-              props.accept(props.customer, props.bookedSpace)}
-            
-            }
+              props.accept(props.customer, props.bookedSpace);
+            }}
             title="Accept"
           />
           <Button
             buttonStyle={styles.button2}
-            onPress={()=>{
-              props.reject(props.bookedSpace)
+            onPress={() => {
+              props.reject(props.bookedSpace);
             }}
             title="Reject"
           />

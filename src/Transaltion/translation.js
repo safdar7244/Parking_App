@@ -121,4 +121,5 @@ export const data = {
   Ticket: ["Ticket", "Parkolójegy"],
   scheduleSet: ["Schedule Set", "Rendelkezésre állás"],
   slot: ["Slot", "Parkolóhely"],
+  parkingRequest: ["You Have A New Parking Request", "Új parkolási igénye van"],
 };

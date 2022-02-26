@@ -91,9 +91,7 @@ export default function MapsView(props, { navigation }) {
               //console.log("sadsad", e.nativeEvent.coordinate);
             }}
           >
-            <Callout>
-              <Text>Hello</Text>
-            </Callout>
+            <Callout>{/* <Text>Hello</Text> */}</Callout>
           </Marker>
         )}
       </MapView>
