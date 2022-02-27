@@ -288,7 +288,7 @@ function Parked(props, navigation) {
             >
               {data["Price"][settings]}:
             </Text>{" "}
-            {props.bookedSpace.Price} ft/hr
+            {props.bookedSpace.Price} {data["ft"][settings]}
           </Text>
           <Text>
             <Text

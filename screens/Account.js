@@ -68,14 +68,15 @@ export default function Account({ navigation }) {
                   console.log("Signed Out");
                   usr_.delete().then(async () => {
                     setLoading(false);
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: "Register",
-                        },
-                      ],
-                    });
+                    // navigation.reset({
+                    //   index: 0,
+                    //   routes: [
+                    //     {
+                    //       name: "Register",
+                    //     },
+                    //   ],
+                    // });
+                    NativeModules.DevSettings.reload();
                   });
                 },
                 function (error) {
