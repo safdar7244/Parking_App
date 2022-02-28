@@ -45,6 +45,11 @@ export const data = {
     "Message length can not be less than 5 characters long",
     "Az üzenet hossza nem lehet rövidebb 5 karakternél",
   ],
+  Alert3: [
+    "Are you sure you want to logout?",
+    "Biztos, hogy ki akar jelentkezni?",
+  ],
+  Alert4: ["Something went wrong , Try again", "Hiba történt. Próbálja újra"],
   Cancel: ["Cancel", "mégsem"],
   Proceed: ["Proceed", "Folytassa"],
   Confirm_Credentials: [

@@ -159,23 +159,54 @@ export default function Account({ navigation }) {
     key == 7 && navigation.navigate("Stripe");
   };
   const LogoutAccount = (x) => {
-    auth.signOut().then(
-      // navigation
-      //   .reset({
-      //     index: 0,
-      //     routes: [
-      //       {
-      //         name: "Login",
-      //       },
-      //     ],
-      //   })
-      //   .then(() => {
-      NativeModules.DevSettings.reload()
-      // })
-    );
-    // db.clearPersistence().catch((error) => {
-    //   console.error("Could not enable persistence:", error.code);
-    // });
+    try {
+      Alert.alert("Alert !", data["Alert3"][settings], [
+        {
+          text: data["OK"][settings],
+          onPress: () => {
+            setLoading(true);
+            auth
+              .signOut()
+              .then(
+                // navigation
+                //   .reset({
+                //     index: 0,
+                //     routes: [
+                //       {
+                //         name: "Login",
+                //       },
+                //     ],
+                //   })
+                //   .then(() => {
+
+                NativeModules.DevSettings.reload()
+
+                // })
+              )
+              .catch((e) => {
+                console.log("Error while lgooutinh");
+                setLoading(false);
+              });
+          },
+        },
+        {
+          text: data["Cancel"][settings],
+          onPress: () => {},
+        },
+      ]);
+    } catch {
+      setLoading(false);
+      Alert.alert("Alert !", data["Alert4"][settings], [
+        {
+          text: data["OK"][settings],
+          onPress: () => {},
+
+          // db.clearPersistence().catch((error) => {
+          //   console.error("Could not enable persistence:", error.code);
+          // });
+        },
+      ]);
+    }
   };
 
   return (
@@ -285,7 +316,7 @@ export default function Account({ navigation }) {
         <View style={styles.ListStyle1}>
           <View style={styles.innerListStyle}>
             <ListItem
-              button
+              disabled={loading}
               onPress={() => {
                 {
                   LogoutAccount(new Date());
@@ -298,6 +329,11 @@ export default function Account({ navigation }) {
               <ListItem.Content>
                 <ListItem.Title style={{ color: "red", fontWeight: "bold" }}>
                   {data["Logout"][settings]}
+                  {loading && (
+                    <View style={{ paddingTop: 10, paddingLeft: 5 }}>
+                      <ActivityIndicator size="small" color="#0000ff" />
+                    </View>
+                  )}
                 </ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />

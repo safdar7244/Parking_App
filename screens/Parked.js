@@ -67,6 +67,7 @@ function Parked(props, navigation) {
         const diffTime = Math.abs(date1 - date);
         const hours = diffTime / 3600000;
         setHours(hours);
+        // console.log("inside parked", props);
         setPrice(hours * props.bookedSpace.Price);
       }
     };
@@ -99,9 +100,7 @@ function Parked(props, navigation) {
     sign = sign == 1 ? "" : "-";
 
     // Concate hours and minutes
-    time = sign + hour + "hrs" + minute + "min";
-
-    return time;
+    return sign + hour + "hrs" + minute + "min";
   }
 
   async function checkout() {
@@ -299,7 +298,8 @@ function Parked(props, navigation) {
             >
               {data["Payable"][settings]}:
             </Text>{" "}
-            {price.toFixed(1) <= 176 ? "176" : price.toFixed(1)} ft
+            {parseInt(price).toFixed(1) <= 176 ? "176" : parseInt(price)} ft
+            {console.log("->", parseInt(price).toFixed(1))}
           </Text>
         </View>
         {}
