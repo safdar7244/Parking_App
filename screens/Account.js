@@ -179,7 +179,8 @@ export default function Account({ navigation }) {
                 //   })
                 //   .then(() => {
 
-                NativeModules.DevSettings.reload()
+                // NativeModules.DevSettings.reload()
+                RNRestart.Restart()
 
                 // })
               )
