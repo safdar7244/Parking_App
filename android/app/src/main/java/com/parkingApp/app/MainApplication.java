@@ -6,6 +6,8 @@ import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.microsoft.codepush.react.CodePush;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.reactnativerestart.RestartPackage;
 import com.reactnativerestart.RestartPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -50,7 +52,8 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       new ReactNativePushNotificationPackage();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
-      packages.add( new RestartPackage() )
+      packages.add( new ReactNativeRestartPackage() )
+      // new ReactNativeRestartPackage()
 
       return packages;
     }

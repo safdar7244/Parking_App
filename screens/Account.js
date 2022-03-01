@@ -28,6 +28,7 @@ import { data } from "../src/Transaltion/translation";
 import SettingsContext from "../src/context/Setting";
 import { Overlay } from "react-native-elements/dist/overlay/Overlay";
 import RNRestart from "react-native-restart"; // Import package from node modules
+import CodePush from "react-native-code-push";
 
 export default function Account({ navigation }) {
   const { settings, saveSettings } = useContext(SettingsContext);
@@ -180,7 +181,7 @@ export default function Account({ navigation }) {
                 //   .then(() => {
 
                 // NativeModules.DevSettings.reload()
-                RNRestart.Restart()
+                CodePush.restartApp()
 
                 // })
               )
