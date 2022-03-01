@@ -101,7 +101,7 @@ export default function AccountLanguage({ navigation }) {
               }}
             >
               <Picker.Item label="English" value="eng" />
-              <Picker.Item label="Hungary" value="hang" />
+              <Picker.Item label="Hungarian" value="hang" />
             </Picker>
             {loading && (
               <View style={{ paddingTop: 15, paddingLeft: 15 }}>

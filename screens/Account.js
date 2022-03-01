@@ -77,7 +77,8 @@ export default function Account({ navigation }) {
                     //     },
                     //   ],
                     // });
-                    NativeModules.DevSettings.reload();
+                    // NativeModules.DevSettings.reload();
+                    CodePush.restartApp();
                   });
                 },
                 function (error) {
