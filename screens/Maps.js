@@ -781,7 +781,9 @@ export default function Maps(props) {
                     let slot_end_time = parseFloat(end_time.replace(":", "."));
 
                     if (
-                      ((camera === guard) === covered) === false &&
+                      camera == false &&
+                      covered == false &&
+                      guard === false &&
                       (space.camera || space.guard || space.covered)
                     ) {
                       return null;
