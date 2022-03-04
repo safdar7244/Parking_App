@@ -136,6 +136,12 @@ export default function Maps(props) {
   }
   ////////////////////////////////////////////////////////////
 
+  useEffect(() => {
+    if (covered == false && camera == false && guard == false) {
+      setFilter(false);
+    }
+  }, [covered, camera, guard]);
+
   //////////////////////////////// to start interval
   function startDirections() {
     if (startGps) {
@@ -468,7 +474,6 @@ export default function Maps(props) {
         isVisible={visible}
         onBackdropPress={() => {
           setVisible(!visible);
-          setFilter(true);
         }}
       >
         <OverlaySet
@@ -478,6 +483,7 @@ export default function Maps(props) {
           setGuard={setGuard}
           setCovered={setCovered}
           setCamera={setCamera}
+          setFilter={setFilter}
         />
       </Overlay>
 
@@ -659,6 +665,7 @@ export default function Maps(props) {
           buttonStyle={styles.filterButton}
           onPress={() => {
             setVisible(!visible);
+            setFilter(true);
           }}
         ></Button>
 
