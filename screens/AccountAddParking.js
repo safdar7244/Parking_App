@@ -557,9 +557,9 @@ export default function AccountAddParking({ route, navigation }) {
         <Text style={styles.UserName}>{data["Querries"][settings]}</Text>
 
         <View style={styles.innerContainer3}>
-          <Text style={{ marginBottom: 20 }}>
-            {data["If_Any_Querry"][settings]}
-          </Text>
+          {/* <Text style={{ marginBottom: 20 }}> */}
+          {/* {data["If_Any_Querry"][settings]} */}
+          {/* </Text> */}
           <TextInput
             editable={true}
             multiline={true}
