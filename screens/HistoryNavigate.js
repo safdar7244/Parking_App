@@ -223,9 +223,9 @@ export default function HistoryNavigate({ route, navigation }) {
               >
                 {data["Payable"][settings] + ":"}
               </Text>{" "}
-              {(Price * route.params.item.time).toFixed(1) <= 176
-                ? "176"
-                : (Price * route.params.item.time).toFixed(1) <= 176}
+              {(Price * route.params.item.time).toFixed(1) <= 257
+                ? "257"
+                : (Price * route.params.item.time).toFixed(1)}
               -ft
             </Text>
             {!route.params.item.isPayed && (
