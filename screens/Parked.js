@@ -298,7 +298,7 @@ function Parked(props, navigation) {
             >
               {data["Payable"][settings]}:
             </Text>{" "}
-            {parseInt(price).toFixed(1) <= 257 ? "257" : parseInt(price)} ft
+            {parseInt(price).toFixed(1) <= 285 ? "285" : parseInt(price)} {"ft"}
             {console.log("->", parseInt(price).toFixed(1))}
           </Text>
         </View>

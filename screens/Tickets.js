@@ -24,78 +24,41 @@ import { auth, db } from "../firebase";
 import SettingsContext from "../src/context/Setting";
 import { data } from "../src/Transaltion/translation";
 import HistoryNavigate from "./HistoryNavigate";
-export default function Tickets({ navigation }) {
+export default function Tickets({ route, navigation }) {
   const [history, setHistroy] = useState([]);
   const [flag, setFlag] = useState(false);
+  const [error, setError] = useState(false);
 
   async function func() {
     console.log("Entered");
     console.log("auth.", auth.currentUser.uid);
     const aUser = db.collection("users").doc(auth.currentUser.uid);
-    // console.log("AUSEE L ",aUser)
     const docData = await aUser.get();
     if (docData) {
       console.log("docs: ", docData.data().history);
-      // console.log("History : ",history_spaces)
       if (docData.data().history) {
         setHistroy(docData.data().history);
         setFlag(true);
       }
-      // const dta={
-      //   title:2
-      // }
-      // dd.append(dta)
-      // list_spaces.push(dd)
     }
   }
 
-  //   const [username,setUsername]=useState("User")
   const { settings, saveSettings } = useContext(SettingsContext);
 
   React.useEffect(() => {
-    // const user=auth.currentUser.providerData[0]["displayName"]
-    // setUsername(user)
-    // console.log("CURRENT : ",user)
-
     func();
-
-    //     db.collection("users")
-    //     .where("id", "==", auth.currentUser.uid)
-    //     .onSnapshot((snapshot) => {
-    //       // Your own custom logic here
-    //       snapshot.forEach((doc) => {
-
-    //         // ////console.log(doc.id, doc.data());
-    // // console.log("PARKING SLOT YAAAY",doc.data())
-    // let dd=doc.data()
-    // dd["title"]="Slot "+(list_spaces.length+1)
-    // // const dta={
-    // //   title:2
-    // // }
-    // // dd.append(dta)
-    // // list_spaces.push(dd)
-    //     //   });
-    //       // console.log(list_spaces)
-    //       // console.log(list_spaces.length)
-    //       setSpaces(list_spaces);
-    //     });
+    if (route.params) {
+      if (route.params.error) {
+        setError(true);
+      }
+    }
   }, []);
 
   const renderFunction = (item, key) => {
     console.log("key : ", key);
     navigation.navigate("HistoryNavigate", { item: item, index: key - 1 });
   };
-  // data.b = "new value";
-  // const list = [
 
-  //     {
-  //       title: 'Slot 1',
-  //     },
-  //     {
-  //         title: 'Slot 2',
-  //       },
-
-  //   ]
   return (
     <View style={styles.container}>
       <ScrollView
@@ -103,13 +66,6 @@ export default function Tickets({ navigation }) {
         contentContainerStyle={{ flexGrow: 1 }}
         stickyFooterIndices={[0]}
       >
-        {/* <ScrollView 
-    style={styles.Scrollcontainer}
-> */}
-        {/* <TabBottom navigate={navigation}/>  */}
-
-        {/* <ImageBackground source={require('../pictures/bkg-user.jpeg')} resizeMode="cover" style={styles.image} /> */}
-
         <View style={styles.innerContainer}>
           {/* <AvatarCustom /> */}
 
@@ -117,6 +73,20 @@ export default function Tickets({ navigation }) {
 
           <View style={styles.innerContainer2}>
             <Text style={styles.innerText}>{data["My_Tickets"][settings]}</Text>
+            {error && (
+              <Text
+                style={{
+                  color: "red",
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                  margin: 0,
+                  fontSize: 11,
+                }}
+              >
+                {data["Tickets_Error"][settings]}
+              </Text>
+            )}
             {flag &&
               history.map((item, i) => (
                 <ListItem

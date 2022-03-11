@@ -127,4 +127,8 @@ export const data = {
   scheduleSet: ["Schedule Set", "Rendelkezésre állás"],
   slot: ["Slot", "Parkolóhely"],
   parkingRequest: ["You Have A New Parking Request", "Új parkolási igénye van"],
+  Tickets_Error: [
+    "There was some Error with the transaction",
+    "Hiba történt a tranzakció során",
+  ],
 };

@@ -27,8 +27,10 @@ export default function Card({ navigation, route }) {
   const { settings, saveSettings } = useContext(SettingsContext);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const price = route.params.price;
+  const price = route.params.price <= 285 ? 285 : route.params.price;
   const [card, setCard] = useState(null);
+  const [flag, setFlag] = useState(false);
+
   const [cvc, setCvc] = useState(null);
   const date = new Date();
 
@@ -49,6 +51,20 @@ export default function Card({ navigation, route }) {
 
     return true;
   }
+  // useEffect(() => {
+  //   // if (route.params) {
+  //   //   if (route.params.path) {
+  //   //     setFlag(true);
+  //   //   }
+  //   // }
+  // }, []);
+  useEffect(() => {
+    if (flag) {
+      navigation.replace("Tickets", {
+        error: "Error Occurred In Last Payment",
+      });
+    }
+  }, [flag]);
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
   });
@@ -130,18 +146,33 @@ export default function Card({ navigation, route }) {
               .catch((err) => {
                 console.log(err);
                 setLoading(false);
+                if (route.params) {
+                  if (route.params.path) {
+                    setFlag(true);
+                  }
+                }
                 navigation.replace("Maps", {
                   error: "Error Occurred In Last Payment",
                 });
               });
           } else {
             setLoading(false);
+            if (route.params) {
+              if (route.params.path) {
+                setFlag(true);
+              }
+            }
             navigation.replace("Maps", {
               error: "Error Occurred In Last Payment",
             });
           }
         } else {
           setLoading(false);
+          if (route.params) {
+            if (route.params.path) {
+              setFlag(true);
+            }
+          }
           navigation.replace("Maps", {
             error: "Error Occurred In Last Payment",
           });
@@ -150,6 +181,11 @@ export default function Card({ navigation, route }) {
         console.log(err);
         Alert.alert("ERROR OCCURRED");
         setLoading(false);
+        if (route.params) {
+          if (route.params.path) {
+            setFlag(true);
+          }
+        }
         navigation.replace("Maps", {
           error: "Error Occurred In Last Payment",
         });

@@ -223,8 +223,8 @@ export default function HistoryNavigate({ route, navigation }) {
               >
                 {data["Payable"][settings] + ":"}
               </Text>{" "}
-              {(Price * route.params.item.time).toFixed(1) <= 257
-                ? "257"
+              {(Price * route.params.item.time).toFixed(1) <= 285
+                ? "285"
                 : (Price * route.params.item.time).toFixed(1)}
               -ft
             </Text>
@@ -233,9 +233,10 @@ export default function HistoryNavigate({ route, navigation }) {
                 title={data["payNow"][settings]}
                 function={() => {
                   navigation.navigate("Card", {
+                    path: true,
                     pay: pay,
                     ownerid: route.params.item.bookedSpace.owner,
-                    price: route.params.item.bookedSpace.Price,
+                    price: Price * route.params.item.time,
                     time: route.params.item.time,
                     checkoutFunc: () => {
                       navigation.navigate("Maps");
