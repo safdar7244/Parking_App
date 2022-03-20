@@ -110,6 +110,7 @@ function Parked(props, navigation) {
       price: price,
       time: hours,
       checkoutFunc: checkoutLater,
+      slotPrice: props.bookedSpace.Price,
     });
   }
 
@@ -165,7 +166,10 @@ function Parked(props, navigation) {
     console.log("\n\nWERTY2");
   }
 
-  async function pay(price, time) {
+  async function pay(price, time, slotPrice) {
+    console.log("PRICEE", price);
+    console.log("SLOT", slotPrice);
+    console.log("time", time);
     var history = [];
     const cityRef = db.collection("users").doc(auth.currentUser.uid);
     const doc = await cityRef.get();
@@ -181,9 +185,9 @@ function Parked(props, navigation) {
             address: doc.data().address,
             city: doc.data().city,
             zipCode: doc.data().zipCode,
-            slotPrice: props.bookedSpace.Price,
-            hours: time,
-            price,
+            slotPrice: slotPrice,
+            hours: price > 285 ? time : price / slotPrice,
+            price: price,
             date: new Date().toISOString().slice(0, 10),
           }
         );
@@ -211,6 +215,7 @@ function Parked(props, navigation) {
       })
       .then(function () {
         props.setParked(false);
+
         props.reset();
       });
   }

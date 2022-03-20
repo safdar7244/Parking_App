@@ -112,6 +112,7 @@ export default function Card({ navigation, route }) {
   };
 
   const handlePayPress = async () => {
+    route.params.pay(price, route.params.time, route.params.slotPrice);
     if (cvc) {
       try {
         setLoading(true);
@@ -120,7 +121,6 @@ export default function Card({ navigation, route }) {
         const obj = await fetchPaymentIntentClientSecret();
         if (obj != null) {
           console.log("OOBBJJ:", obj);
-
           // 2. Gather customer billing information (ex. email)
           const response = await axios.post(
             "https://ancient-woodland-88729.herokuapp.com/confirm-payment",
@@ -128,7 +128,6 @@ export default function Card({ navigation, route }) {
           );
           console.log("confirm payemnt :", response);
           // .then((res) => { console.log("RES Confirm opayment:", res) });
-
           if (response.data.data_success) {
             const stripeID = await Check();
             const resp = await axios

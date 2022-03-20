@@ -238,6 +238,7 @@ export default function HistoryNavigate({ route, navigation }) {
                     ownerid: route.params.item.bookedSpace.owner,
                     price: Price * route.params.item.time,
                     time: route.params.item.time,
+                    slotPrice: Price,
                     checkoutFunc: () => {
                       navigation.navigate("Maps");
                     },
