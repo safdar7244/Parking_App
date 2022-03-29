@@ -112,7 +112,7 @@ export default function Card({ navigation, route }) {
   };
 
   const handlePayPress = async () => {
-    route.params.pay(price, route.params.time, route.params.slotPrice);
+    // route.params.pay(price, route.params.time, route.params.slotPrice);
     if (cvc) {
       try {
         setLoading(true);
@@ -139,7 +139,11 @@ export default function Card({ navigation, route }) {
               .then((res) => {
                 console.log("Res transfer", res);
                 setLoading(false);
-                route.params.pay(price, route.params.time);
+                route.params.pay(
+                  price,
+                  route.params.time,
+                  route.params.slotPrice
+                );
                 navigation.replace("Maps");
               })
               .catch((err) => {

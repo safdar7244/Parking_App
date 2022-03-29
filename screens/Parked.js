@@ -181,7 +181,7 @@ function Parked(props, navigation) {
           "https://ancient-woodland-88729.herokuapp.com/generate_invoice",
           {
             name: doc.data().name,
-            email: doc.data().email,
+            email: "l180931@lhr.nu.edu.pk",
             address: doc.data().address,
             city: doc.data().city,
             zipCode: doc.data().zipCode,
@@ -197,6 +197,7 @@ function Parked(props, navigation) {
 
       if (doc.data().history) {
         history = doc.data().history;
+        console.log("l180931@lhr.nu.edu.pk");
       }
     }
 
